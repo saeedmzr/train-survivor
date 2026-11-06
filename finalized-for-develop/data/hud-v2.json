@@ -1,0 +1,27 @@
+{
+ "version": 2,
+ "change": "level number moved out of the separate TRAIN LV badge into the XP bar's left cap",
+ "removed": [
+  "TRAIN LV badge on the level-3 GROW states"
+ ],
+ "row": {
+  "assets": [
+   "ui/hud/hud_xp_level_row.png",
+   "ui/hud/hud_xp_level_row_lv15.png"
+  ],
+  "chipW": 34,
+  "chipH": 20,
+  "trackW": 106,
+  "trackH": 16,
+  "gap": 4,
+  "behaviour": [
+   "chip shows LV + zero-padded number, always visible",
+   "fill under the chip shows progress to the next level",
+   "on level-up the chip flashes and the number rolls"
+  ]
+ },
+ "wagon": {
+  "assets": "ui/hud/hud_wagon_slots.png",
+  "slotsMax": 2
+ }
+}

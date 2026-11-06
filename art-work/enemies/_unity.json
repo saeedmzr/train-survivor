@@ -1,0 +1,222 @@
+{
+ "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+ "atlasSize": 2048,
+ "sprites": {
+  "shrieker": {
+   "id": "shrieker",
+   "sprite": "en_shrieker",
+   "heightM": 1.75,
+   "px": [
+    342,
+    160
+   ],
+   "source": "art-work/enemies/shrieker/walk_0.png",
+   "frames": [
+    "en_shrieker",
+    "en_shrieker_f1",
+    "en_shrieker_f2",
+    "en_shrieker_f3",
+    "en_shrieker_f4",
+    "en_shrieker_f5"
+   ]
+  },
+  "crawler": {
+   "id": "crawler",
+   "sprite": "en_crawler",
+   "heightM": 1.15,
+   "px": [
+    328,
+    160
+   ],
+   "source": "art-work/enemies/crawler/walk_0.png",
+   "frames": [
+    "en_crawler",
+    "en_crawler_f1",
+    "en_crawler_f2",
+    "en_crawler_f3",
+    "en_crawler_f4",
+    "en_crawler_f5"
+   ]
+  },
+  "sprinter": {
+   "id": "sprinter",
+   "sprite": "en_sprinter",
+   "heightM": 1.9,
+   "px": [
+    318,
+    160
+   ],
+   "source": "art-work/enemies/sprinter/walk_0.png",
+   "frames": [
+    "en_sprinter",
+    "en_sprinter_f1",
+    "en_sprinter_f2",
+    "en_sprinter_f3",
+    "en_sprinter_f4",
+    "en_sprinter_f5"
+   ]
+  },
+  "glider": {
+   "id": "glider",
+   "sprite": "en_glider",
+   "heightM": 1.6,
+   "px": [
+    310,
+    160
+   ],
+   "source": "art-work/enemies/glider/walk_0.png",
+   "frames": [
+    "en_glider",
+    "en_glider_f1",
+    "en_glider_f2",
+    "en_glider_f3",
+    "en_glider_f4",
+    "en_glider_f5"
+   ]
+  },
+  "spitter": {
+   "id": "spitter",
+   "sprite": "en_spitter",
+   "heightM": 1.8,
+   "px": [
+    310,
+    160
+   ],
+   "source": "art-work/enemies/spitter/walk_0.png",
+   "frames": [
+    "en_spitter",
+    "en_spitter_f1",
+    "en_spitter_f2",
+    "en_spitter_f3",
+    "en_spitter_f4",
+    "en_spitter_f5"
+   ]
+  },
+  "rimback": {
+   "id": "rimeback",
+   "sprite": "en_rimback",
+   "heightM": 2.4,
+   "px": [
+    285,
+    160
+   ],
+   "source": "art-work/enemies/rimback/walk_0.png",
+   "frames": [
+    "en_rimback",
+    "en_rimback_f1",
+    "en_rimback_f2",
+    "en_rimback_f3",
+    "en_rimback_f4",
+    "en_rimback_f5"
+   ]
+  },
+  "bloater": {
+   "id": "bloater",
+   "sprite": "en_bloater",
+   "heightM": 2.1,
+   "px": [
+    279,
+    160
+   ],
+   "source": "art-work/enemies/bloater/walk_0.png",
+   "frames": [
+    "en_bloater",
+    "en_bloater_f1",
+    "en_bloater_f2",
+    "en_bloater_f3",
+    "en_bloater_f4",
+    "en_bloater_f5"
+   ]
+  },
+  "drillmaw": {
+   "id": "drillmaw",
+   "sprite": "en_drillmaw",
+   "heightM": 1.5,
+   "px": [
+    274,
+    160
+   ],
+   "source": "art-work/enemies/drillmaw/walk_0.png",
+   "frames": [
+    "en_drillmaw",
+    "en_drillmaw_f1",
+    "en_drillmaw_f2",
+    "en_drillmaw_f3",
+    "en_drillmaw_f4",
+    "en_drillmaw_f5"
+   ]
+  },
+  "walker": {
+   "id": "walker",
+   "sprite": "en_walker",
+   "heightM": 2.0,
+   "px": [
+    266,
+    160
+   ],
+   "source": "art-work/enemies/walker/walk_0.png",
+   "frames": [
+    "en_walker",
+    "en_walker_f1",
+    "en_walker_f2",
+    "en_walker_f3",
+    "en_walker_f4",
+    "en_walker_f5"
+   ]
+  },
+  "tank": {
+   "id": "tank",
+   "sprite": "en_tank",
+   "heightM": 2.9,
+   "px": [
+    251,
+    160
+   ],
+   "source": "art-work/enemies/tank/walk_0.png",
+   "frames": [
+    "en_tank",
+    "en_tank_f1",
+    "en_tank_f2",
+    "en_tank_f3",
+    "en_tank_f4",
+    "en_tank_f5"
+   ]
+  },
+  "bulwark": {
+   "id": "bulwark",
+   "sprite": "en_bulwark",
+   "heightM": 2.3,
+   "px": [
+    237,
+    160
+   ],
+   "source": "art-work/enemies/bulwark/walk_0.png",
+   "frames": [
+    "en_bulwark",
+    "en_bulwark_f1",
+    "en_bulwark_f2",
+    "en_bulwark_f3",
+    "en_bulwark_f4",
+    "en_bulwark_f5"
+   ]
+  },
+  "lantern": {
+   "id": "lantern",
+   "sprite": "en_lantern",
+   "heightM": 2.2,
+   "px": [
+    124,
+    160
+   ],
+   "source": "art-work/enemies/lantern/walk_0.png",
+   "frames": [
+    "en_lantern",
+    "en_lantern_f1",
+    "en_lantern_f2",
+    "en_lantern_f3",
+    "en_lantern_f4",
+    "en_lantern_f5"
+   ]
+  }
+ }
+}

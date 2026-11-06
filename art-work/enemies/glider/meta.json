@@ -1,0 +1,98 @@
+{
+ "id": "glider",
+ "artFolder": "glider",
+ "name": "Glider",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 35,
+  "speed": 7.0,
+  "dmg": 9,
+  "xp": 9,
+  "armor": 0,
+  "pack": "2–4",
+  "lane": "air",
+  "threat": "medium"
+ },
+ "ability": {
+  "name": "Glider",
+  "role": "ragged-wing leaper — vaults barricades and lands on a wagon",
+  "behaviour": [
+   "ignores barricades and rails, flies in a sine wave",
+   "lands on a wagon and chews a gun slot (3 s disable)",
+   "cannot be rammed while airborne"
+  ],
+  "counters": [
+   "tesla chain",
+   "shotgun as it lands",
+   "kill before it reaches the convoy"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/glider/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/glider/sprite.png",
+    "px": [
+     716,
+     479
+    ],
+    "coverage": 55.2
+   },
+   "hit": "art-work/enemies/glider/sprite_hit.png",
+   "dead": "art-work/enemies/glider/sprite_dead.png",
+   "preview": "art-work/enemies/glider/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    20,
+    140,
+    750,
+    880
+   ],
+   "components": 2,
+   "blob": 80976,
+   "trimmed": [
+    730,
+    483
+   ]
+  },
+  "palette": [
+   "#4A403A",
+   "#684F3F",
+   "#90775C",
+   "#6C6B63",
+   "#CACDAA",
+   "#988C74"
+  ],
+  "silhouette": "Small winged drone-creature: barrel body, two large eyes, rag wings, dangling talons.",
+  "pose": "front view, airborne, thrusters firing",
+  "features": [
+   "patched canvas wings on steel spars",
+   "twin blue thruster flames",
+   "clawed feet tucked under the body",
+   "stub exhaust pipe on the back"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_glider",
+  "heightM": 1.6,
+  "atlasPx": [
+   287,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/glider.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/glider.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_glider.png"
+ }
+}

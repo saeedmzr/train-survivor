@@ -1,0 +1,98 @@
+{
+ "id": "drillmaw",
+ "artFolder": "drillmaw",
+ "name": "Drillmaw",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 90,
+  "speed": 3.0,
+  "dmg": 15,
+  "xp": 16,
+  "armor": 2,
+  "pack": "1",
+  "lane": "underground",
+  "threat": "high"
+ },
+ "ability": {
+  "name": "Drillmaw",
+  "role": "burrower — tunnels under the track and surfaces ahead of the train",
+  "behaviour": [
+   "burrows at 5 m/s, untargetable, dust trail visible",
+   "surfaces 8 m ahead of the train",
+   "on surfacing it lunges 6 m — hit it during the 0.6 s wind-up"
+  ],
+  "counters": [
+   "time the brake",
+   "watch the dust trail",
+   "splash at the surface point"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/drillmaw/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/drillmaw/sprite.png",
+    "px": [
+     606,
+     472
+    ],
+    "coverage": 70.2
+   },
+   "hit": "art-work/enemies/drillmaw/sprite_hit.png",
+   "dead": "art-work/enemies/drillmaw/sprite_dead.png",
+   "preview": "art-work/enemies/drillmaw/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    30,
+    140,
+    740,
+    870
+   ],
+   "components": 5,
+   "blob": 89071,
+   "trimmed": [
+    710,
+    476
+   ]
+  },
+  "palette": [
+   "#725844",
+   "#473A32",
+   "#584031",
+   "#8B755C",
+   "#72432A",
+   "#C0AD82"
+  ],
+  "silhouette": "Drill-headed worm rearing out of the ballast: conical screw head, gear collar, clawed forelimbs.",
+  "pose": "front three-quarter, emerging from rubble",
+  "features": [
+   "star-shaped drill with a glowing amber core",
+   "stacked gear rings behind the head",
+   "hazard-striped collar",
+   "churned dirt and sparks at the base"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_drillmaw",
+  "heightM": 1.5,
+  "atlasPx": [
+   247,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/drillmaw.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/drillmaw.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_drillmaw.png"
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "biomes": 3,
+ "items/banners": 2,
+ "items/enemies": 16,
+ "items/hero": 2,
+ "items/hud_art": 4,
+ "items/markers": 7,
+ "items/obstacles": 4,
+ "items/pickups": 8,
+ "items/upgrade_icons": 9,
+ "screens/level-1-burning-metropolis": 20,
+ "screens/level-2-frozen-canyon": 20,
+ "screens/level-3-toxic-swamp": 20,
+ "ui": 1,
+ "ui/cards": 14,
+ "ui/control": 4,
+ "ui/hud": 10
+}

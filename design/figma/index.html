@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Train Survivor — Figma field guide</title>
+<style>
+ :root { color-scheme: dark; }
+ body { margin:0; background:#0E1522; color:#F2F4EE; font:14px/1.45 Inter,system-ui,sans-serif; }
+ header.top { padding:24px 32px; border-bottom:1px solid #22303F; }
+ h1 { font:700 26px/1.1 "Barlow Condensed",Inter,sans-serif; letter-spacing:.02em; margin:0 0 6px; }
+ .lede { color:#93A3AD; margin:0; }
+ nav a { color:#FFAB61; text-decoration:none; margin-right:18px; font:12px "IBM Plex Mono",monospace; }
+ section { padding:28px 32px 8px; border-top:1px solid #1B2735; }
+ h2 { font:700 30px/1 "Barlow Condensed",Inter,sans-serif; margin:0 0 4px; }
+ .sub { color:#EDFD78; margin:0 0 2px; }
+ .meta { color:#93A3AD; font:12px "IBM Plex Mono",monospace; margin:0; }
+ .board img { width:100%; border-radius:8px; border:1px solid #22303F; margin:14px 0 18px; }
+ .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; }
+ figure { margin:0; background:#131D2B; border:1px solid #22303F; border-radius:8px; overflow:hidden; }
+ figure img { width:100%; display:block; }
+ figcaption { padding:8px 10px 10px; font-size:12px; }
+ figcaption span { color:#93A3AD; }
+ figcaption b { color:#FFAB61; font-family:"IBM Plex Mono",monospace; margin-right:4px; }
+ .missing { padding:60px 10px; text-align:center; color:#93A3AD; background:#0E1522; font-size:12px; }
+ footer { padding:24px 32px 40px; color:#93A3AD; font-size:12px; }
+</style></head><body>
+<header class="top">
+  <h1>TRAIN SURVIVOR / GAMEPLAY FIELD GUIDE</h1>
+  <p class="lede">Extracted from Figma file <code>WCcq0Z67MX8Xuus3m5qVVa</code> · 3 biomes · 64 states.
+     Text + geometry live in <code>figma-spec.json</code>; per-level sheets in <code>levels/</code>.</p>
+  <nav><a href="#level-3-toxic-swamp">LEVEL 3: TOXIC SWAMP</a> <a href="#level-2-frozen-canyon">LEVEL 2: FROZEN CANYON</a> <a href="#level-1-burning-metropolis">LEVEL 1: BURNING METROPOLIS</a></nav>
+</header>
+
+  <section id="level-3-toxic-swamp">
+    <header>
+      <h2>LEVEL 3: TOXIC SWAMP</h2>
+      <p class="sub">Poison water. Hungry shadows. Burn a path through the mire.</p>
+      <p class="meta">24 STATES  /  1,000 m  /  STATIC STORYBOARD · IRONCLAD Mk III  ·  CANNON / GATLING / ROCKET / TESLA / ACID / SHOTGUN · READ LEFT → RIGHT · TOP ROW 01–10 · BOTTOM ROW 11–24 · +4 GROWTH MILESTONES · 24 states</p>
+    </header>
+    <div class="board"><a href="boards/level-3-toxic-swamp.png"><img src="boards/level-3-toxic-swamp.png" alt="board"></a></div>
+    <div class="grid">
+      <figure>
+        <a href="states/level-3-toxic-swamp/01-start-line.png"><img src="states/level-3-toxic-swamp/01-start-line.png" loading="lazy" alt="01-start-line"></a>
+        <figcaption><b>01</b> Start line<br><span>Full armor. Clear rails. Hold to depart.</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/02-train-moving.png"><img src="states/level-3-toxic-swamp/02-train-moving.png" loading="lazy" alt="02-train-moving"></a>
+        <figcaption><b>02</b> Train moving<br><span>Hold input · wheels engage</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/03-a-b-track-split-approaching.png"><img src="states/level-3-toxic-swamp/03-a-b-track-split-approaching.png" loading="lazy" alt="03-a-b-track-split-approaching"></a>
+        <figcaption><b>03</b> A/B Track Split approaching<br><span>Deceleration · brake sparks · two route panels appear</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/04-choosing-left-path-a.png"><img src="states/level-3-toxic-swamp/04-choosing-left-path-a.png" loading="lazy" alt="04-choosing-left-path-a"></a>
+        <figcaption><b>04</b> Choosing left path (A)<br><span>Route A · +Health / −Speed · brake sparks</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/05-choosing-right-path-b.png"><img src="states/level-3-toxic-swamp/05-choosing-right-path-b.png" loading="lazy" alt="05-choosing-right-path-b"></a>
+        <figcaption><b>05</b> Choosing right path (B)<br><span>Route B · alternate branch locked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/06-enemies-spawning-in-the-distance.png"><img src="states/level-3-toxic-swamp/06-enemies-spawning-in-the-distance.png" loading="lazy" alt="06-enemies-spawning-in-the-distance"></a>
+        <figcaption><b>06</b> Enemies spawning in the distance<br><span>Contact · silhouettes at the horizon</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/07-the-horde-swarming-the-track.png"><img src="states/level-3-toxic-swamp/07-the-horde-swarming-the-track.png" loading="lazy" alt="07-the-horde-swarming-the-track"></a>
+        <figcaption><b>07</b> The Horde swarming the track<br><span>Track overrun · encirclement begins</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/08-the-player-releasing-the-screen.png"><img src="states/level-3-toxic-swamp/08-the-player-releasing-the-screen.png" loading="lazy" alt="08-the-player-releasing-the-screen"></a>
+        <figcaption><b>08</b> The player releasing the screen<br><span>Lift finger · coast to a stop</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/09-train-braking.png"><img src="states/level-3-toxic-swamp/09-train-braking.png" loading="lazy" alt="09-train-braking"></a>
+        <figcaption><b>09</b> Train braking<br><span>Brake FX · metallic spark shower</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/10-turrets-auto-targeting.png"><img src="states/level-3-toxic-swamp/10-turrets-auto-targeting.png" loading="lazy" alt="10-turrets-auto-targeting"></a>
+        <figcaption><b>10</b> Turrets auto-targeting<br><span>Target acquisition · nearest hostile</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/11-turrets-firing.png"><img src="states/level-3-toxic-swamp/11-turrets-firing.png" loading="lazy" alt="11-turrets-firing"></a>
+        <figcaption><b>11</b> Turrets firing<br><span>Auto-fire · neon tracer volley</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/12-an-enemy-taking-damage.png"><img src="states/level-3-toxic-swamp/12-an-enemy-taking-damage.png" loading="lazy" alt="12-an-enemy-taking-damage"></a>
+        <figcaption><b>12</b> An enemy taking damage<br><span>White hit flash · impact confirmed</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/13-enemy-defeat.png"><img src="states/level-3-toxic-swamp/13-enemy-defeat.png" loading="lazy" alt="13-enemy-defeat"></a>
+        <figcaption><b>13</b> Enemy defeat<br><span>Slime burst · bones and ragdoll</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/14-defeating-a-fast-enemy-leaping-onto-the-train.png"><img src="states/level-3-toxic-swamp/14-defeating-a-fast-enemy-leaping-onto-the-train.png" loading="lazy" alt="14-defeating-a-fast-enemy-leaping-onto-the-train"></a>
+        <figcaption><b>14</b> Defeating a fast enemy leaping onto the train<br><span>Sprinter intercepted · airborne impact</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/15-encountering-a-giant-boss-enemy.png"><img src="states/level-3-toxic-swamp/15-encountering-a-giant-boss-enemy.png" loading="lazy" alt="15-encountering-a-giant-boss-enemy"></a>
+        <figcaption><b>15</b> Encountering a giant boss enemy<br><span>Boss encounter · heavy armor threat</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/16-collecting-xp-gems.png"><img src="states/level-3-toxic-swamp/16-collecting-xp-gems.png" loading="lazy" alt="16-collecting-xp-gems"></a>
+        <figcaption><b>16</b> Collecting XP gems<br><span>Magnet pickup · gems stream into XP</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/17-hitting-a-physical-barricade.png"><img src="states/level-3-toxic-swamp/17-hitting-a-physical-barricade.png" loading="lazy" alt="17-hitting-a-physical-barricade"></a>
+        <figcaption><b>17</b> Hitting a physical barricade<br><span>Impact · forward motion blocked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/18-destructible-barricade-destroyed-by-gunfire.png"><img src="states/level-3-toxic-swamp/18-destructible-barricade-destroyed-by-gunfire.png" loading="lazy" alt="18-destructible-barricade-destroyed-by-gunfire"></a>
+        <figcaption><b>18</b> Destructible barricade destroyed by gunfire<br><span>Sustained fire · obstacle breaks apart</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/19-level-complete.png"><img src="states/level-3-toxic-swamp/19-level-complete.png" loading="lazy" alt="19-level-complete"></a>
+        <figcaption><b>19</b> Level Complete<br><span>Red flag reached · route secured</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-3-toxic-swamp/20-level-up-upgrade-screen.png"><img src="states/level-3-toxic-swamp/20-level-up-upgrade-screen.png" loading="lazy" alt="20-level-up-upgrade-screen"></a>
+        <figcaption><b>20</b> Level Up / Upgrade Screen<br><span>Choose one · randomized upgrade reward</span></figcaption>
+      </figure>
+      <figure>
+        <div class="missing">no render<br><small>overflows frame</small></div>
+        <figcaption><b>21</b> Train Level 15 — Convoy Growth<br><span>+Turret · +Wagon · camera zooms out · whole train visible</span></figcaption>
+      </figure>
+      <figure>
+        <div class="missing">no render<br><small>overflows frame</small></div>
+        <figcaption><b>22</b> Cinematic Slow-Mo Impact Event<br><span>POW! burst · speed lines · glowing debris · zoomed-in camera</span></figcaption>
+      </figure>
+      <figure>
+        <div class="missing">no render<br><small>overflows frame</small></div>
+        <figcaption><b>23</b> Train Level 20 — Ultimate Convoy<br><span>4 wagons · 4 turrets · neon underglow · max camera zoom</span></figcaption>
+      </figure>
+      <figure>
+        <div class="missing">no render<br><small>overflows frame</small></div>
+        <figcaption><b>24</b> Convoy Growth Reference Chart<br><span>Thresholds · turret/wagon schedule · camera zoom progression</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="level-2-frozen-canyon">
+    <header>
+      <h2>LEVEL 2: FROZEN CANYON</h2>
+      <p class="sub">Subzero rails. Icebound predators. Keep the engine alive.</p>
+      <p class="meta">20 STATES  /  1,000 m  /  STATIC STORYBOARD · IRONCLAD Mk II  ·  CANNON / GATLING / ROCKET / TESLA / FIRE / SHOTGUN · READ LEFT → RIGHT · TOP ROW 01–10 · BOTTOM ROW 11–20 · 20 states</p>
+    </header>
+    <div class="board"><a href="boards/level-2-frozen-canyon.png"><img src="boards/level-2-frozen-canyon.png" alt="board"></a></div>
+    <div class="grid">
+      <figure>
+        <a href="states/level-2-frozen-canyon/01-start-line.png"><img src="states/level-2-frozen-canyon/01-start-line.png" loading="lazy" alt="01-start-line"></a>
+        <figcaption><b>01</b> Start line<br><span>Full armor. Clear rails. Hold to depart.</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/02-train-moving.png"><img src="states/level-2-frozen-canyon/02-train-moving.png" loading="lazy" alt="02-train-moving"></a>
+        <figcaption><b>02</b> Train moving<br><span>Hold input · wheels engage</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/03-a-b-track-split-approaching.png"><img src="states/level-2-frozen-canyon/03-a-b-track-split-approaching.png" loading="lazy" alt="03-a-b-track-split-approaching"></a>
+        <figcaption><b>03</b> A/B Track Split approaching<br><span>Two routes appear ahead</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/04-choosing-left-path-a.png"><img src="states/level-2-frozen-canyon/04-choosing-left-path-a.png" loading="lazy" alt="04-choosing-left-path-a"></a>
+        <figcaption><b>04</b> Choosing left path (A)<br><span>Route A · left branch locked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/05-choosing-right-path-b.png"><img src="states/level-2-frozen-canyon/05-choosing-right-path-b.png" loading="lazy" alt="05-choosing-right-path-b"></a>
+        <figcaption><b>05</b> Choosing right path (B)<br><span>Route B · alternate branch locked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/06-enemies-spawning-in-the-distance.png"><img src="states/level-2-frozen-canyon/06-enemies-spawning-in-the-distance.png" loading="lazy" alt="06-enemies-spawning-in-the-distance"></a>
+        <figcaption><b>06</b> Enemies spawning in the distance<br><span>Contact · silhouettes at the horizon</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/07-the-horde-swarming-the-track.png"><img src="states/level-2-frozen-canyon/07-the-horde-swarming-the-track.png" loading="lazy" alt="07-the-horde-swarming-the-track"></a>
+        <figcaption><b>07</b> The Horde swarming the track<br><span>Track overrun · encirclement begins</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/08-the-player-releasing-the-screen.png"><img src="states/level-2-frozen-canyon/08-the-player-releasing-the-screen.png" loading="lazy" alt="08-the-player-releasing-the-screen"></a>
+        <figcaption><b>08</b> The player releasing the screen<br><span>Lift finger · coast to a stop</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/09-train-braking.png"><img src="states/level-2-frozen-canyon/09-train-braking.png" loading="lazy" alt="09-train-braking"></a>
+        <figcaption><b>09</b> Train braking<br><span>Brake FX · metallic spark shower</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/10-turrets-auto-targeting.png"><img src="states/level-2-frozen-canyon/10-turrets-auto-targeting.png" loading="lazy" alt="10-turrets-auto-targeting"></a>
+        <figcaption><b>10</b> Turrets auto-targeting<br><span>Target acquisition · nearest hostile</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/11-turrets-firing.png"><img src="states/level-2-frozen-canyon/11-turrets-firing.png" loading="lazy" alt="11-turrets-firing"></a>
+        <figcaption><b>11</b> Turrets firing<br><span>Auto-fire · neon tracer volley</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/12-an-enemy-taking-damage.png"><img src="states/level-2-frozen-canyon/12-an-enemy-taking-damage.png" loading="lazy" alt="12-an-enemy-taking-damage"></a>
+        <figcaption><b>12</b> An enemy taking damage<br><span>White hit flash · impact confirmed</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/13-enemy-defeat.png"><img src="states/level-2-frozen-canyon/13-enemy-defeat.png" loading="lazy" alt="13-enemy-defeat"></a>
+        <figcaption><b>13</b> Enemy defeat<br><span>Slime burst · bones and ragdoll</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/14-defeating-a-fast-enemy-leaping-onto-the-train.png"><img src="states/level-2-frozen-canyon/14-defeating-a-fast-enemy-leaping-onto-the-train.png" loading="lazy" alt="14-defeating-a-fast-enemy-leaping-onto-the-train"></a>
+        <figcaption><b>14</b> Defeating a fast enemy leaping onto the train<br><span>Sprinter intercepted · airborne impact</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/15-encountering-a-giant-boss-enemy.png"><img src="states/level-2-frozen-canyon/15-encountering-a-giant-boss-enemy.png" loading="lazy" alt="15-encountering-a-giant-boss-enemy"></a>
+        <figcaption><b>15</b> Encountering a giant boss enemy<br><span>Boss encounter · heavy armor threat</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/16-collecting-xp-gems.png"><img src="states/level-2-frozen-canyon/16-collecting-xp-gems.png" loading="lazy" alt="16-collecting-xp-gems"></a>
+        <figcaption><b>16</b> Collecting XP gems<br><span>Magnet pickup · gems stream into XP</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/17-hitting-a-physical-barricade.png"><img src="states/level-2-frozen-canyon/17-hitting-a-physical-barricade.png" loading="lazy" alt="17-hitting-a-physical-barricade"></a>
+        <figcaption><b>17</b> Hitting a physical barricade<br><span>Impact · forward motion blocked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/18-destructible-barricade-destroyed-by-gunfire.png"><img src="states/level-2-frozen-canyon/18-destructible-barricade-destroyed-by-gunfire.png" loading="lazy" alt="18-destructible-barricade-destroyed-by-gunfire"></a>
+        <figcaption><b>18</b> Destructible barricade destroyed by gunfire<br><span>Sustained fire · obstacle breaks apart</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/19-level-complete.png"><img src="states/level-2-frozen-canyon/19-level-complete.png" loading="lazy" alt="19-level-complete"></a>
+        <figcaption><b>19</b> Level Complete<br><span>Red flag reached · route secured</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-2-frozen-canyon/20-level-up-upgrade-screen.png"><img src="states/level-2-frozen-canyon/20-level-up-upgrade-screen.png" loading="lazy" alt="20-level-up-upgrade-screen"></a>
+        <figcaption><b>20</b> Level Up / Upgrade Screen<br><span>Choose one · randomized upgrade reward</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="level-1-burning-metropolis">
+    <header>
+      <h2>LEVEL 1: BURNING METROPOLIS</h2>
+      <p class="sub">Ember-lit avenues. A broken city. One way out.</p>
+      <p class="meta">20 STATES  /  1,000 m  /  STATIC STORYBOARD · IRONCLAD Mk I  ·  CANNON / GATLING / ROCKET / TESLA / FIRE / SHOTGUN · READ LEFT → RIGHT · TOP ROW 01–10 · BOTTOM ROW 11–20 · 20 states</p>
+    </header>
+    <div class="board"><a href="boards/level-1-burning-metropolis.png"><img src="boards/level-1-burning-metropolis.png" alt="board"></a></div>
+    <div class="grid">
+      <figure>
+        <a href="states/level-1-burning-metropolis/01-start-line.png"><img src="states/level-1-burning-metropolis/01-start-line.png" loading="lazy" alt="01-start-line"></a>
+        <figcaption><b>01</b> Start line<br><span>Full armor. Clear rails. Hold to depart.</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/02-train-moving.png"><img src="states/level-1-burning-metropolis/02-train-moving.png" loading="lazy" alt="02-train-moving"></a>
+        <figcaption><b>02</b> Train moving<br><span>Hold input · wheels engage</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/03-a-b-track-split-approaching.png"><img src="states/level-1-burning-metropolis/03-a-b-track-split-approaching.png" loading="lazy" alt="03-a-b-track-split-approaching"></a>
+        <figcaption><b>03</b> A/B Track Split approaching<br><span>Two routes appear ahead</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/04-choosing-left-path-a.png"><img src="states/level-1-burning-metropolis/04-choosing-left-path-a.png" loading="lazy" alt="04-choosing-left-path-a"></a>
+        <figcaption><b>04</b> Choosing left path (A)<br><span>Route A · left branch locked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/05-choosing-right-path-b.png"><img src="states/level-1-burning-metropolis/05-choosing-right-path-b.png" loading="lazy" alt="05-choosing-right-path-b"></a>
+        <figcaption><b>05</b> Choosing right path (B)<br><span>Route B · alternate branch locked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/06-enemies-spawning-in-the-distance.png"><img src="states/level-1-burning-metropolis/06-enemies-spawning-in-the-distance.png" loading="lazy" alt="06-enemies-spawning-in-the-distance"></a>
+        <figcaption><b>06</b> Enemies spawning in the distance<br><span>Contact · silhouettes at the horizon</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/07-the-horde-swarming-the-track.png"><img src="states/level-1-burning-metropolis/07-the-horde-swarming-the-track.png" loading="lazy" alt="07-the-horde-swarming-the-track"></a>
+        <figcaption><b>07</b> The Horde swarming the track<br><span>Track overrun · encirclement begins</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/08-the-player-releasing-the-screen.png"><img src="states/level-1-burning-metropolis/08-the-player-releasing-the-screen.png" loading="lazy" alt="08-the-player-releasing-the-screen"></a>
+        <figcaption><b>08</b> The player releasing the screen<br><span>Lift finger · coast to a stop</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/09-train-braking.png"><img src="states/level-1-burning-metropolis/09-train-braking.png" loading="lazy" alt="09-train-braking"></a>
+        <figcaption><b>09</b> Train braking<br><span>Brake FX · metallic spark shower</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/10-turrets-auto-targeting.png"><img src="states/level-1-burning-metropolis/10-turrets-auto-targeting.png" loading="lazy" alt="10-turrets-auto-targeting"></a>
+        <figcaption><b>10</b> Turrets auto-targeting<br><span>Target acquisition · nearest hostile</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/11-turrets-firing.png"><img src="states/level-1-burning-metropolis/11-turrets-firing.png" loading="lazy" alt="11-turrets-firing"></a>
+        <figcaption><b>11</b> Turrets firing<br><span>Auto-fire · neon tracer volley</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/12-an-enemy-taking-damage.png"><img src="states/level-1-burning-metropolis/12-an-enemy-taking-damage.png" loading="lazy" alt="12-an-enemy-taking-damage"></a>
+        <figcaption><b>12</b> An enemy taking damage<br><span>White hit flash · impact confirmed</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/13-enemy-defeat.png"><img src="states/level-1-burning-metropolis/13-enemy-defeat.png" loading="lazy" alt="13-enemy-defeat"></a>
+        <figcaption><b>13</b> Enemy defeat<br><span>Slime burst · bones and ragdoll</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/14-defeating-a-fast-enemy-leaping-onto-the-train.png"><img src="states/level-1-burning-metropolis/14-defeating-a-fast-enemy-leaping-onto-the-train.png" loading="lazy" alt="14-defeating-a-fast-enemy-leaping-onto-the-train"></a>
+        <figcaption><b>14</b> Defeating a fast enemy leaping onto the train<br><span>Sprinter intercepted · airborne impact</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/15-encountering-a-giant-boss-enemy.png"><img src="states/level-1-burning-metropolis/15-encountering-a-giant-boss-enemy.png" loading="lazy" alt="15-encountering-a-giant-boss-enemy"></a>
+        <figcaption><b>15</b> Encountering a giant boss enemy<br><span>Boss encounter · heavy armor threat</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/16-collecting-xp-gems.png"><img src="states/level-1-burning-metropolis/16-collecting-xp-gems.png" loading="lazy" alt="16-collecting-xp-gems"></a>
+        <figcaption><b>16</b> Collecting XP gems<br><span>Magnet pickup · gems stream into XP</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/17-hitting-a-physical-barricade.png"><img src="states/level-1-burning-metropolis/17-hitting-a-physical-barricade.png" loading="lazy" alt="17-hitting-a-physical-barricade"></a>
+        <figcaption><b>17</b> Hitting a physical barricade<br><span>Impact · forward motion blocked</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/18-destructible-barricade-destroyed-by-gunfire.png"><img src="states/level-1-burning-metropolis/18-destructible-barricade-destroyed-by-gunfire.png" loading="lazy" alt="18-destructible-barricade-destroyed-by-gunfire"></a>
+        <figcaption><b>18</b> Destructible barricade destroyed by gunfire<br><span>Sustained fire · obstacle breaks apart</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/19-level-complete.png"><img src="states/level-1-burning-metropolis/19-level-complete.png" loading="lazy" alt="19-level-complete"></a>
+        <figcaption><b>19</b> Level Complete<br><span>Red flag reached · route secured</span></figcaption>
+      </figure>
+      <figure>
+        <a href="states/level-1-burning-metropolis/20-level-up-upgrade-screen.png"><img src="states/level-1-burning-metropolis/20-level-up-upgrade-screen.png" loading="lazy" alt="20-level-up-upgrade-screen"></a>
+        <figcaption><b>20</b> Level Up / Upgrade Screen<br><span>Choose one · randomized upgrade reward</span></figcaption>
+      </figure>
+    </div>
+  </section>
+<footer>Renders exported at 2× from the Figma API. States without a render overflow their board frame in Figma.</footer>
+</body></html>

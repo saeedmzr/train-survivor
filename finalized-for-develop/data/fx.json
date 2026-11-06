@@ -1,0 +1,97 @@
+{
+ "version": 1,
+ "impactByDamageType": {
+  "kinetic": "impact_kinetic",
+  "fire": "fire_burst",
+  "blast": "blast_ring",
+  "acid": "acid_splash",
+  "electric": "electric_burst"
+ },
+ "deathByEnemy": {
+  "walker": "death_goo",
+  "sprinter": "death_bone",
+  "tank": "death_metal",
+  "crawler": "death_goo",
+  "bloater": "blast_ring",
+  "spitter": "acid_splash",
+  "shrieker": "death_bone",
+  "bulwark": "death_metal",
+  "glider": "death_goo",
+  "drillmaw": "death_goo",
+  "mites": "death_swarm",
+  "lantern": "death_bone",
+  "rimeback": "death_ice"
+ },
+ "fx": [
+  {
+   "id": "impact_kinetic",
+   "name": "kinetic impact",
+   "sprite": "fx/fx_impact_kinetic.png",
+   "frames": 1,
+   "durationMs": 380
+  },
+  {
+   "id": "fire_burst",
+   "name": "fire burst",
+   "sprite": "fx/fx_fire_burst.png",
+   "frames": 1,
+   "durationMs": 380
+  },
+  {
+   "id": "blast_ring",
+   "name": "blast / rocket",
+   "sprite": "fx/fx_blast_ring.png",
+   "frames": 1,
+   "durationMs": 380
+  },
+  {
+   "id": "acid_splash",
+   "name": "acid splash",
+   "sprite": "fx/fx_acid_splash.png",
+   "frames": 1,
+   "durationMs": 380
+  },
+  {
+   "id": "electric_burst",
+   "name": "electric burst",
+   "sprite": "fx/fx_electric_burst.png",
+   "frames": 1,
+   "durationMs": 380
+  },
+  {
+   "id": "death_goo",
+   "name": "flesh / goo death",
+   "sprite": "fx/fx_death_goo.png",
+   "frames": 1,
+   "durationMs": 520
+  },
+  {
+   "id": "death_metal",
+   "name": "armoured death",
+   "sprite": "fx/fx_death_metal.png",
+   "frames": 1,
+   "durationMs": 520
+  },
+  {
+   "id": "death_ice",
+   "name": "frozen shatter",
+   "sprite": "fx/fx_death_ice.png",
+   "frames": 1,
+   "durationMs": 520
+  },
+  {
+   "id": "death_bone",
+   "name": "skeletal burst",
+   "sprite": "fx/fx_death_bone.png",
+   "frames": 1,
+   "durationMs": 520
+  },
+  {
+   "id": "death_swarm",
+   "name": "swarm scatter",
+   "sprite": "fx/fx_death_swarm.png",
+   "frames": 1,
+   "durationMs": 520
+  }
+ ]
+}

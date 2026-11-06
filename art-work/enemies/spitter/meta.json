@@ -1,0 +1,98 @@
+{
+ "id": "spitter",
+ "artFolder": "spitter",
+ "name": "Spitter",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 45,
+  "speed": 2.8,
+  "dmg": 7,
+  "xp": 10,
+  "armor": 0,
+  "pack": "1–3",
+  "lane": "embankment",
+  "threat": "medium"
+ },
+ "ability": {
+  "name": "Spitter",
+  "role": "ranged acid lobber on the embankment — arcs globs over barricades",
+  "behaviour": [
+   "stops at 25 m and lobs acid globs in an arc over barricades",
+   "repositions when the train brakes",
+   "globs leave a pool for 2 s"
+  ],
+  "counters": [
+   "shoot at range",
+   "ram it before it settles",
+   "brake to break its lead"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/spitter/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/spitter/sprite.png",
+    "px": [
+     680,
+     458
+    ],
+    "coverage": 69.1
+   },
+   "hit": "art-work/enemies/spitter/sprite_hit.png",
+   "dead": "art-work/enemies/spitter/sprite_dead.png",
+   "preview": "art-work/enemies/spitter/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    30,
+    150,
+    740,
+    860
+   ],
+   "components": 2,
+   "blob": 90189,
+   "trimmed": [
+    680,
+    462
+   ]
+  },
+  "palette": [
+   "#3C4437",
+   "#635040",
+   "#837B5C",
+   "#55774A",
+   "#A4D571",
+   "#66BD54"
+  ],
+  "silhouette": "Quadruped carrying a huge cannon-like acid sac on its back, aimed forward, jaws open.",
+  "pose": "side three-quarter, braced on four legs",
+  "features": [
+   "glowing green tank/cannon strapped to the spine",
+   "drip-covered needle teeth",
+   "hazard-yellow eye",
+   "long tail counterweight"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_spitter",
+  "heightM": 1.8,
+  "atlasPx": [
+   285,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/spitter.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/spitter.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_spitter.png"
+ }
+}

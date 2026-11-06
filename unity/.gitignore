@@ -1,0 +1,35 @@
+# Unity
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Generated C# project files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+.vs/
+.idea/
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+
+# Build pipeline
+*.apk
+*.aab
+*.unitypackage
+crashlytics-build.properties
+
+# OS
+.DS_Store
+Thumbs.db

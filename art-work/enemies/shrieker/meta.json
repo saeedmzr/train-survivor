@@ -1,0 +1,97 @@
+{
+ "id": "shrieker",
+ "artFolder": "shrieker",
+ "name": "Shrieker",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 70,
+  "speed": 2.6,
+  "dmg": 0,
+  "xp": 15,
+  "armor": 0,
+  "pack": "1",
+  "lane": "rear",
+  "threat": "medium"
+ },
+ "ability": {
+  "name": "Shrieker",
+  "role": "support screamer — buffs nearby enemies and calls the horde",
+  "behaviour": [
+   "aura: +15 % movement speed to enemies within 12 m",
+   "screams every 8 s, spawning 6 walkers",
+   "scream is a 1.5 s telegraph you can hear"
+  ],
+  "counters": [
+   "focus it first",
+   "rocket into the spawn point"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/shrieker/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/shrieker/sprite.png",
+    "px": [
+     710,
+     458
+    ],
+    "coverage": 60.5
+   },
+   "hit": "art-work/enemies/shrieker/sprite_hit.png",
+   "dead": "art-work/enemies/shrieker/sprite_dead.png",
+   "preview": "art-work/enemies/shrieker/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    30,
+    150,
+    740,
+    860
+   ],
+   "components": 1,
+   "blob": 93334,
+   "trimmed": [
+    710,
+    462
+   ]
+  },
+  "palette": [
+   "#2B443E",
+   "#626858",
+   "#453D3A",
+   "#5B4941",
+   "#75B69A",
+   "#ADB798"
+  ],
+  "silhouette": "Skeletal zombie with two gramophone horns growing out of its head, arms flung out, screaming.",
+  "pose": "front view, mid-scream",
+  "features": [
+   "twin brass horn cones",
+   "concentric green sound rings",
+   "tattered coat over exposed ribs",
+   "ember sparks off the shoulders"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_shrieker",
+  "heightM": 1.75,
+  "atlasPx": [
+   298,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/shrieker.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/shrieker.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_shrieker.png"
+ }
+}

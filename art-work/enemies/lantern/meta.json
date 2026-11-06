@@ -1,0 +1,98 @@
+{
+ "id": "lantern",
+ "artFolder": "lantern",
+ "name": "The Lantern",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 85,
+  "speed": 2.0,
+  "dmg": 6,
+  "xp": 20,
+  "armor": 0,
+  "pack": "1",
+  "lane": "rear",
+  "threat": "high"
+ },
+ "ability": {
+  "name": "The Lantern",
+  "role": "necromancer — raises fallen zombies as husks until killed",
+  "behaviour": [
+   "raises one dead enemy every 6 s as a husk at 50 % HP",
+   "husks collapse when it dies",
+   "lamp glow lights the area — it is always visible in fog"
+  ],
+  "counters": [
+   "rush it",
+   "piercing rounds through the husks",
+   "fire trail denies the corpse line"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/lantern/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/lantern/sprite.png",
+    "px": [
+     424,
+     674
+    ],
+    "coverage": 58.7
+   },
+   "hit": "art-work/enemies/lantern/sprite_hit.png",
+   "dead": "art-work/enemies/lantern/sprite_dead.png",
+   "preview": "art-work/enemies/lantern/cutout_preview.png"
+  },
+  "extraction": {
+   "method": "polygon+detail",
+   "sourceBox": [
+    60,
+    55,
+    720,
+    880
+   ],
+   "components": null,
+   "blob": null,
+   "trimmed": [
+    424,
+    674
+   ]
+  },
+  "palette": [
+   "#48715D",
+   "#2E4D42",
+   "#535845",
+   "#4C4235",
+   "#84B9A1",
+   "#3EAB96"
+  ],
+  "silhouette": "Tall robed skeleton conductor in a wide-brimmed witch hat, holding a caged lantern on a chain.",
+  "pose": "three-quarter front, standing, lamp arm raised",
+  "features": [
+   "caged lantern with a cyan flame on a chain",
+   "glowing cyan eye sockets in a stitched skull",
+   "mechanical forearm and exposed rib cage",
+   "rope belt over a ragged robe"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_lantern",
+  "heightM": 2.2,
+  "atlasPx": [
+   121,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/lantern.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/lantern.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_lantern.png"
+ }
+}

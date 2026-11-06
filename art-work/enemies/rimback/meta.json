@@ -1,0 +1,97 @@
+{
+ "id": "rimeback",
+ "artFolder": "rimback",
+ "name": "Rimeback",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 140,
+  "speed": 1.8,
+  "dmg": 16,
+  "xp": 22,
+  "armor": 4,
+  "pack": "1",
+  "lane": "rails",
+  "threat": "high"
+ },
+ "ability": {
+  "name": "Rimeback",
+  "role": "armoured brute — its hit chills the throttle for 2 s",
+  "behaviour": [
+   "on hit: chills the throttle (−35 % for 2 s)",
+   "ice armour cracks after 3 hits, then takes double damage",
+   "slow turn, wide sweep — the ram is a real option"
+  ],
+  "counters": [
+   "fire (melts armour fastest)",
+   "ram then shoot the cracked plates"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/rimback/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/rimback/sprite.png",
+    "px": [
+     730,
+     485
+    ],
+    "coverage": 74.4
+   },
+   "hit": "art-work/enemies/rimback/sprite_hit.png",
+   "dead": "art-work/enemies/rimback/sprite_dead.png",
+   "preview": "art-work/enemies/rimback/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    20,
+    130,
+    750,
+    880
+   ],
+   "components": 1,
+   "blob": 110096,
+   "trimmed": [
+    730,
+    489
+   ]
+  },
+  "palette": [
+   "#354C4E",
+   "#708D8B",
+   "#63625D",
+   "#59473E",
+   "#83D8DD",
+   "#C1F3EF"
+  ],
+  "silhouette": "Massive armoured beast, low and wide, crowned with ice spikes over the back and a plated head.",
+  "pose": "front three-quarter, crouched, shoulders forward",
+  "features": [
+   "ridge of pale-blue ice crystals",
+   "frost-breathing jaw with tusks",
+   "exhaust stacks venting smoke",
+   "cracked rust plates on the shoulders"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_rimback",
+  "heightM": 2.4,
+  "atlasPx": [
+   289,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/rimback.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/rimeback.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_rimeback.png"
+ }
+}

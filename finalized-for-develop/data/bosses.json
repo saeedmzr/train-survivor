@@ -1,0 +1,485 @@
+{
+ "version": 1,
+ "bosses": [
+  {
+   "id": "the_inferno",
+   "name": "The Inferno",
+   "biome": "burning-metropolis",
+   "role": "Giant infected juggernaut: molten seams open in its chest between attacks.",
+   "hp": 2400,
+   "arena": "straight avenue, 2 barricade lanes",
+   "entry": "stand-off at 30 m; it walks, never runs",
+   "weakness": "chest vent only in phase 2+",
+   "attackNote": "every attack has a 0.8 s wind-up you can brake out of",
+   "reward": "+1 wagon slot, 400 XP",
+   "phases": [
+    {
+     "name": "Molten Walk",
+     "at": 1.0,
+     "attacks": [
+      "sweeping arm slam (2.5 m)",
+      "ember spit: 3 slow fireballs"
+     ]
+    },
+    {
+     "name": "Vent",
+     "at": 0.55,
+     "attacks": [
+      "chest vents open for 6 s — weak point ×3",
+      "lava trail follows its feet"
+     ]
+    },
+    {
+     "name": "Overheat",
+     "at": 0.25,
+     "attacks": [
+      "enraged: double slam, embers become a ring",
+      "arena starts burning from the edges"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_the_inferno.png",
+   "card": "bosses/cards/card_the_inferno.png",
+   "palette": [
+    "#3E6B4E",
+    "#16241B",
+    "#8FBF84",
+    "#FF7A3C",
+    "#FF5A1E"
+   ],
+   "prompt": "The Inferno — Giant infected juggernaut: molten seams open in its chest between attacks.. burning-metropolis. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "railmaw",
+   "name": "Railmaw",
+   "biome": "burning-metropolis",
+   "role": "A worm that lives under the ballast and wears the track as teeth.",
+   "hp": 1900,
+   "arena": "long straight, rails twist",
+   "entry": "burrows ahead, surfaces behind the train",
+   "weakness": "teeth ring: shoot the mouth during the coil",
+   "attackNote": "it never attacks from the front — watch the sides",
+   "reward": "repair kit, 350 XP",
+   "phases": [
+    {
+     "name": "Coil",
+     "at": 1.0,
+     "attacks": [
+      "bursts from the ballast beside the track",
+      "rail-shard volley, 5 shards in a fan"
+     ]
+    },
+    {
+     "name": "Squeeze",
+     "at": 0.6,
+     "attacks": [
+      "coils across the track, blocks the lane for 4 s",
+      "telegraph: rails bend before it rises"
+     ]
+    },
+    {
+     "name": "Collapse",
+     "at": 0.3,
+     "attacks": [
+      "digs under and takes the track with it — forced brake",
+      "spawns 4 crawlers from the hole"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_railmaw.png",
+   "card": "bosses/cards/card_railmaw.png",
+   "palette": [
+    "#7A6350",
+    "#241C14",
+    "#C9AE8A",
+    "#D9D2C0",
+    "#FF8A3C"
+   ],
+   "prompt": "Railmaw — A worm that lives under the ballast and wears the track as teeth.. burning-metropolis. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "slagheart",
+   "name": "Slagheart",
+   "biome": "burning-metropolis",
+   "role": "Walking furnace: the grate is the weak point, and it knows it.",
+   "hp": 2600,
+   "arena": "furnace yard, floor vents",
+   "entry": "strides in from a side street, slower than it looks",
+   "weakness": "the grate",
+   "attackNote": "slag rain is telegraphed by the chimney glowing white",
+   "reward": "fire card, 450 XP",
+   "phases": [
+    {
+     "name": "Bellows",
+     "at": 1.0,
+     "attacks": [
+      "stomp shockwave (4 m)",
+      "vent bursts: 4 flame jets on a timer"
+     ]
+    },
+    {
+     "name": "Stoke",
+     "at": 0.5,
+     "attacks": [
+      "opens the grate core — ×4 damage for 4 s, then it slams shut",
+      "chimney drops slag rain"
+     ]
+    },
+    {
+     "name": "Meltdown",
+     "at": 0.2,
+     "attacks": [
+      "core exposed permanently but it chases at double speed",
+      "leaves a lava pool wherever it stands"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_slagheart.png",
+   "card": "bosses/cards/card_slagheart.png",
+   "palette": [
+    "#6B4A3E",
+    "#1E1410",
+    "#C08A6E",
+    "#FFB25C",
+    "#FF7A1E"
+   ],
+   "prompt": "Slagheart — Walking furnace: the grate is the weak point, and it knows it.. burning-metropolis. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "the_conductor",
+   "name": "The Conductor",
+   "biome": "burning-metropolis",
+   "role": "Undead stationmaster with a signal lamp; calls trains that were never built.",
+   "hp": 2100,
+   "arena": "station platform, two switches",
+   "entry": "stands on the platform; the fight starts when the signal turns red",
+   "weakness": "lamp staff arm — break it to stop the blind",
+   "attackNote": "the semaphore never lies: red means move",
+   "reward": "card choice ×2, 500 XP",
+   "phases": [
+    {
+     "name": "Timetable",
+     "at": 1.0,
+     "attacks": [
+      "semaphore arm signals which lane is safe",
+      "summons a ghost train that runs the opposite lane"
+     ]
+    },
+    {
+     "name": "Delay",
+     "at": 0.6,
+     "attacks": [
+      "lamp staff blinds a gun slot for 4 s",
+      "husks rise from the platform"
+     ]
+    },
+    {
+     "name": "Last Call",
+     "at": 0.25,
+     "attacks": [
+      "switches the tracks under you — forced A/B pick",
+      "attacks twice as fast, stops signalling"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_the_conductor.png",
+   "card": "bosses/cards/card_the_conductor.png",
+   "palette": [
+    "#2C4050",
+    "#0E161D",
+    "#7E9CAE",
+    "#D8B24A",
+    "#5CFFCF"
+   ],
+   "prompt": "The Conductor — Undead stationmaster with a signal lamp; calls trains that were never built.. burning-metropolis. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "glacier_maw",
+   "name": "Glacier Maw",
+   "biome": "frozen-canyon",
+   "role": "A jaw the size of a tunnel, with icicle teeth that regrow every phase.",
+   "hp": 3000,
+   "arena": "frozen canyon, ice walls",
+   "entry": "blocks the canyon mouth; you have to break in",
+   "weakness": "between plates at the jaw hinge",
+   "attackNote": "frost breath is a 1 s inhale — brake out of the cone",
+   "reward": "tesla coil, 550 XP",
+   "phases": [
+    {
+     "name": "Bite",
+     "at": 1.0,
+     "attacks": [
+      "lunges the width of the track",
+      "frost breath cone that freezes the nearest turret"
+     ]
+    },
+    {
+     "name": "Shell",
+     "at": 0.6,
+     "attacks": [
+      "ice plates: 3 plates, 1 breaks per 400 damage",
+      "falling icicles from the ceiling"
+     ]
+    },
+    {
+     "name": "Thaw",
+     "at": 0.25,
+     "attacks": [
+      "armour gone, speed doubled",
+      "the floor becomes slick — braking is halved"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_glacier_maw.png",
+   "card": "bosses/cards/card_glacier_maw.png",
+   "palette": [
+    "#6E9CB8",
+    "#14242F",
+    "#DCF2FA",
+    "#9BE8FF",
+    "#63C8FF"
+   ],
+   "prompt": "Glacier Maw — A jaw the size of a tunnel, with icicle teeth that regrow every phase.. frozen-canyon. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "rime_engine",
+   "name": "Rime Engine",
+   "biome": "frozen-canyon",
+   "role": "A train like yours, grown over with ice and aimed the wrong way.",
+   "hp": 3200,
+   "arena": "head-on duel on a single track",
+   "entry": "the mirror fight: it comes at you on your own rails",
+   "weakness": "the headlight — shoot it to blind its aim",
+   "attackNote": "it mirrors your speed: brake and it overshoots",
+   "reward": "+1 gun slot per wagon, 600 XP",
+   "phases": [
+    {
+     "name": "Head-on",
+     "at": 1.0,
+     "attacks": [
+      "rams — the only way out is a side branch",
+      "side turrets fire in sync with yours"
+     ]
+    },
+    {
+     "name": "Boiler Burst",
+     "at": 0.6,
+     "attacks": [
+      "vents steam that hides the track for 3 s",
+      "drops ice caltrops behind it"
+     ]
+    },
+    {
+     "name": "Derail",
+     "at": 0.25,
+     "attacks": [
+      "loses a wheel, drifts across both lanes",
+      "turret fire becomes a continuous beam"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_rime_engine.png",
+   "card": "bosses/cards/card_rime_engine.png",
+   "palette": [
+    "#5A7E92",
+    "#141F27",
+    "#CFE8F4",
+    "#FF6B57",
+    "#8FE4FF"
+   ],
+   "prompt": "Rime Engine — A train like yours, grown over with ice and aimed the wrong way.. frozen-canyon. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "mireheart",
+   "name": "Mireheart",
+   "biome": "toxic-swamp",
+   "role": "Fungal colossus; its cap breathes spore clouds that hide the horde.",
+   "hp": 2800,
+   "arena": "swamp clearing, water on both sides",
+   "entry": "rooted at first; it pulls itself free at 70 %",
+   "weakness": "the stalk under the cap",
+   "attackNote": "spore clouds do not damage — they hide; shoot blind into them",
+   "reward": "acid turret, 500 XP",
+   "phases": [
+    {
+     "name": "Rooted",
+     "at": 1.0,
+     "attacks": [
+      "spore clouds: 4 clouds that hide enemies",
+      "tendril sweep across the track"
+     ]
+    },
+    {
+     "name": "Uproot",
+     "at": 0.7,
+     "attacks": [
+      "walks on roots, spawns 2 spitters per 10 s",
+      "acid rain pools on the rails"
+     ]
+    },
+    {
+     "name": "Bloom",
+     "at": 0.3,
+     "attacks": [
+      "cap bursts: 8 spore mines",
+      "tendrils grab the train and hold it for 2 s"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_mireheart.png",
+   "card": "bosses/cards/card_mireheart.png",
+   "palette": [
+    "#6E4C7A",
+    "#1E1424",
+    "#C89BD4",
+    "#B6FF4D",
+    "#9CFF3C"
+   ],
+   "prompt": "Mireheart — Fungal colossus; its cap breathes spore clouds that hide the horde.. toxic-swamp. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "hollow_queen",
+   "name": "Hollow Queen",
+   "biome": "toxic-swamp",
+   "role": "A sac on legs that births swarmlings until you break the eggs.",
+   "hp": 2500,
+   "arena": "nest of egg sacs on the track",
+   "entry": "the nest is already on the track; she is inside it",
+   "weakness": "eggs — they are the real health bar",
+   "attackNote": "she cannot move; the danger is the swarm",
+   "reward": "rapid fire, 480 XP",
+   "phases": [
+    {
+     "name": "Brood",
+     "at": 1.0,
+     "attacks": [
+      "births 3 swarmlings every 5 s",
+      "shell hardens while birthing (×0.5 damage)"
+     ]
+    },
+    {
+     "name": "Rupture",
+     "at": 0.6,
+     "attacks": [
+      "sac bursts — 6 mites, shell softens ×1.5",
+      "web slows the train in a 10 m patch"
+     ]
+    },
+    {
+     "name": "Last Eggs",
+     "at": 0.3,
+     "attacks": [
+      "guards 3 eggs; each egg killed removes a swarm wave",
+      "body attacks with 4 arms"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_hollow_queen.png",
+   "card": "bosses/cards/card_hollow_queen.png",
+   "palette": [
+    "#8A5A6E",
+    "#241419",
+    "#D8A0AE",
+    "#FFD06B",
+    "#FF8A5C"
+   ],
+   "prompt": "Hollow Queen — A sac on legs that births swarmlings until you break the eggs.. toxic-swamp. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "iron_choir",
+   "name": "Iron Choir",
+   "biome": "frozen-canyon",
+   "role": "Three bell-torsos on one frame: kill them in order or the dead one sings.",
+   "hp": 3600,
+   "arena": "bridge with three bell towers",
+   "entry": "three torsos on one frame, singing in tune",
+   "weakness": "the chain links between torsos (breaks the sync)",
+   "attackNote": "listen for which bell rings first",
+   "reward": "tesla + rocket, 700 XP",
+   "phases": [
+    {
+     "name": "Three Voices",
+     "at": 1.0,
+     "attacks": [
+      "each torso has its own attack pattern: left shockwave, middle beam, right swarm",
+      "kill order is left → right → middle"
+     ]
+    },
+    {
+     "name": "Discord",
+     "at": 0.6,
+     "attacks": [
+      "a dead torso keeps attacking for 8 s unless the next is killed fast",
+      "bells ring: screen shake, aim drifts"
+     ]
+    },
+    {
+     "name": "Silence",
+     "at": 0.2,
+     "attacks": [
+      "last torso absorbs the others: bigger, faster, all three patterns",
+      "the frame collapses, arena narrows"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_iron_choir.png",
+   "card": "bosses/cards/card_iron_choir.png",
+   "palette": [
+    "#5F6E7E",
+    "#151D24",
+    "#B9C8D4",
+    "#E8C35A",
+    "#FFD27A"
+   ],
+   "prompt": "Iron Choir — Three bell-torsos on one frame: kill them in order or the dead one sings.. frozen-canyon. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  },
+  {
+   "id": "nightmail",
+   "name": "The Nightmail",
+   "biome": "toxic-swamp",
+   "role": "A ghost locomotive that phases through the swamp — and through you.",
+   "hp": 4200,
+   "arena": "flooded swamp line, ghost rails",
+   "entry": "it phases through the trees and arrives behind you",
+   "weakness": "the headlight lanterns — break both to stop the phasing",
+   "attackNote": "the illusion never touches the rails",
+   "reward": "nightmail skin + 900 XP",
+   "phases": [
+    {
+     "name": "Phantom",
+     "at": 1.0,
+     "attacks": [
+      "phases out for 2 s, untargetable, then reappears beside the train",
+      "lantern beams that burn the nearest gun slot"
+     ]
+    },
+    {
+     "name": "Twin",
+     "at": 0.65,
+     "attacks": [
+      "splits into two: one is an illusion — the real one casts a shadow",
+      "ghost rails force an A/B choice mid-fight"
+     ]
+    },
+    {
+     "name": "Terminus",
+     "at": 0.3,
+     "attacks": [
+      "stops phasing, opens both boilers",
+      "chain lightning across the wagons, 3 s telegraph"
+     ]
+    }
+   ],
+   "sprite": "bosses/boss_nightmail.png",
+   "card": "bosses/cards/card_nightmail.png",
+   "palette": [
+    "#3A4C6B",
+    "#101725",
+    "#9FB6E0",
+    "#8CD8FF",
+    "#6FC8FF"
+   ],
+   "prompt": "The Nightmail — A ghost locomotive that phases through the swamp — and through you.. toxic-swamp. Top-down 3/4 game sprite, thick dark outline, painterly comic style, teal-and-ember palette, rim light from the upper left, transparent background, single subject centred, no text, no UI, 1024x1024."
+  }
+ ]
+}

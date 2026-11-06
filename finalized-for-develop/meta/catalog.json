@@ -1,0 +1,3390 @@
+{
+ "root": "finalized-for-develop",
+ "source": "design/figma (Figma file WCcq0Z67MX8Xuus3m5qVVa)",
+ "assetCount": 210,
+ "assets": [
+  {
+   "id": "palette-level-1-burning-metropolis",
+   "path": "biomes/level-1-burning-metropolis/palette.png",
+   "category": "biomes",
+   "tags": [
+    "palette",
+    "biome",
+    "l1"
+   ],
+   "role": "area-weighted palette of LEVEL 1: BURNING METROPOLIS, from states 01/07/15/19",
+   "w": 720,
+   "h": 90,
+   "alpha": false,
+   "source": "derived from screens",
+   "notes": "swatch strip; exact hexes in meta/palette.json"
+  },
+  {
+   "id": "palette-level-2-frozen-canyon",
+   "path": "biomes/level-2-frozen-canyon/palette.png",
+   "category": "biomes",
+   "tags": [
+    "palette",
+    "biome",
+    "l2"
+   ],
+   "role": "area-weighted palette of LEVEL 2: FROZEN CANYON, from states 01/07/15/19",
+   "w": 720,
+   "h": 90,
+   "alpha": false,
+   "source": "derived from screens",
+   "notes": "swatch strip; exact hexes in meta/palette.json"
+  },
+  {
+   "id": "palette-level-3-toxic-swamp",
+   "path": "biomes/level-3-toxic-swamp/palette.png",
+   "category": "biomes",
+   "tags": [
+    "palette",
+    "biome",
+    "l3"
+   ],
+   "role": "area-weighted palette of LEVEL 3: TOXIC SWAMP, from states 01/07/15/19",
+   "w": 720,
+   "h": 90,
+   "alpha": false,
+   "source": "derived from screens",
+   "notes": "swatch strip; exact hexes in meta/palette.json"
+  },
+  {
+   "id": "banner_levelup",
+   "path": "items/banners/banner_levelup.png",
+   "category": "items/banners",
+   "tags": [
+    "sprite",
+    "banner",
+    "levelup",
+    "modal"
+   ],
+   "role": "LEVEL UP banner (full-screen)",
+   "w": 541,
+   "h": 148,
+   "alpha": true,
+   "source": "images/sliced/banner_levelup.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "banner_victory",
+   "path": "items/banners/banner_victory.png",
+   "category": "items/banners",
+   "tags": [
+    "sprite",
+    "banner",
+    "victory",
+    "stage"
+   ],
+   "role": "VICTORY banner (full-screen)",
+   "w": 540,
+   "h": 148,
+   "alpha": true,
+   "source": "images/sliced/banner_victory.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "sprinter_0",
+   "path": "items/enemies/sprinter_0.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "sprinter",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "sprinter zombie \u2014 fast leaper \u2014 idle cycle frame 0",
+   "w": 244,
+   "h": 266,
+   "alpha": true,
+   "source": "images/sliced/sprinter_0.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "sprinter_1",
+   "path": "items/enemies/sprinter_1.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "sprinter",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "sprinter zombie \u2014 fast leaper \u2014 idle cycle frame 1",
+   "w": 200,
+   "h": 267,
+   "alpha": true,
+   "source": "images/sliced/sprinter_1.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "sprinter_2",
+   "path": "items/enemies/sprinter_2.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "sprinter",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "sprinter zombie \u2014 fast leaper \u2014 idle cycle frame 2",
+   "w": 219,
+   "h": 257,
+   "alpha": true,
+   "source": "images/sliced/sprinter_2.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "sprinter_3",
+   "path": "items/enemies/sprinter_3.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "sprinter",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "sprinter zombie \u2014 fast leaper \u2014 idle cycle frame 3",
+   "w": 257,
+   "h": 249,
+   "alpha": true,
+   "source": "images/sliced/sprinter_3.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "sprinter_dead",
+   "path": "items/enemies/sprinter_dead.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "sprinter",
+    "enemy",
+    "dead"
+   ],
+   "role": "sprinter zombie \u2014 fast leaper \u2014 death frame",
+   "w": 236,
+   "h": 192,
+   "alpha": true,
+   "source": "images/sliced/sprinter_dead.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "sprinter_hit",
+   "path": "items/enemies/sprinter_hit.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "sprinter",
+    "enemy",
+    "hit",
+    "flash"
+   ],
+   "role": "sprinter zombie \u2014 fast leaper \u2014 hit flash frame",
+   "w": 330,
+   "h": 244,
+   "alpha": true,
+   "source": "images/sliced/sprinter_hit.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "tank_0",
+   "path": "items/enemies/tank_0.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "tank",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "tank zombie \u2014 armored heavy \u2014 idle cycle frame 0",
+   "w": 301,
+   "h": 346,
+   "alpha": true,
+   "source": "images/sliced/tank_0.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "tank_1",
+   "path": "items/enemies/tank_1.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "tank",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "tank zombie \u2014 armored heavy \u2014 idle cycle frame 1",
+   "w": 351,
+   "h": 345,
+   "alpha": true,
+   "source": "images/sliced/tank_1.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "tank_dead",
+   "path": "items/enemies/tank_dead.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "tank",
+    "enemy",
+    "dead"
+   ],
+   "role": "tank zombie \u2014 armored heavy \u2014 death frame",
+   "w": 236,
+   "h": 192,
+   "alpha": true,
+   "source": "images/sliced/tank_dead.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "tank_hit",
+   "path": "items/enemies/tank_hit.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "tank",
+    "enemy",
+    "hit",
+    "flash"
+   ],
+   "role": "tank zombie \u2014 armored heavy \u2014 hit flash frame",
+   "w": 432,
+   "h": 346,
+   "alpha": true,
+   "source": "images/sliced/tank_hit.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "walker_0",
+   "path": "items/enemies/walker_0.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "walker",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "walker zombie \u2014 slow shambler \u2014 idle cycle frame 0",
+   "w": 233,
+   "h": 326,
+   "alpha": true,
+   "source": "images/sliced/walker_0.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "walker_1",
+   "path": "items/enemies/walker_1.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "walker",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "walker zombie \u2014 slow shambler \u2014 idle cycle frame 1",
+   "w": 230,
+   "h": 326,
+   "alpha": true,
+   "source": "images/sliced/walker_1.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "walker_2",
+   "path": "items/enemies/walker_2.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "walker",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "walker zombie \u2014 slow shambler \u2014 idle cycle frame 2",
+   "w": 182,
+   "h": 321,
+   "alpha": true,
+   "source": "images/sliced/walker_2.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "walker_3",
+   "path": "items/enemies/walker_3.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "walker",
+    "enemy",
+    "idle",
+    "frame"
+   ],
+   "role": "walker zombie \u2014 slow shambler \u2014 idle cycle frame 3",
+   "w": 224,
+   "h": 331,
+   "alpha": true,
+   "source": "images/sliced/walker_3.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "walker_dead",
+   "path": "items/enemies/walker_dead.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "walker",
+    "enemy",
+    "dead"
+   ],
+   "role": "walker zombie \u2014 slow shambler \u2014 death frame",
+   "w": 236,
+   "h": 192,
+   "alpha": true,
+   "source": "images/sliced/walker_dead.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "walker_hit",
+   "path": "items/enemies/walker_hit.png",
+   "category": "items/enemies",
+   "tags": [
+    "sprite",
+    "walker",
+    "enemy",
+    "hit",
+    "flash"
+   ],
+   "role": "walker zombie \u2014 slow shambler \u2014 hit flash frame",
+   "w": 280,
+   "h": 331,
+   "alpha": true,
+   "source": "images/sliced/walker_hit.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "boss_inferno-giant",
+   "path": "items/hero/boss_inferno-giant.png",
+   "category": "items/hero",
+   "tags": [
+    "reference",
+    "crop"
+   ],
+   "role": "the L1 boss creature (giant infected juggernaut)",
+   "w": 445,
+   "h": 395,
+   "alpha": false,
+   "source": "crop of screens/level-1-burning-metropolis/15-encountering-a-giant-boss-enemy.png",
+   "notes": "opaque scene crop, background included; box documented in AGENTS.md"
+  },
+  {
+   "id": "train_burning-metropolis",
+   "path": "items/hero/train_burning-metropolis.png",
+   "category": "items/hero",
+   "tags": [
+    "reference",
+    "crop"
+   ],
+   "role": "engine + full convoy, top-down rear view",
+   "w": 297,
+   "h": 860,
+   "alpha": false,
+   "source": "crop of screens/level-1-burning-metropolis/01-start-line.png",
+   "notes": "opaque scene crop, background included; box documented in AGENTS.md"
+  },
+  {
+   "id": "bar_fill_blue",
+   "path": "items/hud_art/bar_fill_blue.png",
+   "category": "items/hud_art",
+   "tags": [
+    "sprite",
+    "hud",
+    "9slice",
+    "xp",
+    "fill"
+   ],
+   "role": "XP fill, 9-slice source",
+   "w": 309,
+   "h": 36,
+   "alpha": true,
+   "source": "images/sliced/bar_fill_blue.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "bar_fill_green",
+   "path": "items/hud_art/bar_fill_green.png",
+   "category": "items/hud_art",
+   "tags": [
+    "sprite",
+    "hud",
+    "9slice",
+    "hp",
+    "fill"
+   ],
+   "role": "HP fill, 9-slice source",
+   "w": 397,
+   "h": 38,
+   "alpha": true,
+   "source": "images/sliced/bar_fill_green.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "bar_frame",
+   "path": "items/hud_art/bar_frame.png",
+   "category": "items/hud_art",
+   "tags": [
+    "sprite",
+    "hud",
+    "9slice",
+    "frame"
+   ],
+   "role": "bar frame, 9-slice source",
+   "w": 564,
+   "h": 99,
+   "alpha": true,
+   "source": "images/sliced/bar_frame.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "icon_heart",
+   "path": "items/hud_art/icon_heart.png",
+   "category": "items/hud_art",
+   "tags": [
+    "sprite",
+    "hud",
+    "icon",
+    "heart",
+    "hp"
+   ],
+   "role": "heart icon \u2014 HP",
+   "w": 83,
+   "h": 86,
+   "alpha": true,
+   "source": "images/sliced/icon_heart.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "flag_green",
+   "path": "items/markers/flag_green.png",
+   "category": "items/markers",
+   "tags": [
+    "sprite",
+    "flag",
+    "goal",
+    "green"
+   ],
+   "role": "goal flag, green",
+   "w": 97,
+   "h": 147,
+   "alpha": true,
+   "source": "images/sliced/flag_green.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "flag_red",
+   "path": "items/markers/flag_red.png",
+   "category": "items/markers",
+   "tags": [
+    "sprite",
+    "flag",
+    "goal",
+    "red"
+   ],
+   "role": "goal flag, red \u2014 stage end",
+   "w": 94,
+   "h": 148,
+   "alpha": true,
+   "source": "images/sliced/flag_red.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "flag_yellow",
+   "path": "items/markers/flag_yellow.png",
+   "category": "items/markers",
+   "tags": [
+    "sprite",
+    "flag",
+    "goal",
+    "yellow"
+   ],
+   "role": "goal flag, yellow \u2014 checkpoint",
+   "w": 116,
+   "h": 148,
+   "alpha": true,
+   "source": "images/sliced/flag_yellow.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "marker_a",
+   "path": "items/markers/marker_a.png",
+   "category": "items/markers",
+   "tags": [
+    "sprite",
+    "route",
+    "split",
+    "a"
+   ],
+   "role": "route A branch marker",
+   "w": 115,
+   "h": 126,
+   "alpha": true,
+   "source": "images/sliced/marker_a.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "marker_b",
+   "path": "items/markers/marker_b.png",
+   "category": "items/markers",
+   "tags": [
+    "sprite",
+    "route",
+    "split",
+    "b"
+   ],
+   "role": "route B branch marker",
+   "w": 95,
+   "h": 125,
+   "alpha": true,
+   "source": "images/sliced/marker_b.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "warn_0",
+   "path": "items/markers/warn_0.png",
+   "category": "items/markers",
+   "tags": [
+    "sprite",
+    "warn",
+    "hazard",
+    "alert"
+   ],
+   "role": "warning triangle",
+   "w": 152,
+   "h": 138,
+   "alpha": true,
+   "source": "images/sliced/warn_0.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "warn_1",
+   "path": "items/markers/warn_1.png",
+   "category": "items/markers",
+   "tags": [
+    "sprite",
+    "warn",
+    "hazard",
+    "alert"
+   ],
+   "role": "warning triangle, variant",
+   "w": 152,
+   "h": 138,
+   "alpha": true,
+   "source": "images/sliced/warn_1.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "block_barrels",
+   "path": "items/obstacles/block_barrels.png",
+   "category": "items/obstacles",
+   "tags": [
+    "sprite",
+    "barrels",
+    "blockade",
+    "ram"
+   ],
+   "role": "stacked barrel blockade",
+   "w": 433,
+   "h": 423,
+   "alpha": true,
+   "source": "images/sliced/block_barrels.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "block_barrier",
+   "path": "items/obstacles/block_barrier.png",
+   "category": "items/obstacles",
+   "tags": [
+    "sprite",
+    "barrier",
+    "blockade",
+    "ram"
+   ],
+   "role": "striped road barrier blockade",
+   "w": 238,
+   "h": 188,
+   "alpha": true,
+   "source": "images/sliced/block_barrier.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "block_debris",
+   "path": "items/obstacles/block_debris.png",
+   "category": "items/obstacles",
+   "tags": [
+    "sprite",
+    "debris",
+    "blockade",
+    "ram"
+   ],
+   "role": "rubble pile blockade",
+   "w": 301,
+   "h": 140,
+   "alpha": true,
+   "source": "images/sliced/block_debris.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "block_wreck",
+   "path": "items/obstacles/block_wreck.png",
+   "category": "items/obstacles",
+   "tags": [
+    "sprite",
+    "wreck",
+    "blockade",
+    "ram"
+   ],
+   "role": "wrecked car blockade",
+   "w": 750,
+   "h": 471,
+   "alpha": true,
+   "source": "images/sliced/block_wreck.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "barrel_rust",
+   "path": "items/pickups/barrel_rust.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "barrel",
+    "prop",
+    "scenery"
+   ],
+   "role": "rusty barrel \u2014 scenery prop",
+   "w": 123,
+   "h": 181,
+   "alpha": true,
+   "source": "images/sliced/barrel_rust.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "barrel_toxic",
+   "path": "items/pickups/barrel_toxic.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "barrel",
+    "hazard",
+    "prop"
+   ],
+   "role": "toxic barrel \u2014 hazard prop",
+   "w": 123,
+   "h": 180,
+   "alpha": true,
+   "source": "images/sliced/barrel_toxic.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "crate",
+   "path": "items/pickups/crate.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "crate",
+    "prop",
+    "scenery"
+   ],
+   "role": "wooden crate \u2014 scenery / destructible prop",
+   "w": 168,
+   "h": 172,
+   "alpha": true,
+   "source": "images/sliced/crate.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "currency",
+   "path": "items/pickups/currency.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "currency",
+    "pickup",
+    "meta"
+   ],
+   "role": "soft currency \u2014 meta reward",
+   "w": 257,
+   "h": 200,
+   "alpha": true,
+   "source": "images/sliced/currency.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "gem_blue",
+   "path": "items/pickups/gem_blue.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "gem",
+    "xp",
+    "pickup",
+    "blue"
+   ],
+   "role": "XP gem, blue \u2014 mid value",
+   "w": 130,
+   "h": 198,
+   "alpha": true,
+   "source": "images/sliced/gem_blue.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "gem_green",
+   "path": "items/pickups/gem_green.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "gem",
+    "xp",
+    "pickup",
+    "green"
+   ],
+   "role": "XP gem, green",
+   "w": 128,
+   "h": 200,
+   "alpha": true,
+   "source": "images/sliced/gem_green.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "gem_purple",
+   "path": "items/pickups/gem_purple.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "gem",
+    "xp",
+    "pickup",
+    "purple"
+   ],
+   "role": "XP gem, purple \u2014 high value",
+   "w": 120,
+   "h": 196,
+   "alpha": true,
+   "source": "images/sliced/gem_purple.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "health_pack",
+   "path": "items/pickups/health_pack.png",
+   "category": "items/pickups",
+   "tags": [
+    "sprite",
+    "health",
+    "pickup",
+    "heal"
+   ],
+   "role": "health pickup \u2014 restores HP",
+   "w": 186,
+   "h": 167,
+   "alpha": true,
+   "source": "images/sliced/health_pack.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_boiler",
+   "path": "items/upgrade_icons/up_boiler.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "train",
+    "power"
+   ],
+   "role": "upgrade: boiler (train power)",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_boiler.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_extragun",
+   "path": "items/upgrade_icons/up_extragun.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "turret",
+    "convoy"
+   ],
+   "role": "upgrade: extra gun (+turret slot)",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_extragun.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_extrawagon",
+   "path": "items/upgrade_icons/up_extrawagon.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "wagon",
+    "convoy"
+   ],
+   "role": "upgrade: extra wagon (+car slot)",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_extrawagon.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_firetrail",
+   "path": "items/upgrade_icons/up_firetrail.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "fire",
+    "trail"
+   ],
+   "role": "upgrade: fire trail (burn on move)",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_firetrail.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_incendiary",
+   "path": "items/upgrade_icons/up_incendiary.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "fire",
+    "damage"
+   ],
+   "role": "upgrade: incendiary rounds",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_incendiary.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_multishot",
+   "path": "items/upgrade_icons/up_multishot.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "weapon",
+    "multishot"
+   ],
+   "role": "upgrade: multishot (+projectiles)",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_multishot.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_piercing",
+   "path": "items/upgrade_icons/up_piercing.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "weapon",
+    "pierce"
+   ],
+   "role": "upgrade: piercing rounds",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_piercing.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_rapidfire",
+   "path": "items/upgrade_icons/up_rapidfire.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "weapon",
+    "rate"
+   ],
+   "role": "upgrade: rapid fire",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_rapidfire.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "up_spikebumper",
+   "path": "items/upgrade_icons/up_spikebumper.png",
+   "category": "items/upgrade_icons",
+   "tags": [
+    "sprite",
+    "upgrade",
+    "ram",
+    "spike"
+   ],
+   "role": "upgrade: spike bumper (ram damage)",
+   "w": 217,
+   "h": 217,
+   "alpha": true,
+   "source": "images/sliced/up_spikebumper.png",
+   "notes": "alpha-keyed, tight trimmed"
+  },
+  {
+   "id": "l1-01-start-line",
+   "path": "screens/level-1-burning-metropolis/01-start-line.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Start line gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 182605e4",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-02-train-moving",
+   "path": "screens/level-1-burning-metropolis/02-train-moving.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Train moving gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref dc39507d",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-03-a-b-track-split-approaching",
+   "path": "screens/level-1-burning-metropolis/03-a-b-track-split-approaching.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean A/B Track Split approaching gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref df908716",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-04-choosing-left-path-a",
+   "path": "screens/level-1-burning-metropolis/04-choosing-left-path-a.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Choosing left path (A) gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 5a5f352d",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-05-choosing-right-path-b",
+   "path": "screens/level-1-burning-metropolis/05-choosing-right-path-b.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Choosing right path (B) gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref ecac3ffc",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-06-enemies-spawning-in-the-distance",
+   "path": "screens/level-1-burning-metropolis/06-enemies-spawning-in-the-distance.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Enemies spawning in the distance gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref c8704a1f",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-07-the-horde-swarming-the-track",
+   "path": "screens/level-1-burning-metropolis/07-the-horde-swarming-the-track.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean The Horde swarming the track gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref cbf2e0ad",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-08-the-player-releasing-the-screen",
+   "path": "screens/level-1-burning-metropolis/08-the-player-releasing-the-screen.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean The player releasing the screen gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 32cd5e6f",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-09-train-braking",
+   "path": "screens/level-1-burning-metropolis/09-train-braking.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Train braking gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 5261588a",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-10-turrets-auto-targeting",
+   "path": "screens/level-1-burning-metropolis/10-turrets-auto-targeting.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Turrets auto-targeting gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 8e576c25",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-11-turrets-firing",
+   "path": "screens/level-1-burning-metropolis/11-turrets-firing.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Turrets firing gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref a70399cd",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-12-an-enemy-taking-damage",
+   "path": "screens/level-1-burning-metropolis/12-an-enemy-taking-damage.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean An enemy taking damage gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref d9846dee",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-13-enemy-defeat",
+   "path": "screens/level-1-burning-metropolis/13-enemy-defeat.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Enemy defeat gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref ec736671",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-14-defeating-a-fast-enemy-leaping-onto-the-train",
+   "path": "screens/level-1-burning-metropolis/14-defeating-a-fast-enemy-leaping-onto-the-train.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Defeating a fast enemy leaping onto the train gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref c0ebcaeb",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-15-encountering-a-giant-boss-enemy",
+   "path": "screens/level-1-burning-metropolis/15-encountering-a-giant-boss-enemy.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Encountering a giant boss enemy gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 899e66fe",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-16-collecting-xp-gems",
+   "path": "screens/level-1-burning-metropolis/16-collecting-xp-gems.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Collecting XP gems gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 8fcdcbd2",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-17-hitting-a-physical-barricade",
+   "path": "screens/level-1-burning-metropolis/17-hitting-a-physical-barricade.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Hitting a physical barricade gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref ad20ea05",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-18-destructible-barricade-destroyed-by-gunfire",
+   "path": "screens/level-1-burning-metropolis/18-destructible-barricade-destroyed-by-gunfire.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Destructible barricade destroyed by gunfire gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 1cea734f",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-19-level-complete",
+   "path": "screens/level-1-burning-metropolis/19-level-complete.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Level Complete gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 29f4282f",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l1-20-level-up-upgrade-screen",
+   "path": "screens/level-1-burning-metropolis/20-level-up-upgrade-screen.png",
+   "category": "screens/level-1-burning-metropolis",
+   "tags": [
+    "screen",
+    "gameplay",
+    "1"
+   ],
+   "role": "clean Level Up / Upgrade Screen gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 7de68e06",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-01-start-line",
+   "path": "screens/level-2-frozen-canyon/01-start-line.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Start line gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref c8cfb7a7",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-02-train-moving",
+   "path": "screens/level-2-frozen-canyon/02-train-moving.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Train moving gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 31784075",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-03-a-b-track-split-approaching",
+   "path": "screens/level-2-frozen-canyon/03-a-b-track-split-approaching.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean A/B Track Split approaching gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 906ff393",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-04-choosing-left-path-a",
+   "path": "screens/level-2-frozen-canyon/04-choosing-left-path-a.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Choosing left path (A) gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref cc25bd17",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-05-choosing-right-path-b",
+   "path": "screens/level-2-frozen-canyon/05-choosing-right-path-b.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Choosing right path (B) gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 77605da5",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-06-enemies-spawning-in-the-distance",
+   "path": "screens/level-2-frozen-canyon/06-enemies-spawning-in-the-distance.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Enemies spawning in the distance gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref d000e2a2",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-07-the-horde-swarming-the-track",
+   "path": "screens/level-2-frozen-canyon/07-the-horde-swarming-the-track.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean The Horde swarming the track gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 5a5c334f",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-08-the-player-releasing-the-screen",
+   "path": "screens/level-2-frozen-canyon/08-the-player-releasing-the-screen.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean The player releasing the screen gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 105333f2",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-09-train-braking",
+   "path": "screens/level-2-frozen-canyon/09-train-braking.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Train braking gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref f9029659",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-10-turrets-auto-targeting",
+   "path": "screens/level-2-frozen-canyon/10-turrets-auto-targeting.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Turrets auto-targeting gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref e27bd815",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-11-turrets-firing",
+   "path": "screens/level-2-frozen-canyon/11-turrets-firing.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Turrets firing gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref efd32fc5",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-12-an-enemy-taking-damage",
+   "path": "screens/level-2-frozen-canyon/12-an-enemy-taking-damage.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean An enemy taking damage gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 35472772",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-13-enemy-defeat",
+   "path": "screens/level-2-frozen-canyon/13-enemy-defeat.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Enemy defeat gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref ee398a7d",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-14-defeating-a-fast-enemy-leaping-onto-the-train",
+   "path": "screens/level-2-frozen-canyon/14-defeating-a-fast-enemy-leaping-onto-the-train.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Defeating a fast enemy leaping onto the train gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 9236a546",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-15-encountering-a-giant-boss-enemy",
+   "path": "screens/level-2-frozen-canyon/15-encountering-a-giant-boss-enemy.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Encountering a giant boss enemy gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 5e9dbf1c",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-16-collecting-xp-gems",
+   "path": "screens/level-2-frozen-canyon/16-collecting-xp-gems.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Collecting XP gems gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 02d74c82",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-17-hitting-a-physical-barricade",
+   "path": "screens/level-2-frozen-canyon/17-hitting-a-physical-barricade.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Hitting a physical barricade gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 1cc94408",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-18-destructible-barricade-destroyed-by-gunfire",
+   "path": "screens/level-2-frozen-canyon/18-destructible-barricade-destroyed-by-gunfire.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Destructible barricade destroyed by gunfire gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref e1599cac",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-19-level-complete",
+   "path": "screens/level-2-frozen-canyon/19-level-complete.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Level Complete gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref c8f2dedf",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l2-20-level-up-upgrade-screen",
+   "path": "screens/level-2-frozen-canyon/20-level-up-upgrade-screen.png",
+   "category": "screens/level-2-frozen-canyon",
+   "tags": [
+    "screen",
+    "gameplay",
+    "2"
+   ],
+   "role": "clean Level Up / Upgrade Screen gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 3a0982dc",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-01-start-line",
+   "path": "screens/level-3-toxic-swamp/01-start-line.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Start line gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref e9358d70",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-02-train-moving",
+   "path": "screens/level-3-toxic-swamp/02-train-moving.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Train moving gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref ed0e351e",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-03-a-b-track-split-approaching",
+   "path": "screens/level-3-toxic-swamp/03-a-b-track-split-approaching.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean A/B Track Split approaching gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 576d3f23",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-04-choosing-left-path-a",
+   "path": "screens/level-3-toxic-swamp/04-choosing-left-path-a.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Choosing left path (A) gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 712771e9",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-05-choosing-right-path-b",
+   "path": "screens/level-3-toxic-swamp/05-choosing-right-path-b.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Choosing right path (B) gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref c784aece",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-06-enemies-spawning-in-the-distance",
+   "path": "screens/level-3-toxic-swamp/06-enemies-spawning-in-the-distance.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Enemies spawning in the distance gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 2307b204",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-07-the-horde-swarming-the-track",
+   "path": "screens/level-3-toxic-swamp/07-the-horde-swarming-the-track.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean The Horde swarming the track gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 4b65ca09",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-08-the-player-releasing-the-screen",
+   "path": "screens/level-3-toxic-swamp/08-the-player-releasing-the-screen.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean The player releasing the screen gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref e7151373",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-09-train-braking",
+   "path": "screens/level-3-toxic-swamp/09-train-braking.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Train braking gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 4ee372b1",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-10-turrets-auto-targeting",
+   "path": "screens/level-3-toxic-swamp/10-turrets-auto-targeting.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Turrets auto-targeting gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 82480aa6",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-11-turrets-firing",
+   "path": "screens/level-3-toxic-swamp/11-turrets-firing.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Turrets firing gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 1d44a9d5",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-12-an-enemy-taking-damage",
+   "path": "screens/level-3-toxic-swamp/12-an-enemy-taking-damage.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean An enemy taking damage gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref e36907d3",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-13-enemy-defeat",
+   "path": "screens/level-3-toxic-swamp/13-enemy-defeat.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Enemy defeat gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref a51fb314",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-14-defeating-a-fast-enemy-leaping-onto-the-train",
+   "path": "screens/level-3-toxic-swamp/14-defeating-a-fast-enemy-leaping-onto-the-train.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Defeating a fast enemy leaping onto the train gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref fcb51c1a",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-15-encountering-a-giant-boss-enemy",
+   "path": "screens/level-3-toxic-swamp/15-encountering-a-giant-boss-enemy.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Encountering a giant boss enemy gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref e54e7038",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-16-collecting-xp-gems",
+   "path": "screens/level-3-toxic-swamp/16-collecting-xp-gems.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Collecting XP gems gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 4f06dd88",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-17-hitting-a-physical-barricade",
+   "path": "screens/level-3-toxic-swamp/17-hitting-a-physical-barricade.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Hitting a physical barricade gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 4d477538",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-18-destructible-barricade-destroyed-by-gunfire",
+   "path": "screens/level-3-toxic-swamp/18-destructible-barricade-destroyed-by-gunfire.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Destructible barricade destroyed by gunfire gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 1cb1634a",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-19-level-complete",
+   "path": "screens/level-3-toxic-swamp/19-level-complete.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Level Complete gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 09fa178a",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "l3-20-level-up-upgrade-screen",
+   "path": "screens/level-3-toxic-swamp/20-level-up-upgrade-screen.png",
+   "category": "screens/level-3-toxic-swamp",
+   "tags": [
+    "screen",
+    "gameplay",
+    "3"
+   ],
+   "role": "clean Level Up / Upgrade Screen gameplay frame",
+   "w": 1024,
+   "h": 1024,
+   "alpha": false,
+   "source": "figma image ref 8d48a04d",
+   "notes": "1024x1024, no HUD (HUD is drawn separately)"
+  },
+  {
+   "id": "reference_hud_layout",
+   "path": "ui/reference_hud_layout.png",
+   "category": "ui",
+   "tags": [
+    "reference",
+    "hud",
+    "layout"
+   ],
+   "role": "HUD composed over gameplay at design proportions (2x)",
+   "w": 600,
+   "h": 600,
+   "alpha": false,
+   "source": "figma card render 07",
+   "notes": "shows spacing of distance bar, status bar and touch chip together"
+  },
+  {
+   "id": "up_arrow_left",
+   "path": "ui/cards/up_arrow_left.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "prev/next arrow button",
+   "w": 124,
+   "h": 122,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_arrow_right",
+   "path": "ui/cards/up_arrow_right.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "prev/next arrow button, mirrored",
+   "w": 124,
+   "h": 122,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_art_firetrail",
+   "path": "ui/cards/up_art_firetrail.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "card art only, no frame",
+   "w": 130,
+   "h": 130,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_art_multishot",
+   "path": "ui/cards/up_art_multishot.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "card art only, no frame",
+   "w": 130,
+   "h": 130,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_art_spikebumper",
+   "path": "ui/cards/up_art_spikebumper.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "card art only, no frame",
+   "w": 130,
+   "h": 130,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_card_firetrail",
+   "path": "ui/cards/up_card_firetrail.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "full card: frame + label + art",
+   "w": 162,
+   "h": 206,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_card_multishot",
+   "path": "ui/cards/up_card_multishot.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "full card: frame + label + art",
+   "w": 162,
+   "h": 206,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_card_row_mini",
+   "path": "ui/cards/up_card_row_mini.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "condensed 3-card row under the wordmark",
+   "w": 404,
+   "h": 188,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_card_spikebumper",
+   "path": "ui/cards/up_card_spikebumper.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "full card: frame + label + art",
+   "w": 162,
+   "h": 206,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_gauge_distance",
+   "path": "ui/cards/up_gauge_distance.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "circular DISTANCE TO SURVIVE gauge",
+   "w": 146,
+   "h": 140,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_instruction",
+   "path": "ui/cards/up_instruction.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "swipe/tap instruction line",
+   "w": 435,
+   "h": 48,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_levelup_burst",
+   "path": "ui/cards/up_levelup_burst.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "LEVEL UP! wordmark with its spark burst",
+   "w": 518,
+   "h": 142,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_levelup_wordmark",
+   "path": "ui/cards/up_levelup_wordmark.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "LEVEL UP! wordmark, letters plus outline",
+   "w": 404,
+   "h": 92,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "up_tap_choose",
+   "path": "ui/cards/up_tap_choose.png",
+   "category": "ui/cards",
+   "tags": [
+    "upgrade",
+    "modal"
+   ],
+   "role": "TAP CHOOSE prompt",
+   "w": 196,
+   "h": 54,
+   "alpha": false,
+   "source": "figma image fill 1c955e61 (level-up sheet)",
+   "notes": ""
+  },
+  {
+   "id": "control_auto",
+   "path": "ui/control/control_auto.png",
+   "category": "ui/control",
+   "tags": [
+    "touch",
+    "input"
+   ],
+   "role": "touch-control chip in the AUTO state",
+   "w": 68,
+   "h": 86,
+   "alpha": false,
+   "source": "figma card render 10-turrets-auto-targeting",
+   "notes": "composed over live gameplay art; chip is 32x41 at design scale, this crop is 2x"
+  },
+  {
+   "id": "control_hold",
+   "path": "ui/control/control_hold.png",
+   "category": "ui/control",
+   "tags": [
+    "touch",
+    "input"
+   ],
+   "role": "touch-control chip in the HOLD state",
+   "w": 68,
+   "h": 86,
+   "alpha": false,
+   "source": "figma card render 07-the-horde-swarming-the-track",
+   "notes": "composed over live gameplay art; chip is 32x41 at design scale, this crop is 2x"
+  },
+  {
+   "id": "control_ready",
+   "path": "ui/control/control_ready.png",
+   "category": "ui/control",
+   "tags": [
+    "touch",
+    "input"
+   ],
+   "role": "touch-control chip in the READY state",
+   "w": 68,
+   "h": 86,
+   "alpha": false,
+   "source": "figma card render 19-level-complete",
+   "notes": "composed over live gameplay art; chip is 32x41 at design scale, this crop is 2x"
+  },
+  {
+   "id": "control_release",
+   "path": "ui/control/control_release.png",
+   "category": "ui/control",
+   "tags": [
+    "touch",
+    "input"
+   ],
+   "role": "touch-control chip in the RELEASE state",
+   "w": 68,
+   "h": 116,
+   "alpha": false,
+   "source": "figma card render 08-the-player-releasing-the-screen",
+   "notes": "composed over live gameplay art; chip is 32x41 at design scale, this crop is 2x"
+  },
+  {
+   "id": "hud_bar_hp_full",
+   "path": "ui/hud/hud_bar_hp_full.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "bar"
+   ],
+   "role": "HP bar, full: dark track + green fill",
+   "w": 648,
+   "h": 76,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_bar_xp_full",
+   "path": "ui/hud/hud_bar_xp_full.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "bar"
+   ],
+   "role": "XP bar, full: dark track + blue fill",
+   "w": 653,
+   "h": 77,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_distance_header",
+   "path": "ui/hud/hud_distance_header.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "icon"
+   ],
+   "role": "wordmark for the distance bar",
+   "w": 407,
+   "h": 47,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_distance_track",
+   "path": "ui/hud/hud_distance_track.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "icon"
+   ],
+   "role": "empty distance track between heart and flag",
+   "w": 586,
+   "h": 62,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_fill_hp",
+   "path": "ui/hud/hud_fill_hp.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "bar"
+   ],
+   "role": "HP green fill only",
+   "w": 602,
+   "h": 67,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_fill_xp",
+   "path": "ui/hud/hud_fill_xp.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "bar"
+   ],
+   "role": "XP blue fill only",
+   "w": 489,
+   "h": 68,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_flag",
+   "path": "ui/hud/hud_flag.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "icon"
+   ],
+   "role": "goal flag, right cap of the distance bar",
+   "w": 94,
+   "h": 88,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_heart",
+   "path": "ui/hud/hud_heart.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "icon"
+   ],
+   "role": "HP icon, left cap of the distance bar",
+   "w": 92,
+   "h": 90,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_label_hp",
+   "path": "ui/hud/hud_label_hp.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "icon"
+   ],
+   "role": "HP label glyph",
+   "w": 132,
+   "h": 76,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "hud_label_xp",
+   "path": "ui/hud/hud_label_xp.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "icon"
+   ],
+   "role": "XP label glyph",
+   "w": 134,
+   "h": 80,
+   "alpha": true,
+   "source": "figma image fill c65e402d (HUD kit sheet)",
+   "notes": ""
+  },
+  {
+   "id": "en_crawler",
+   "path": "enemies/en_crawler.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "crawler"
+   ],
+   "role": "Crawler",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_crawler",
+   "path": "enemies/cards/card_crawler.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "crawler"
+   ],
+   "role": "design card for Crawler",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_bloater",
+   "path": "enemies/en_bloater.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "bloater"
+   ],
+   "role": "Bloater",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_bloater",
+   "path": "enemies/cards/card_bloater.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "bloater"
+   ],
+   "role": "design card for Bloater",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_spitter",
+   "path": "enemies/en_spitter.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "spitter"
+   ],
+   "role": "Spitter",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_spitter",
+   "path": "enemies/cards/card_spitter.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "spitter"
+   ],
+   "role": "design card for Spitter",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_shrieker",
+   "path": "enemies/en_shrieker.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "shrieker"
+   ],
+   "role": "Shrieker",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_shrieker",
+   "path": "enemies/cards/card_shrieker.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "shrieker"
+   ],
+   "role": "design card for Shrieker",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_bulwark",
+   "path": "enemies/en_bulwark.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "bulwark"
+   ],
+   "role": "Bulwark",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_bulwark",
+   "path": "enemies/cards/card_bulwark.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "bulwark"
+   ],
+   "role": "design card for Bulwark",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_glider",
+   "path": "enemies/en_glider.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "glider"
+   ],
+   "role": "Glider",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_glider",
+   "path": "enemies/cards/card_glider.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "glider"
+   ],
+   "role": "design card for Glider",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_drillmaw",
+   "path": "enemies/en_drillmaw.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "drillmaw"
+   ],
+   "role": "Drillmaw",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_drillmaw",
+   "path": "enemies/cards/card_drillmaw.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "drillmaw"
+   ],
+   "role": "design card for Drillmaw",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_mites",
+   "path": "enemies/en_mites.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "mites"
+   ],
+   "role": "Rustmites",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_mites",
+   "path": "enemies/cards/card_mites.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "mites"
+   ],
+   "role": "design card for Rustmites",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_lantern",
+   "path": "enemies/en_lantern.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "lantern"
+   ],
+   "role": "The Lantern",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_lantern",
+   "path": "enemies/cards/card_lantern.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "lantern"
+   ],
+   "role": "design card for The Lantern",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "en_rimeback",
+   "path": "enemies/en_rimeback.png",
+   "category": "enemies",
+   "tags": [
+    "enemy",
+    "rimeback"
+   ],
+   "role": "Rimeback",
+   "w": 512,
+   "h": 512,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_rimeback",
+   "path": "enemies/cards/card_rimeback.png",
+   "category": "enemies/cards",
+   "tags": [
+    "card",
+    "enemy",
+    "rimeback"
+   ],
+   "role": "design card for Rimeback",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_the_inferno",
+   "path": "bosses/boss_the_inferno.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "the_inferno",
+    "burning-metropolis"
+   ],
+   "role": "The Inferno",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_the_inferno",
+   "path": "bosses/cards/card_the_inferno.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "the_inferno"
+   ],
+   "role": "design card for The Inferno",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_railmaw",
+   "path": "bosses/boss_railmaw.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "railmaw",
+    "burning-metropolis"
+   ],
+   "role": "Railmaw",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_railmaw",
+   "path": "bosses/cards/card_railmaw.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "railmaw"
+   ],
+   "role": "design card for Railmaw",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_slagheart",
+   "path": "bosses/boss_slagheart.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "slagheart",
+    "burning-metropolis"
+   ],
+   "role": "Slagheart",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_slagheart",
+   "path": "bosses/cards/card_slagheart.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "slagheart"
+   ],
+   "role": "design card for Slagheart",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_the_conductor",
+   "path": "bosses/boss_the_conductor.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "the_conductor",
+    "burning-metropolis"
+   ],
+   "role": "The Conductor",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_the_conductor",
+   "path": "bosses/cards/card_the_conductor.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "the_conductor"
+   ],
+   "role": "design card for The Conductor",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_glacier_maw",
+   "path": "bosses/boss_glacier_maw.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "glacier_maw",
+    "frozen-canyon"
+   ],
+   "role": "Glacier Maw",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_glacier_maw",
+   "path": "bosses/cards/card_glacier_maw.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "glacier_maw"
+   ],
+   "role": "design card for Glacier Maw",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_rime_engine",
+   "path": "bosses/boss_rime_engine.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "rime_engine",
+    "frozen-canyon"
+   ],
+   "role": "Rime Engine",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_rime_engine",
+   "path": "bosses/cards/card_rime_engine.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "rime_engine"
+   ],
+   "role": "design card for Rime Engine",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_mireheart",
+   "path": "bosses/boss_mireheart.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "mireheart",
+    "toxic-swamp"
+   ],
+   "role": "Mireheart",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_mireheart",
+   "path": "bosses/cards/card_mireheart.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "mireheart"
+   ],
+   "role": "design card for Mireheart",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_hollow_queen",
+   "path": "bosses/boss_hollow_queen.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "hollow_queen",
+    "toxic-swamp"
+   ],
+   "role": "Hollow Queen",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_hollow_queen",
+   "path": "bosses/cards/card_hollow_queen.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "hollow_queen"
+   ],
+   "role": "design card for Hollow Queen",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_iron_choir",
+   "path": "bosses/boss_iron_choir.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "iron_choir",
+    "frozen-canyon"
+   ],
+   "role": "Iron Choir",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_iron_choir",
+   "path": "bosses/cards/card_iron_choir.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "iron_choir"
+   ],
+   "role": "design card for Iron Choir",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "boss_nightmail",
+   "path": "bosses/boss_nightmail.png",
+   "category": "bosses",
+   "tags": [
+    "boss",
+    "nightmail",
+    "toxic-swamp"
+   ],
+   "role": "The Nightmail",
+   "w": 768,
+   "h": 768,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "card_nightmail",
+   "path": "bosses/cards/card_nightmail.png",
+   "category": "bosses/cards",
+   "tags": [
+    "card",
+    "boss",
+    "nightmail"
+   ],
+   "role": "design card for The Nightmail",
+   "w": 640,
+   "h": 906,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "proj_bullet_tracer",
+   "path": "projectiles/proj_bullet_tracer.png",
+   "category": "projectiles",
+   "tags": [
+    "projectile",
+    "kinetic",
+    "bullet_tracer"
+   ],
+   "role": "Tracer round",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "proj_rocket",
+   "path": "projectiles/proj_rocket.png",
+   "category": "projectiles",
+   "tags": [
+    "projectile",
+    "blast",
+    "rocket"
+   ],
+   "role": "Rocket",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "proj_fireball",
+   "path": "projectiles/proj_fireball.png",
+   "category": "projectiles",
+   "tags": [
+    "projectile",
+    "fire",
+    "fireball"
+   ],
+   "role": "Fireball",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "proj_acid_glob",
+   "path": "projectiles/proj_acid_glob.png",
+   "category": "projectiles",
+   "tags": [
+    "projectile",
+    "acid",
+    "acid_glob"
+   ],
+   "role": "Acid glob",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "proj_tesla_arc",
+   "path": "projectiles/proj_tesla_arc.png",
+   "category": "projectiles",
+   "tags": [
+    "projectile",
+    "electric",
+    "tesla_arc"
+   ],
+   "role": "Tesla arc",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "proj_shotgun_pellet",
+   "path": "projectiles/proj_shotgun_pellet.png",
+   "category": "projectiles",
+   "tags": [
+    "projectile",
+    "kinetic",
+    "shotgun_pellet"
+   ],
+   "role": "Pellet spread",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "proj_bone_spike",
+   "path": "projectiles/proj_bone_spike.png",
+   "category": "projectiles",
+   "tags": [
+    "projectile",
+    "kinetic",
+    "bone_spike"
+   ],
+   "role": "Bone spike",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_impact_kinetic",
+   "path": "fx/fx_impact_kinetic.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "impact",
+    "impact_kinetic"
+   ],
+   "role": "kinetic impact",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_fire_burst",
+   "path": "fx/fx_fire_burst.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "impact",
+    "fire_burst"
+   ],
+   "role": "fire burst",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_blast_ring",
+   "path": "fx/fx_blast_ring.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "impact",
+    "blast_ring"
+   ],
+   "role": "blast / rocket",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_acid_splash",
+   "path": "fx/fx_acid_splash.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "impact",
+    "acid_splash"
+   ],
+   "role": "acid splash",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_electric_burst",
+   "path": "fx/fx_electric_burst.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "impact",
+    "electric_burst"
+   ],
+   "role": "electric burst",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_death_goo",
+   "path": "fx/fx_death_goo.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "death",
+    "death_goo"
+   ],
+   "role": "flesh / goo death",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_death_metal",
+   "path": "fx/fx_death_metal.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "death",
+    "death_metal"
+   ],
+   "role": "armoured death",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_death_ice",
+   "path": "fx/fx_death_ice.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "death",
+    "death_ice"
+   ],
+   "role": "frozen shatter",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_death_bone",
+   "path": "fx/fx_death_bone.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "death",
+    "death_bone"
+   ],
+   "role": "skeletal burst",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx_death_swarm",
+   "path": "fx/fx_death_swarm.png",
+   "category": "fx",
+   "tags": [
+    "fx",
+    "death",
+    "death_swarm"
+   ],
+   "role": "swarm scatter",
+   "w": 256,
+   "h": 256,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "hud_xp_level_row",
+   "path": "ui/hud/hud_xp_level_row.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "xp",
+    "level"
+   ],
+   "role": "XP bar with the level number fused into its left cap",
+   "w": 560,
+   "h": 96,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "hud_xp_level_row_lv15",
+   "path": "ui/hud/hud_xp_level_row_lv15.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "xp",
+    "level"
+   ],
+   "role": "same row at LV 15 / 78 %",
+   "w": 560,
+   "h": 96,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "hud_wagon_slots",
+   "path": "ui/hud/hud_wagon_slots.png",
+   "category": "ui/hud",
+   "tags": [
+    "hud",
+    "wagon",
+    "slots"
+   ],
+   "role": "wagon with 2 gun slots, slot 1 filled, slot 2 locked",
+   "w": 360,
+   "h": 140,
+   "alpha": true,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "enemies",
+   "path": "data/enemies.json",
+   "category": "data",
+   "tags": [
+    "data",
+    "enemies"
+   ],
+   "role": "machine-readable enemy roster",
+   "w": 0,
+   "h": 0,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "bosses",
+   "path": "data/bosses.json",
+   "category": "data",
+   "tags": [
+    "data",
+    "bosses"
+   ],
+   "role": "boss roster with phases and attacks",
+   "w": 0,
+   "h": 0,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "projectiles",
+   "path": "data/projectiles.json",
+   "category": "data",
+   "tags": [
+    "data",
+    "projectiles"
+   ],
+   "role": "projectile roster + gun mapping",
+   "w": 0,
+   "h": 0,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "fx",
+   "path": "data/fx.json",
+   "category": "data",
+   "tags": [
+    "data",
+    "fx"
+   ],
+   "role": "impact/death FX mapping",
+   "w": 0,
+   "h": 0,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "wagons",
+   "path": "data/wagons.json",
+   "category": "data",
+   "tags": [
+    "data",
+    "rules"
+   ],
+   "role": "wagon gun-slot rule (max 2, start 1)",
+   "w": 0,
+   "h": 0,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  },
+  {
+   "id": "hud-v2",
+   "path": "data/hud-v2.json",
+   "category": "data",
+   "tags": [
+    "data",
+    "hud"
+   ],
+   "role": "HUD v2 change spec",
+   "w": 0,
+   "h": 0,
+   "alpha": false,
+   "source": "meta/gen_expansion.py",
+   "notes": ""
+  }
+ ]
+}

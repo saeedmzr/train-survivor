@@ -1,0 +1,96 @@
+{
+ "id": "sprinter",
+ "artFolder": "sprinter",
+ "name": "Sprinter",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 12,
+  "speed": 6.5,
+  "dmg": 4,
+  "xp": 1,
+  "armor": 0,
+  "pack": "3–5",
+  "lane": "flanks",
+  "threat": "low"
+ },
+ "ability": {
+  "name": "Sprinter",
+  "role": "fast four-limbed runner",
+  "behaviour": [
+   "closes distance fast",
+   "leaps at the lead car"
+  ],
+  "counters": [
+   "brake immediately",
+   "shotgun"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/sprinter/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/sprinter/sprite.png",
+    "px": [
+     633,
+     454
+    ],
+    "coverage": 50.9
+   },
+   "hit": "art-work/enemies/sprinter/sprite_hit.png",
+   "dead": "art-work/enemies/sprinter/sprite_dead.png",
+   "preview": "art-work/enemies/sprinter/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    30,
+    150,
+    740,
+    850
+   ],
+   "components": 6,
+   "blob": 72580,
+   "trimmed": [
+    678,
+    458
+   ]
+  },
+  "palette": [
+   "#4D3A31",
+   "#715546",
+   "#764129",
+   "#985938",
+   "#EDB454",
+   "#B97545"
+  ],
+  "silhouette": "Emaciated running zombie caught mid-stride, on fire.",
+  "pose": "side view, leaning into a sprint",
+  "features": [
+   "full-body flame silhouette",
+   "burning feet trailing embers",
+   "exposed ribs and shoulder blade",
+   "glowing orange eyes"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_sprinter",
+  "heightM": 1.9,
+  "atlasPx": [
+   268,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/sprinter.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/sprinter.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_sprinter.png"
+ }
+}

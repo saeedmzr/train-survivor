@@ -1,0 +1,95 @@
+{
+ "id": "walker",
+ "artFolder": "walker",
+ "name": "Walker",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 30,
+  "speed": 2.2,
+  "dmg": 6,
+  "xp": 1,
+  "armor": 0,
+  "pack": "4–8",
+  "lane": "rails",
+  "threat": "low"
+ },
+ "ability": {
+  "name": "Walker",
+  "role": "standard shambler, swarms the train",
+  "behaviour": [
+   "walks in straight lines at the train"
+  ],
+  "counters": [
+   "stop early and thin them",
+   "ram"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/walker/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/walker/sprite.png",
+    "px": [
+     558,
+     453
+    ],
+    "coverage": 63.6
+   },
+   "hit": "art-work/enemies/walker/sprite_hit.png",
+   "dead": "art-work/enemies/walker/sprite_dead.png",
+   "preview": "art-work/enemies/walker/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    40,
+    150,
+    730,
+    850
+   ],
+   "components": 1,
+   "blob": 72123,
+   "trimmed": [
+    642,
+    457
+   ]
+  },
+  "palette": [
+   "#334433",
+   "#484A39",
+   "#657747",
+   "#80A75C",
+   "#93D95D",
+   "#614F3B"
+  ],
+  "silhouette": "Shambling zombie in a torn shirt and trousers, arms hanging, head tilted.",
+  "pose": "front view, mid-step",
+  "features": [
+   "glowing green wound across the torso",
+   "torn sleeves and hanging jaw",
+   "ember glow on one shoulder",
+   "sickly green highlights over washed grey"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_walker",
+  "heightM": 2.0,
+  "atlasPx": [
+   237,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/walker.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/walker.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_walker.png"
+ }
+}

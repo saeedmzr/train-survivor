@@ -1,0 +1,127 @@
+{
+ "version": 1,
+ "gunMap": {
+  "CANNON": "bullet_tracer",
+  "GATLING": "bullet_tracer",
+  "ROCKET": "rocket",
+  "TESLA": "tesla_arc",
+  "FIRE": "fireball",
+  "SHOTGUN": "shotgun_pellet",
+  "ACID": "acid_glob"
+ },
+ "projectiles": [
+  {
+   "id": "bullet_tracer",
+   "name": "Tracer round",
+   "damageType": "kinetic",
+   "role": "Cannon + gatling. Fast, no splash, pierces 1.",
+   "sprite": "projectiles/proj_bullet_tracer.png",
+   "impact": "impact_kinetic",
+   "uses": [
+    "CANNON",
+    "GATLING"
+   ],
+   "palette": [
+    "#F7D98A",
+    "#FFFBEA",
+    "#FFC85A"
+   ]
+  },
+  {
+   "id": "rocket",
+   "name": "Rocket",
+   "damageType": "blast",
+   "role": "Rocket launcher. Arcs slightly, big splash, slow.",
+   "sprite": "projectiles/proj_rocket.png",
+   "impact": "blast_ring",
+   "uses": [
+    "ROCKET"
+   ],
+   "palette": [
+    "#B85A3A",
+    "#E3A07A",
+    "#FF8A2E"
+   ]
+  },
+  {
+   "id": "fireball",
+   "name": "Fireball",
+   "damageType": "fire",
+   "role": "Flamer / fire card. Ignites ground, damage over time.",
+   "sprite": "projectiles/proj_fireball.png",
+   "impact": "fire_burst",
+   "uses": [
+    "FIRE"
+   ],
+   "palette": [
+    "#FF8A2E",
+    "#FFE07A",
+    "#FF6A1E"
+   ]
+  },
+  {
+   "id": "acid_glob",
+   "name": "Acid glob",
+   "damageType": "acid",
+   "role": "Acid turret + spitters. Shreds armour, leaves a pool.",
+   "sprite": "projectiles/proj_acid_glob.png",
+   "impact": "acid_splash",
+   "uses": [
+    "ACID"
+   ],
+   "palette": [
+    "#A8D34A",
+    "#E6FF9A",
+    "#9CFF3C"
+   ]
+  },
+  {
+   "id": "tesla_arc",
+   "name": "Tesla arc",
+   "damageType": "electric",
+   "role": "Tesla coil. Chains to a second target, stuns briefly.",
+   "sprite": "projectiles/proj_tesla_arc.png",
+   "impact": "electric_burst",
+   "uses": [
+    "TESLA"
+   ],
+   "palette": [
+    "#9FE4FF",
+    "#EAFFFF",
+    "#7FDFFF"
+   ]
+  },
+  {
+   "id": "shotgun_pellet",
+   "name": "Pellet spread",
+   "damageType": "kinetic",
+   "role": "Shotgun. 5 pellets, wide cone, close range.",
+   "sprite": "projectiles/proj_shotgun_pellet.png",
+   "impact": "impact_kinetic",
+   "uses": [
+    "SHOTGUN"
+   ],
+   "palette": [
+    "#F2D9A0",
+    "#FFF6DC",
+    "#FFD98A"
+   ]
+  },
+  {
+   "id": "bone_spike",
+   "name": "Bone spike",
+   "damageType": "kinetic",
+   "role": "Enemy ranged attack (spitter, conductor, queen).",
+   "sprite": "projectiles/proj_bone_spike.png",
+   "impact": "impact_kinetic",
+   "uses": [
+    "enemy ranged"
+   ],
+   "palette": [
+    "#E8E0C8",
+    "#FFFDF2",
+    "#FFE9B0"
+   ]
+  }
+ ]
+}

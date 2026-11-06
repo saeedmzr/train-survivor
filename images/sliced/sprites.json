@@ -1,0 +1,665 @@
+{
+ "block_wreck": {
+  "atlas": "world",
+  "x": 6,
+  "y": 6,
+  "w": 750,
+  "h": 471,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "block_barrels": {
+  "atlas": "world",
+  "x": 762,
+  "y": 6,
+  "w": 433,
+  "h": 423,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "tank_hit": {
+  "atlas": "world",
+  "x": 1201,
+  "y": 6,
+  "w": 432,
+  "h": 346,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "tank_0": {
+  "atlas": "world",
+  "x": 1639,
+  "y": 6,
+  "w": 301,
+  "h": 346,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "tank_1": {
+  "atlas": "world",
+  "x": 6,
+  "y": 483,
+  "w": 351,
+  "h": 345,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "walker_hit": {
+  "atlas": "world",
+  "x": 363,
+  "y": 483,
+  "w": 280,
+  "h": 331,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "walker_3": {
+  "atlas": "world",
+  "x": 649,
+  "y": 483,
+  "w": 224,
+  "h": 331,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "walker_0": {
+  "atlas": "world",
+  "x": 879,
+  "y": 483,
+  "w": 233,
+  "h": 326,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "walker_1": {
+  "atlas": "world",
+  "x": 1118,
+  "y": 483,
+  "w": 230,
+  "h": 326,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "walker_2": {
+  "atlas": "world",
+  "x": 1354,
+  "y": 483,
+  "w": 182,
+  "h": 321,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "sprinter_1": {
+  "atlas": "world",
+  "x": 1542,
+  "y": 483,
+  "w": 200,
+  "h": 267,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "sprinter_0": {
+  "atlas": "world",
+  "x": 1748,
+  "y": 483,
+  "w": 244,
+  "h": 266,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "sprinter_2": {
+  "atlas": "world",
+  "x": 6,
+  "y": 834,
+  "w": 219,
+  "h": 257,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "sprinter_3": {
+  "atlas": "world",
+  "x": 231,
+  "y": 834,
+  "w": 257,
+  "h": 249,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "sprinter_hit": {
+  "atlas": "world",
+  "x": 494,
+  "y": 834,
+  "w": 330,
+  "h": 244,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "currency": {
+  "atlas": "world",
+  "x": 830,
+  "y": 834,
+  "w": 257,
+  "h": 200,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "gem_green": {
+  "atlas": "world",
+  "x": 1093,
+  "y": 834,
+  "w": 128,
+  "h": 200,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "gem_blue": {
+  "atlas": "world",
+  "x": 1227,
+  "y": 834,
+  "w": 130,
+  "h": 198,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "gem_purple": {
+  "atlas": "world",
+  "x": 1363,
+  "y": 834,
+  "w": 120,
+  "h": 196,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "walker_dead": {
+  "atlas": "world",
+  "x": 1489,
+  "y": 834,
+  "w": 236,
+  "h": 192,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "sprinter_dead": {
+  "atlas": "world",
+  "x": 1731,
+  "y": 834,
+  "w": 236,
+  "h": 192,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "tank_dead": {
+  "atlas": "world",
+  "x": 6,
+  "y": 1097,
+  "w": 236,
+  "h": 192,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "block_barrier": {
+  "atlas": "world",
+  "x": 248,
+  "y": 1097,
+  "w": 238,
+  "h": 188,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "barrel_rust": {
+  "atlas": "world",
+  "x": 492,
+  "y": 1097,
+  "w": 123,
+  "h": 181,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "barrel_toxic": {
+  "atlas": "world",
+  "x": 621,
+  "y": 1097,
+  "w": 123,
+  "h": 180,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "crate": {
+  "atlas": "world",
+  "x": 750,
+  "y": 1097,
+  "w": 168,
+  "h": 172,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "health_pack": {
+  "atlas": "world",
+  "x": 924,
+  "y": 1097,
+  "w": 186,
+  "h": 167,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "block_debris": {
+  "atlas": "world",
+  "x": 1116,
+  "y": 1097,
+  "w": 301,
+  "h": 140,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "up_multishot": {
+  "atlas": "ui",
+  "x": 6,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_firetrail": {
+  "atlas": "ui",
+  "x": 229,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_spikebumper": {
+  "atlas": "ui",
+  "x": 452,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_piercing": {
+  "atlas": "ui",
+  "x": 675,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_boiler": {
+  "atlas": "ui",
+  "x": 898,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_rapidfire": {
+  "atlas": "ui",
+  "x": 1121,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_incendiary": {
+  "atlas": "ui",
+  "x": 1344,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_extragun": {
+  "atlas": "ui",
+  "x": 1567,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "up_extrawagon": {
+  "atlas": "ui",
+  "x": 1790,
+  "y": 6,
+  "w": 217,
+  "h": 217,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "icon_blockade": {
+  "atlas": "ui",
+  "x": 6,
+  "y": 229,
+  "w": 238,
+  "h": 188,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "banner_levelup": {
+  "atlas": "ui",
+  "x": 250,
+  "y": 229,
+  "w": 541,
+  "h": 148,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "banner_victory": {
+  "atlas": "ui",
+  "x": 797,
+  "y": 229,
+  "w": 540,
+  "h": 148,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "flag_yellow": {
+  "atlas": "ui",
+  "x": 1343,
+  "y": 229,
+  "w": 116,
+  "h": 148,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "flag_red": {
+  "atlas": "ui",
+  "x": 1465,
+  "y": 229,
+  "w": 94,
+  "h": 148,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "flag_green": {
+  "atlas": "ui",
+  "x": 1565,
+  "y": 229,
+  "w": 97,
+  "h": 147,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.0
+  ]
+ },
+ "warn_0": {
+  "atlas": "ui",
+  "x": 1668,
+  "y": 229,
+  "w": 152,
+  "h": 138,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "warn_1": {
+  "atlas": "ui",
+  "x": 1826,
+  "y": 229,
+  "w": 152,
+  "h": 138,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "marker_a": {
+  "atlas": "ui",
+  "x": 6,
+  "y": 423,
+  "w": 115,
+  "h": 126,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "marker_b": {
+  "atlas": "ui",
+  "x": 127,
+  "y": 423,
+  "w": 95,
+  "h": 125,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "bar_frame": {
+  "atlas": "ui",
+  "x": 228,
+  "y": 423,
+  "w": 564,
+  "h": 99,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "icon_heart": {
+  "atlas": "ui",
+  "x": 798,
+  "y": 423,
+  "w": 83,
+  "h": 86,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "bar_fill_green": {
+  "atlas": "ui",
+  "x": 887,
+  "y": 423,
+  "w": 397,
+  "h": 38,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ },
+ "bar_fill_blue": {
+  "atlas": "ui",
+  "x": 1290,
+  "y": 423,
+  "w": 309,
+  "h": 36,
+  "atlasW": 2048,
+  "atlasH": 2048,
+  "pivot": [
+   0.5,
+   0.5
+  ]
+ }
+}

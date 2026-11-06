@@ -1,0 +1,60 @@
+{
+ "version": 2,
+ "rule": {
+  "gunSlotsMax": 2,
+  "gunSlotsAtStart": 1,
+  "secondSlotUnlock": "spend an 'Extra Gun' upgrade card on that wagon",
+  "notes": "each wagon arrives with 1 gun; a wagon may never hold more than 2"
+ },
+ "convoy": [
+  {
+   "wagon": 1,
+   "unlockLevel": 1,
+   "slots": [
+    true,
+    false
+   ]
+  },
+  {
+   "wagon": 2,
+   "unlockLevel": 5,
+   "slots": [
+    true,
+    false
+   ]
+  },
+  {
+   "wagon": 3,
+   "unlockLevel": 10,
+   "slots": [
+    true,
+    false
+   ]
+  },
+  {
+   "wagon": 4,
+   "unlockLevel": 15,
+   "slots": [
+    true,
+    false
+   ]
+  },
+  {
+   "wagon": 5,
+   "unlockLevel": 20,
+   "slots": [
+    true,
+    false
+   ]
+  }
+ ],
+ "ui": {
+  "hud": "ui/hud/hud_wagon_slots.png",
+  "composite": "ui/hud/hud_wagon_slots.png"
+ },
+ "integration": [
+  "GunSlot[] per wagon, length 2, index 1 locked until unlocked",
+  "ram/turret targeting iterates wagons then slots (wagon 1 = engine)",
+  "glider disables the slot it lands on for 3 s"
+ ]
+}

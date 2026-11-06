@@ -1,0 +1,97 @@
+{
+ "id": "tank",
+ "artFolder": "tank",
+ "name": "Tank",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 255,
+  "speed": 1.2,
+  "dmg": 18,
+  "xp": 6,
+  "armor": 2,
+  "pack": "1",
+  "lane": "rails",
+  "threat": "high"
+ },
+ "ability": {
+  "name": "Tank",
+  "role": "bloated brute, bullet sponge",
+  "behaviour": [
+   "absorbs fire meant for weaker enemies",
+   "smashes barricades aside"
+  ],
+  "counters": [
+   "sustained fire",
+   "rocket",
+   "the ram does nothing"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/tank/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/tank/sprite.png",
+    "px": [
+     615,
+     471
+    ],
+    "coverage": 75.5
+   },
+   "hit": "art-work/enemies/tank/sprite_hit.png",
+   "dead": "art-work/enemies/tank/sprite_dead.png",
+   "preview": "art-work/enemies/tank/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    20,
+    140,
+    750,
+    870
+   ],
+   "components": 2,
+   "blob": 86723,
+   "trimmed": [
+    625,
+    475
+   ]
+  },
+  "palette": [
+   "#443633",
+   "#563934",
+   "#544843",
+   "#81665E",
+   "#6F4F47",
+   "#969387"
+  ],
+  "silhouette": "Hulking humanoid brute in work overalls, one arm in an armoured gauntlet.",
+  "pose": "front view, planted, fists closed",
+  "features": [
+   "chains and padlock across the chest",
+   "spiked shoulder plate",
+   "riveted bracer on the left arm",
+   "blood-flecked skin, pale glowing eyes"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_tank",
+  "heightM": 2.9,
+  "atlasPx": [
+   251,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/tank.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/tank.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_tank.png"
+ }
+}

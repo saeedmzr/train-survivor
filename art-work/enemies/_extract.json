@@ -1,0 +1,229 @@
+{
+ "bloater": {
+  "sourceBox": [
+   30,
+   150,
+   740,
+   860
+  ],
+  "blob": 94524,
+  "components": 1,
+  "trimmed": [
+   699,
+   462
+  ],
+  "sprite": [
+   658,
+   458
+  ],
+  "coverage": 72.0
+ },
+ "bulwark": {
+  "sourceBox": [
+   30,
+   140,
+   745,
+   870
+  ],
+  "blob": 94632,
+  "components": 1,
+  "trimmed": [
+   715,
+   476
+  ],
+  "sprite": [
+   610,
+   472
+  ],
+  "coverage": 76.4
+ },
+ "crawler": {
+  "sourceBox": [
+   30,
+   140,
+   740,
+   860
+  ],
+  "blob": 96899,
+  "components": 1,
+  "trimmed": [
+   710,
+   470
+  ],
+  "sprite": [
+   710,
+   466
+  ],
+  "coverage": 65.0
+ },
+ "drillmaw": {
+  "sourceBox": [
+   30,
+   140,
+   740,
+   870
+  ],
+  "blob": 89071,
+  "components": 5,
+  "trimmed": [
+   710,
+   476
+  ],
+  "sprite": [
+   606,
+   472
+  ],
+  "coverage": 70.2
+ },
+ "glider": {
+  "sourceBox": [
+   20,
+   140,
+   750,
+   880
+  ],
+  "blob": 80976,
+  "components": 2,
+  "trimmed": [
+   730,
+   483
+  ],
+  "sprite": [
+   716,
+   479
+  ],
+  "coverage": 55.2
+ },
+ "lantern": {
+  "sourceBox": [
+   60,
+   55,
+   720,
+   880
+  ],
+  "method": "polygon+detail",
+  "trimmed": [
+   424,
+   674
+  ],
+  "sprite": [
+   424,
+   674
+  ],
+  "coverage": 58.7
+ },
+ "rimback": {
+  "sourceBox": [
+   20,
+   130,
+   750,
+   880
+  ],
+  "blob": 110096,
+  "components": 1,
+  "trimmed": [
+   730,
+   489
+  ],
+  "sprite": [
+   730,
+   485
+  ],
+  "coverage": 74.4
+ },
+ "shrieker": {
+  "sourceBox": [
+   30,
+   150,
+   740,
+   860
+  ],
+  "blob": 93334,
+  "components": 1,
+  "trimmed": [
+   710,
+   462
+  ],
+  "sprite": [
+   710,
+   458
+  ],
+  "coverage": 60.5
+ },
+ "spitter": {
+  "sourceBox": [
+   30,
+   150,
+   740,
+   860
+  ],
+  "blob": 90189,
+  "components": 2,
+  "trimmed": [
+   680,
+   462
+  ],
+  "sprite": [
+   680,
+   458
+  ],
+  "coverage": 69.1
+ },
+ "sprinter": {
+  "sourceBox": [
+   30,
+   150,
+   740,
+   850
+  ],
+  "blob": 72580,
+  "components": 6,
+  "trimmed": [
+   678,
+   458
+  ],
+  "sprite": [
+   633,
+   454
+  ],
+  "coverage": 50.9
+ },
+ "tank": {
+  "sourceBox": [
+   20,
+   140,
+   750,
+   870
+  ],
+  "blob": 86723,
+  "components": 2,
+  "trimmed": [
+   625,
+   475
+  ],
+  "sprite": [
+   615,
+   471
+  ],
+  "coverage": 75.5
+ },
+ "walker": {
+  "sourceBox": [
+   40,
+   150,
+   730,
+   850
+  ],
+  "blob": 72123,
+  "components": 1,
+  "trimmed": [
+   642,
+   457
+  ],
+  "sprite": [
+   558,
+   453
+  ],
+  "coverage": 63.6
+ }
+}

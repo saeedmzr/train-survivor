@@ -1,0 +1,98 @@
+{
+ "id": "crawler",
+ "artFolder": "crawler",
+ "name": "Crawler",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 22,
+  "speed": 4.4,
+  "dmg": 4,
+  "xp": 4,
+  "armor": 0,
+  "pack": "3–5",
+  "lane": "rails",
+  "threat": "low"
+ },
+ "ability": {
+  "name": "Crawler",
+  "role": "low quadruped that slides under the cowcatcher — ram misses, shoot it",
+  "behaviour": [
+   "lowers to 0.25 m tall when the train is within 8 m",
+   "slides under the cowcatcher — ram does nothing",
+   "sprints straight down the rails, ignores barricades"
+  ],
+  "counters": [
+   "any bullet",
+   "shotgun close range",
+   "splash"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/crawler/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/crawler/sprite.png",
+    "px": [
+     710,
+     466
+    ],
+    "coverage": 65.0
+   },
+   "hit": "art-work/enemies/crawler/sprite_hit.png",
+   "dead": "art-work/enemies/crawler/sprite_dead.png",
+   "preview": "art-work/enemies/crawler/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    30,
+    140,
+    740,
+    860
+   ],
+   "components": 1,
+   "blob": 96899,
+   "trimmed": [
+    710,
+    470
+   ]
+  },
+  "palette": [
+   "#39443B",
+   "#66705C",
+   "#61564A",
+   "#564439",
+   "#A4BE8B",
+   "#70A96C"
+  ],
+  "silhouette": "Low, long quadruped — an armoured scrap-hound with a finned back, splayed legs and a heavy jaw.",
+  "pose": "side three-quarter, crouched to lunge, tail curling up",
+  "features": [
+   "spine of jagged plates with glowing green core vents",
+   "exposed shoulder actuator and piston legs",
+   "needle-tooth jaw with dripping saliva",
+   "chain-link tail tip"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_crawler",
+  "heightM": 1.15,
+  "atlasPx": [
+   293,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/crawler.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/crawler.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_crawler.png"
+ }
+}

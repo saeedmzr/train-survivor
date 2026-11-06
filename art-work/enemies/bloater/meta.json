@@ -1,0 +1,97 @@
+{
+ "id": "bloater",
+ "artFolder": "bloater",
+ "name": "Bloater",
+ "type": "normal enemy",
+ "biomes": [
+  "burning-metropolis",
+  "frozen-canyon",
+  "toxic-swamp"
+ ],
+ "stats": {
+  "hp": 60,
+  "speed": 2.2,
+  "dmg": 18,
+  "xp": 12,
+  "armor": 1,
+  "pack": "1–2",
+  "lane": "rails",
+  "threat": "medium"
+ },
+ "ability": {
+  "name": "Bloater",
+  "role": "bloated suicide bomber — detonates on contact for area damage",
+  "behaviour": [
+   "fuse glows 1.2 s before detonation",
+   "explodes on contact OR on death — 3 m radius",
+   "blast also damages other enemies"
+  ],
+  "counters": [
+   "kill it early (chain reaction)",
+   "rocket from range"
+  ]
+ },
+ "art": {
+  "sourceCard": "art-work/enemies/bloater/card.png",
+  "sprites": {
+   "sprite": {
+    "file": "art-work/enemies/bloater/sprite.png",
+    "px": [
+     658,
+     458
+    ],
+    "coverage": 72.0
+   },
+   "hit": "art-work/enemies/bloater/sprite_hit.png",
+   "dead": "art-work/enemies/bloater/sprite_dead.png",
+   "preview": "art-work/enemies/bloater/cutout_preview.png"
+  },
+  "extraction": {
+   "method": null,
+   "sourceBox": [
+    30,
+    150,
+    740,
+    860
+   ],
+   "components": 1,
+   "blob": 94524,
+   "trimmed": [
+    699,
+    462
+   ]
+  },
+  "palette": [
+   "#40413A",
+   "#777661",
+   "#655750",
+   "#BFB584",
+   "#60443C",
+   "#75C08A"
+  ],
+  "silhouette": "Spherical gas-bag body on four insectile legs, dominated by a huge mouth and two saucer eyes.",
+  "pose": "front three-quarter, standing wide, flanked by vapour",
+  "features": [
+   "riveted steel belly with glowing green and purple blisters",
+   "stitched skull plate over the mouth",
+   "hydraulic leg struts",
+   "constant vapour leak"
+  ],
+  "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+ },
+ "unity": {
+  "sprite": "en_bloater",
+  "heightM": 2.1,
+  "atlasPx": [
+   276,
+   192
+  ],
+  "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+  "individual": "unity/Assets/_Project/Art/Sprites/Enemies/bloater.png",
+  "prefab": "unity/Assets/_Project/Prefabs/Enemies/bloater.prefab"
+ },
+ "design": {
+  "dataFile": "finalized-for-develop/data/enemies.json",
+  "card": "finalized-for-develop/enemies/cards/card_bloater.png"
+ }
+}

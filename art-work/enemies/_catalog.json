@@ -1,0 +1,894 @@
+{
+ "source": "art-work/enemies",
+ "count": 12,
+ "enemies": [
+  {
+   "id": "shrieker",
+   "artFolder": "shrieker",
+   "name": "Shrieker",
+   "stats": {
+    "hp": 70,
+    "speed": 2.6,
+    "dmg": 0,
+    "xp": 15,
+    "armor": 0,
+    "pack": "1",
+    "lane": "rear",
+    "threat": "medium"
+   },
+   "unity": {
+    "sprite": "en_shrieker",
+    "heightM": 1.75,
+    "atlasPx": [
+     298,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/shrieker.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/shrieker.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/shrieker/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/shrieker/sprite.png",
+      "px": [
+       710,
+       458
+      ],
+      "coverage": 60.5
+     },
+     "hit": "art-work/enemies/shrieker/sprite_hit.png",
+     "dead": "art-work/enemies/shrieker/sprite_dead.png",
+     "preview": "art-work/enemies/shrieker/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      30,
+      150,
+      740,
+      860
+     ],
+     "components": 1,
+     "blob": 93334,
+     "trimmed": [
+      710,
+      462
+     ]
+    },
+    "palette": [
+     "#2B443E",
+     "#626858",
+     "#453D3A",
+     "#5B4941",
+     "#75B69A",
+     "#ADB798"
+    ],
+    "silhouette": "Skeletal zombie with two gramophone horns growing out of its head, arms flung out, screaming.",
+    "pose": "front view, mid-scream",
+    "features": [
+     "twin brass horn cones",
+     "concentric green sound rings",
+     "tattered coat over exposed ribs",
+     "ember sparks off the shoulders"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "crawler",
+   "artFolder": "crawler",
+   "name": "Crawler",
+   "stats": {
+    "hp": 22,
+    "speed": 4.4,
+    "dmg": 4,
+    "xp": 4,
+    "armor": 0,
+    "pack": "3\u20135",
+    "lane": "rails",
+    "threat": "low"
+   },
+   "unity": {
+    "sprite": "en_crawler",
+    "heightM": 1.15,
+    "atlasPx": [
+     293,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/crawler.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/crawler.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/crawler/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/crawler/sprite.png",
+      "px": [
+       710,
+       466
+      ],
+      "coverage": 65.0
+     },
+     "hit": "art-work/enemies/crawler/sprite_hit.png",
+     "dead": "art-work/enemies/crawler/sprite_dead.png",
+     "preview": "art-work/enemies/crawler/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      30,
+      140,
+      740,
+      860
+     ],
+     "components": 1,
+     "blob": 96899,
+     "trimmed": [
+      710,
+      470
+     ]
+    },
+    "palette": [
+     "#39443B",
+     "#66705C",
+     "#61564A",
+     "#564439",
+     "#A4BE8B",
+     "#70A96C"
+    ],
+    "silhouette": "Low, long quadruped \u2014 an armoured scrap-hound with a finned back, splayed legs and a heavy jaw.",
+    "pose": "side three-quarter, crouched to lunge, tail curling up",
+    "features": [
+     "spine of jagged plates with glowing green core vents",
+     "exposed shoulder actuator and piston legs",
+     "needle-tooth jaw with dripping saliva",
+     "chain-link tail tip"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "rimeback",
+   "artFolder": "rimback",
+   "name": "Rimeback",
+   "stats": {
+    "hp": 140,
+    "speed": 1.8,
+    "dmg": 16,
+    "xp": 22,
+    "armor": 4,
+    "pack": "1",
+    "lane": "rails",
+    "threat": "high"
+   },
+   "unity": {
+    "sprite": "en_rimback",
+    "heightM": 2.4,
+    "atlasPx": [
+     289,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/rimback.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/rimeback.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/rimback/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/rimback/sprite.png",
+      "px": [
+       730,
+       485
+      ],
+      "coverage": 74.4
+     },
+     "hit": "art-work/enemies/rimback/sprite_hit.png",
+     "dead": "art-work/enemies/rimback/sprite_dead.png",
+     "preview": "art-work/enemies/rimback/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      20,
+      130,
+      750,
+      880
+     ],
+     "components": 1,
+     "blob": 110096,
+     "trimmed": [
+      730,
+      489
+     ]
+    },
+    "palette": [
+     "#354C4E",
+     "#708D8B",
+     "#63625D",
+     "#59473E",
+     "#83D8DD",
+     "#C1F3EF"
+    ],
+    "silhouette": "Massive armoured beast, low and wide, crowned with ice spikes over the back and a plated head.",
+    "pose": "front three-quarter, crouched, shoulders forward",
+    "features": [
+     "ridge of pale-blue ice crystals",
+     "frost-breathing jaw with tusks",
+     "exhaust stacks venting smoke",
+     "cracked rust plates on the shoulders"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "glider",
+   "artFolder": "glider",
+   "name": "Glider",
+   "stats": {
+    "hp": 35,
+    "speed": 7.0,
+    "dmg": 9,
+    "xp": 9,
+    "armor": 0,
+    "pack": "2\u20134",
+    "lane": "air",
+    "threat": "medium"
+   },
+   "unity": {
+    "sprite": "en_glider",
+    "heightM": 1.6,
+    "atlasPx": [
+     287,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/glider.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/glider.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/glider/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/glider/sprite.png",
+      "px": [
+       716,
+       479
+      ],
+      "coverage": 55.2
+     },
+     "hit": "art-work/enemies/glider/sprite_hit.png",
+     "dead": "art-work/enemies/glider/sprite_dead.png",
+     "preview": "art-work/enemies/glider/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      20,
+      140,
+      750,
+      880
+     ],
+     "components": 2,
+     "blob": 80976,
+     "trimmed": [
+      730,
+      483
+     ]
+    },
+    "palette": [
+     "#4A403A",
+     "#684F3F",
+     "#90775C",
+     "#6C6B63",
+     "#CACDAA",
+     "#988C74"
+    ],
+    "silhouette": "Small winged drone-creature: barrel body, two large eyes, rag wings, dangling talons.",
+    "pose": "front view, airborne, thrusters firing",
+    "features": [
+     "patched canvas wings on steel spars",
+     "twin blue thruster flames",
+     "clawed feet tucked under the body",
+     "stub exhaust pipe on the back"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "spitter",
+   "artFolder": "spitter",
+   "name": "Spitter",
+   "stats": {
+    "hp": 45,
+    "speed": 2.8,
+    "dmg": 7,
+    "xp": 10,
+    "armor": 0,
+    "pack": "1\u20133",
+    "lane": "embankment",
+    "threat": "medium"
+   },
+   "unity": {
+    "sprite": "en_spitter",
+    "heightM": 1.8,
+    "atlasPx": [
+     285,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/spitter.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/spitter.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/spitter/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/spitter/sprite.png",
+      "px": [
+       680,
+       458
+      ],
+      "coverage": 69.1
+     },
+     "hit": "art-work/enemies/spitter/sprite_hit.png",
+     "dead": "art-work/enemies/spitter/sprite_dead.png",
+     "preview": "art-work/enemies/spitter/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      30,
+      150,
+      740,
+      860
+     ],
+     "components": 2,
+     "blob": 90189,
+     "trimmed": [
+      680,
+      462
+     ]
+    },
+    "palette": [
+     "#3C4437",
+     "#635040",
+     "#837B5C",
+     "#55774A",
+     "#A4D571",
+     "#66BD54"
+    ],
+    "silhouette": "Quadruped carrying a huge cannon-like acid sac on its back, aimed forward, jaws open.",
+    "pose": "side three-quarter, braced on four legs",
+    "features": [
+     "glowing green tank/cannon strapped to the spine",
+     "drip-covered needle teeth",
+     "hazard-yellow eye",
+     "long tail counterweight"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "bloater",
+   "artFolder": "bloater",
+   "name": "Bloater",
+   "stats": {
+    "hp": 60,
+    "speed": 2.2,
+    "dmg": 18,
+    "xp": 12,
+    "armor": 1,
+    "pack": "1\u20132",
+    "lane": "rails",
+    "threat": "medium"
+   },
+   "unity": {
+    "sprite": "en_bloater",
+    "heightM": 2.1,
+    "atlasPx": [
+     276,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/bloater.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/bloater.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/bloater/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/bloater/sprite.png",
+      "px": [
+       658,
+       458
+      ],
+      "coverage": 72.0
+     },
+     "hit": "art-work/enemies/bloater/sprite_hit.png",
+     "dead": "art-work/enemies/bloater/sprite_dead.png",
+     "preview": "art-work/enemies/bloater/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      30,
+      150,
+      740,
+      860
+     ],
+     "components": 1,
+     "blob": 94524,
+     "trimmed": [
+      699,
+      462
+     ]
+    },
+    "palette": [
+     "#40413A",
+     "#777661",
+     "#655750",
+     "#BFB584",
+     "#60443C",
+     "#75C08A"
+    ],
+    "silhouette": "Spherical gas-bag body on four insectile legs, dominated by a huge mouth and two saucer eyes.",
+    "pose": "front three-quarter, standing wide, flanked by vapour",
+    "features": [
+     "riveted steel belly with glowing green and purple blisters",
+     "stitched skull plate over the mouth",
+     "hydraulic leg struts",
+     "constant vapour leak"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "sprinter",
+   "artFolder": "sprinter",
+   "name": "Sprinter",
+   "stats": {
+    "hp": 12,
+    "speed": 6.5,
+    "dmg": 4,
+    "xp": 1,
+    "armor": 0,
+    "pack": "3\u20135",
+    "lane": "flanks",
+    "threat": "low"
+   },
+   "unity": {
+    "sprite": "en_sprinter",
+    "heightM": 1.9,
+    "atlasPx": [
+     268,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/sprinter.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/sprinter.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/sprinter/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/sprinter/sprite.png",
+      "px": [
+       633,
+       454
+      ],
+      "coverage": 50.9
+     },
+     "hit": "art-work/enemies/sprinter/sprite_hit.png",
+     "dead": "art-work/enemies/sprinter/sprite_dead.png",
+     "preview": "art-work/enemies/sprinter/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      30,
+      150,
+      740,
+      850
+     ],
+     "components": 6,
+     "blob": 72580,
+     "trimmed": [
+      678,
+      458
+     ]
+    },
+    "palette": [
+     "#4D3A31",
+     "#715546",
+     "#764129",
+     "#985938",
+     "#EDB454",
+     "#B97545"
+    ],
+    "silhouette": "Emaciated running zombie caught mid-stride, on fire.",
+    "pose": "side view, leaning into a sprint",
+    "features": [
+     "full-body flame silhouette",
+     "burning feet trailing embers",
+     "exposed ribs and shoulder blade",
+     "glowing orange eyes"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "tank",
+   "artFolder": "tank",
+   "name": "Tank",
+   "stats": {
+    "hp": 255,
+    "speed": 1.2,
+    "dmg": 18,
+    "xp": 6,
+    "armor": 2,
+    "pack": "1",
+    "lane": "rails",
+    "threat": "high"
+   },
+   "unity": {
+    "sprite": "en_tank",
+    "heightM": 2.9,
+    "atlasPx": [
+     251,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/tank.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/tank.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/tank/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/tank/sprite.png",
+      "px": [
+       615,
+       471
+      ],
+      "coverage": 75.5
+     },
+     "hit": "art-work/enemies/tank/sprite_hit.png",
+     "dead": "art-work/enemies/tank/sprite_dead.png",
+     "preview": "art-work/enemies/tank/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      20,
+      140,
+      750,
+      870
+     ],
+     "components": 2,
+     "blob": 86723,
+     "trimmed": [
+      625,
+      475
+     ]
+    },
+    "palette": [
+     "#443633",
+     "#563934",
+     "#544843",
+     "#81665E",
+     "#6F4F47",
+     "#969387"
+    ],
+    "silhouette": "Hulking humanoid brute in work overalls, one arm in an armoured gauntlet.",
+    "pose": "front view, planted, fists closed",
+    "features": [
+     "chains and padlock across the chest",
+     "spiked shoulder plate",
+     "riveted bracer on the left arm",
+     "blood-flecked skin, pale glowing eyes"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "bulwark",
+   "artFolder": "bulwark",
+   "name": "Bulwark",
+   "stats": {
+    "hp": 110,
+    "speed": 2.4,
+    "dmg": 12,
+    "xp": 18,
+    "armor": 3,
+    "pack": "1\u20132",
+    "lane": "rails",
+    "threat": "high"
+   },
+   "unity": {
+    "sprite": "en_bulwark",
+    "heightM": 2.3,
+    "atlasPx": [
+     248,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/bulwark.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/bulwark.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/bulwark/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/bulwark/sprite.png",
+      "px": [
+       610,
+       472
+      ],
+      "coverage": 76.4
+     },
+     "hit": "art-work/enemies/bulwark/sprite_hit.png",
+     "dead": "art-work/enemies/bulwark/sprite_dead.png",
+     "preview": "art-work/enemies/bulwark/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      30,
+      140,
+      745,
+      870
+     ],
+     "components": 1,
+     "blob": 94632,
+     "trimmed": [
+      715,
+      476
+     ]
+    },
+    "palette": [
+     "#443E39",
+     "#7C7E6F",
+     "#6E6659",
+     "#58483E",
+     "#6E4B38",
+     "#A4AB8F"
+    ],
+    "silhouette": "Heavy humanoid hunched behind a door-sized rail sign used as a shield.",
+    "pose": "front view, planted, shield towards camera",
+    "features": [
+     "shield with yellow/black hazard chevrons and rivets",
+     "spiked shoulder pad",
+     "single glowing eye slit",
+     "plated boots and braced legs"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "drillmaw",
+   "artFolder": "drillmaw",
+   "name": "Drillmaw",
+   "stats": {
+    "hp": 90,
+    "speed": 3.0,
+    "dmg": 15,
+    "xp": 16,
+    "armor": 2,
+    "pack": "1",
+    "lane": "underground",
+    "threat": "high"
+   },
+   "unity": {
+    "sprite": "en_drillmaw",
+    "heightM": 1.5,
+    "atlasPx": [
+     247,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/drillmaw.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/drillmaw.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/drillmaw/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/drillmaw/sprite.png",
+      "px": [
+       606,
+       472
+      ],
+      "coverage": 70.2
+     },
+     "hit": "art-work/enemies/drillmaw/sprite_hit.png",
+     "dead": "art-work/enemies/drillmaw/sprite_dead.png",
+     "preview": "art-work/enemies/drillmaw/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      30,
+      140,
+      740,
+      870
+     ],
+     "components": 5,
+     "blob": 89071,
+     "trimmed": [
+      710,
+      476
+     ]
+    },
+    "palette": [
+     "#725844",
+     "#473A32",
+     "#584031",
+     "#8B755C",
+     "#72432A",
+     "#C0AD82"
+    ],
+    "silhouette": "Drill-headed worm rearing out of the ballast: conical screw head, gear collar, clawed forelimbs.",
+    "pose": "front three-quarter, emerging from rubble",
+    "features": [
+     "star-shaped drill with a glowing amber core",
+     "stacked gear rings behind the head",
+     "hazard-striped collar",
+     "churned dirt and sparks at the base"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "walker",
+   "artFolder": "walker",
+   "name": "Walker",
+   "stats": {
+    "hp": 30,
+    "speed": 2.2,
+    "dmg": 6,
+    "xp": 1,
+    "armor": 0,
+    "pack": "4\u20138",
+    "lane": "rails",
+    "threat": "low"
+   },
+   "unity": {
+    "sprite": "en_walker",
+    "heightM": 2.0,
+    "atlasPx": [
+     237,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/walker.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/walker.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/walker/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/walker/sprite.png",
+      "px": [
+       558,
+       453
+      ],
+      "coverage": 63.6
+     },
+     "hit": "art-work/enemies/walker/sprite_hit.png",
+     "dead": "art-work/enemies/walker/sprite_dead.png",
+     "preview": "art-work/enemies/walker/cutout_preview.png"
+    },
+    "extraction": {
+     "method": null,
+     "sourceBox": [
+      40,
+      150,
+      730,
+      850
+     ],
+     "components": 1,
+     "blob": 72123,
+     "trimmed": [
+      642,
+      457
+     ]
+    },
+    "palette": [
+     "#334433",
+     "#484A39",
+     "#657747",
+     "#80A75C",
+     "#93D95D",
+     "#614F3B"
+    ],
+    "silhouette": "Shambling zombie in a torn shirt and trousers, arms hanging, head tilted.",
+    "pose": "front view, mid-step",
+    "features": [
+     "glowing green wound across the torso",
+     "torn sleeves and hanging jaw",
+     "ember glow on one shoulder",
+     "sickly green highlights over washed grey"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  },
+  {
+   "id": "lantern",
+   "artFolder": "lantern",
+   "name": "The Lantern",
+   "stats": {
+    "hp": 85,
+    "speed": 2.0,
+    "dmg": 6,
+    "xp": 20,
+    "armor": 0,
+    "pack": "1",
+    "lane": "rear",
+    "threat": "high"
+   },
+   "unity": {
+    "sprite": "en_lantern",
+    "heightM": 2.2,
+    "atlasPx": [
+     121,
+     192
+    ],
+    "atlas": "unity/Assets/_Project/Art/Resources/Art/atlas_enemies.png",
+    "individual": "unity/Assets/_Project/Art/Sprites/Enemies/lantern.png",
+    "prefab": "unity/Assets/_Project/Prefabs/Enemies/lantern.prefab"
+   },
+   "art": {
+    "sourceCard": "art-work/enemies/lantern/card.png",
+    "sprites": {
+     "sprite": {
+      "file": "art-work/enemies/lantern/sprite.png",
+      "px": [
+       424,
+       674
+      ],
+      "coverage": 58.7
+     },
+     "hit": "art-work/enemies/lantern/sprite_hit.png",
+     "dead": "art-work/enemies/lantern/sprite_dead.png",
+     "preview": "art-work/enemies/lantern/cutout_preview.png"
+    },
+    "extraction": {
+     "method": "polygon+detail",
+     "sourceBox": [
+      60,
+      55,
+      720,
+      880
+     ],
+     "components": null,
+     "blob": null,
+     "trimmed": [
+      424,
+      674
+     ]
+    },
+    "palette": [
+     "#48715D",
+     "#2E4D42",
+     "#535845",
+     "#4C4235",
+     "#84B9A1",
+     "#3EAB96"
+    ],
+    "silhouette": "Tall robed skeleton conductor in a wide-brimmed witch hat, holding a caged lantern on a chain.",
+    "pose": "three-quarter front, standing, lamp arm raised",
+    "features": [
+     "caged lantern with a cyan flame on a chain",
+     "glowing cyan eye sockets in a stitched skull",
+     "mechanical forearm and exposed rib cage",
+     "rope belt over a ragged robe"
+    ],
+    "notes": "Side-on card art; the creature is cut from the card, title and stat panel removed."
+   }
+  }
+ ]
+}
