@@ -124,6 +124,21 @@ def screech(dur=0.45, seed=5):
     return out
 
 
+
+def crack(dur=0.11, seed=51):
+    """Muzzle crack: high-passed noise with a very fast decay, no tonal content."""
+    rnd = random.Random(seed)
+    n = int(SR * dur)
+    out = []
+    prev = 0.0
+    for i in range(n):
+        x = rnd.uniform(-1.0, 1.0)
+        hp = x - prev
+        prev = x
+        out.append(hp * math.exp(-i / SR * 70.0))
+    return out
+
+
 def mix(*layers):
     n = max(len(l) for l in layers)
     out = [0.0] * n
@@ -178,6 +193,7 @@ def build():
     write("fx_blast", boom(0.9, 43), 1.0)
     write("fx_brake", screech(0.45, 44), 0.75)
     write("fx_ram", mix(boom(0.3, 45), clank(0.3, 900, 46)), 0.9)
+    write("fx_shot", mix(crack(0.11, 51), boom(0.25, 52), clank(0.16, 2400, 53)), 0.8)
 
 
 if __name__ == "__main__":

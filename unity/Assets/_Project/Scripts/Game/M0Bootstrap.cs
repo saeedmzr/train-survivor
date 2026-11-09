@@ -58,8 +58,21 @@ namespace TrainSurvivor.Game
         /// </summary>
         void ApplyDevTweaks()
         {
+            if (DevTuning.Get("dev.diag", 0f) > 0f) gameObject.AddComponent<DevDiag>();
+            if (DevTuning.Get("dev.rig", 0f) > 0.5f) gameObject.AddComponent<EnemyRigDemo>();
+            // dev.models=1 (default) draws walkers with the finalized 3D model instead of sprites
+            if (DevTuning.Get("dev.models", 1f) > 0.5f)
+            {
+                gameObject.AddComponent<WalkerModelView>();
+                // while the walker is the only modelled species the sprite pool is dead weight,
+                // and leaving it on draws billboards on top of the 3D bodies
+                if (Enemies != null) Enemies.enabled = false;
+            }
+
             if (Loop == null || Loop.World == null) return;
             var w = Loop.World;
+            w.DemoKills = DevTuning.Get("dev.kills", 0f) > 0.5f;
+
 
             // dev.timeScale=0.2 runs the whole game in slow motion, sim and view alike: the
             // only way to see a 0.12 s shot sequence on a device that screenshots at ~3 fps.
@@ -102,6 +115,10 @@ namespace TrainSurvivor.Game
             int devWagons = (int)DevTuning.Get("dev.wagons", 0f);
             for (int i = 0; i < devWagons; i++) w.GrantCard(CardId.ExtraWagon);
 
+            // dev.guns=4 bolts turrets on, so the modelled gun can be inspected in place
+            int devGuns = (int)DevTuning.Get("dev.guns", 0f);
+            for (int i = 1; i < devGuns; i++) w.GrantCard(CardId.ExtraGun);
+
             float stageEnd = DevTuning.Get("dev.stageend", 0f);
             if (stageEnd > 0f) w.Train.S = Mathf.Max(0f, w.StageLength - stageEnd);
         }
@@ -115,7 +132,8 @@ namespace TrainSurvivor.Game
             light.type = LightType.Directional;
             light.color = new Color(1f, 0.93f, 0.82f);
             light.intensity = 1.15f;
-            light.shadows = LightShadows.None;   // mobile budget: no real-time shadows
+            light.shadows = LightShadows.Soft;   // props need contact shadows or they float
+            light.shadowStrength = 0.72f;
 
             var fill = new GameObject("Fill");
             fill.transform.SetParent(transform, false);
@@ -172,6 +190,11 @@ namespace TrainSurvivor.Game
             var pickups = new GameObject("Pickups");
             pickups.transform.SetParent(go.transform, false);
             pickups.AddComponent<PickupView>().Build();
+
+            // 3D district first: the sprite props below skip themselves when it is present
+            var district = new GameObject("District");
+            district.transform.SetParent(go.transform, false);
+            district.AddComponent<DistrictScenery>();
 
             var scenery = new GameObject("Scenery");
             scenery.transform.SetParent(go.transform, false);

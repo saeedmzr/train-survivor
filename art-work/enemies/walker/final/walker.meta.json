@@ -1,0 +1,41 @@
+{
+  "id": "walker",
+  "kind": "final-3d-model",
+  "version": "2026-11-08",
+  "source": {
+    "generator": "tripo",
+    "export": "tripo_convert_dfc747a6-ba7d-4494-a375-982a4fe93742",
+    "rig": "mixamo-named skeleton (65 bones)",
+    "animations": "mixamo, authored on the tripo rig"
+  },
+  "files": {
+    "mesh": "walker.fbx",
+    "albedo": "walker_albedo.jpg"
+  },
+  "mesh": {
+    "verts": 5185,
+    "tris": 5980,
+    "uv_sets": 1,
+    "materials": 1,
+    "bones": 65
+  },
+  "clips": [
+    { "name": "Walk",   "frames": 240, "in_place": true, "loop": true  },
+    { "name": "Attack", "frames": 240, "in_place": true, "loop": false },
+    { "name": "Death",  "frames": 240, "in_place": true, "loop": false }
+  ],
+  "game": {
+    "world_height_m": 2.0,
+    "roster_id": "walker",
+    "hp": 30,
+    "speed": 2.2,
+    "damage": 6
+  },
+  "unity": {
+    "model": "Assets/Resources/Models/walker3d.fbx",
+    "albedo": "Assets/Resources/Models/walker3d_albedo.jpg",
+    "material": "Assets/Resources/Models/WalkerMat.mat",
+    "view_component": "TrainSurvivor.Game.View.WalkerModelView",
+    "tune_flag": "dev.models"
+  }
+}

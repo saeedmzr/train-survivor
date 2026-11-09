@@ -21,6 +21,12 @@ namespace TrainSurvivor.Game.Audio
         float _ambientTimer;
         float _master = 0.75f;
 
+        [Tooltip("Volume of one machine-gun shot")]
+        [Range(0f, 1f)] public float shotVolume = 0.30f;
+        [Tooltip("Minimum gap between shot sounds — 12 guns at 8/s would otherwise machine-gun the mixer")]
+        public float shotMinGap = 0.045f;
+        float _lastShotAt = -1f;
+
         /// <summary>tune.txt dev.audiolog=1 logs every triggered clip. The emulator runs with
         /// -no-audio, so this log is the only way to see the mix fire on device.</summary>
         bool _verbose;
@@ -49,6 +55,7 @@ namespace TrainSurvivor.Game.Audio
             foreach (var kind in (EnemyKind[])System.Enum.GetValues(typeof(EnemyKind)))
                 Load(EnemyVoice(kind));
 
+            Load("fx_shot");
             Load("fx_hit");
             Load("fx_death");
             Load("fx_blast");
@@ -90,6 +97,18 @@ namespace TrainSurvivor.Game.Audio
 
         float PitchJitter() => 1f + Random.Range(-0.07f, 0.07f);
 
+        /// <summary>
+        /// One machine-gun report. Throttled: many guns firing in the same frame collapse into a
+        /// single louder sample instead of stacking into clipping.
+        /// </summary>
+        void PlayShot()
+        {
+            float now = Time.time;
+            if (now - _lastShotAt < shotMinGap) return;
+            _lastShotAt = now;
+            Play("fx_shot", Mathf.Clamp01(shotVolume), PitchJitter() * 1.02f);
+        }
+
         // ---------------------------------------------------------------- sim events
 
         public void Handle(SimEvent e)
@@ -100,6 +119,9 @@ namespace TrainSurvivor.Game.Audio
                     Play("fx_death", 0.55f, PitchJitter());
                     // the sim carries the species: the enemy is gone from the world by now
                     Play(EnemyVoice(e.EnemyKind), 0.5f, PitchJitter() * 1.06f);
+                    break;
+                case SimEventKind.Shot:
+                    PlayShot();
                     break;
                 case SimEventKind.ContactHit:
                     Play("fx_hit", 0.7f, PitchJitter());

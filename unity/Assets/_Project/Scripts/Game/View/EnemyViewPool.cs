@@ -112,6 +112,10 @@ namespace TrainSurvivor.Game.View
                 Enemy e = world.Enemies[i];
                 if (!e.Alive) continue;
 
+                // walkers are drawn by WalkerModelView with the finalized 3D model
+                if (e.Kind == EnemyKind.Walker && WalkerModelView.Instance != null && WalkerModelView.Instance.Active)
+                    continue;
+
                 var body = Get(used++);
                 Vector3 pos = TrackSpace.Point(e.S, e.X, 0f);
                 Gait g = GaitOf(e.Kind);

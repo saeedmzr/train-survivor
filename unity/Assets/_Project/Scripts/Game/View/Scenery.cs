@@ -20,7 +20,9 @@ namespace TrainSurvivor.Game.View
         {
             ArtSprites.Preload();
 
-            for (int i = 0; i < 64; i++)
+            // with the 3D district present the billboard props would sit inside the real crates
+            bool flats = DistrictScenery.Instance == null;
+            for (int i = 0; i < (flats ? 64 : 0); i++)
             {
                 var bb = SpriteBillboard.Create(transform, "Prop" + i);
                 _props.Add(bb);

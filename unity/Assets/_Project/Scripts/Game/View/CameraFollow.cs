@@ -13,15 +13,19 @@ namespace TrainSurvivor.Game.View
         public TrainRig Train;
         // Framing tuned on device for the v2 roster: the horde has to be readable at the
         // distance it is first engaged (~25-35 m), which the old 16.5/11 chase shot was not.
-        public float Distance = 15.5f;
-        public float Height = 10.4f;
+        // pulled back and raised for the modelled 4.2 m locomotive: the old 15.5/10.4 framed
+        // the low box train, but with the real loco the cab filled half the screen
+        public float Distance = 20f;
+        public float Height = 16.5f;
 
         /// <summary>Extra chase distance per wagon beyond the engine, so a long convoy still
         /// fits in frame. The camera eases toward it instead of snapping.</summary>
-        public float WagonPushback = 1.4f;
+        public float WagonPushback = 2.2f;
         public float ZoomSmoothing = 2.2f;
-        public float LookAhead = 25f;     // used only to derive the pitch
-        public float LookHeight = 0.4f;
+        // the chase shot used to stare 25 m up the track; 10 keeps the fight (and the cars
+        // beside the rails) in frame instead of empty road
+        public float LookAhead = 10f;     // used only to derive the pitch
+        public float LookHeight = 1.3f;
         public float Lateral = 0f;
         public float Smoothing = 9f;
 
@@ -64,10 +68,18 @@ namespace TrainSurvivor.Game.View
             float height = Height * (_distance / Distance);
             Vector3 wantPos = TrackSpace.Point(s - _distance, Lateral, height);
 
-            // Pitch is pure geometry: look at the track surface LookAhead metres past the
-            // nose, but keep the yaw aligned with the rail so curves never tilt the framing.
-            float pitch = Mathf.Atan2(height - LookHeight, _distance + LookAhead) * Mathf.Rad2Deg;
-            Quaternion wantRot = TrackSpace.Facing(s) * Quaternion.Euler(pitch, 0f, 0f);
+            // Aim at the train, not at a point far up the road: on a curve a fixed track
+            // heading leaves the convoy hanging off one edge of the frame. A short look-ahead
+            // past the nose keeps the road visible without losing the train.
+            Quaternion facing = TrackSpace.Facing(s);
+            Vector3 forward = facing * Vector3.forward;
+            Vector3 aim = Train.LeadPosition
+                          + forward * (2f + LookAhead * 0.25f)
+                          + Vector3.up * LookHeight;
+            Vector3 toAim = aim - wantPos;
+            Quaternion wantRot = toAim.sqrMagnitude > 0.01f
+                ? Quaternion.LookRotation(toAim, Vector3.up)
+                : facing;
 
             float k = 1f - Mathf.Exp(-Smoothing * Time.deltaTime);
             transform.position = Vector3.Lerp(transform.position, wantPos, k);

@@ -23,14 +23,14 @@ namespace TrainSurvivor.Core
         public const float ChargeBonus = 0.40f;      // +40% fire rate at full charge
 
         // --- weapons ---
-        public const float GunDamage = 10f;
-        public const float GunInterval = 0.12f;      // seconds between shots, per gun
+        public const float GunDamage = 3f;
+        public const float GunInterval = 0.5f;       // seconds between shots, per gun
         public const float GunRange = 34f;           // guns hold fire beyond this — zombies must close in
         public const float RearTargetRange = 2f;     // don't shoot things this far behind
         public const float PierceDamageMul = 0.6f;
 
         // --- ram (Change A) ---
-        public const float RamDamage = 35f;
+        public const float RamDamage = 10f;
         public const float RamRange = 3f;
         public const float RamMinSpeed = 7.2f;       // 60% of MoveSpeed
         public const float RamCooldown = 0.35f;
@@ -42,7 +42,7 @@ namespace TrainSurvivor.Core
         public const float FireTrailAhead = 2f;
 
         // --- enemies ---
-        public const float ContactRange = 4f;        // stops and bites from here
+        public const float ContactRange = 5.5f;      // stops and bites from here
         public const float WalkerHp = 30f;
         public const float WalkerSpeed = 2.2f;
         public const float WalkerDamage = 6f;
@@ -59,6 +59,15 @@ namespace TrainSurvivor.Core
         public const float TankAttackInterval = 2.0f;
 
         public const int MaxEnemies = 64;
+
+        // --- live spawner: keeps walkers closing from every direction, not just the rails ahead ---
+        public const bool LiveSpawner = true;
+        public const float LiveSpawnEvery = 1.6f;     // seconds between bursts
+        public const int LiveSpawnBurst = 3;          // up to this many per burst
+        public const int LiveSpawnCap = 18;           // stop spawning while this many are alive
+        public const float LiveSpawnBehind = -30f;    // S offset range relative to the train
+        public const float LiveSpawnAhead = 65f;
+        public const float LiveSpawnLateral = 22f;    // ± metres off the rails — they walk in across the ground
 
         // --- roster -------------------------------------------------------------
         // One row per species. XP scales with the threat; the flags drive the three
@@ -110,8 +119,16 @@ namespace TrainSurvivor.Core
         }
 
         /// <summary>Weighted species pick for a normal spawn; later stages open the nastier ones.</summary>
+        /// <summary>
+        /// While the walker 3D model is the only modelled enemy, the stage spawns nothing else.
+        /// Flip this back to false to restore the full roster table.
+        /// </summary>
+        public const bool OnlyWalkers = true;
+
         public static EnemyKind PickKind(int stage, float roll)
         {
+            if (OnlyWalkers) return EnemyKind.Walker;
+
             // cumulative table, tuned so stage 1 is walkers/crawlers and stage 6+ is varied
             float wWalker = 100f;
             float wCrawler = stage >= 1 ? 40f : 0f;

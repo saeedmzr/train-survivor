@@ -1,0 +1,42 @@
+{
+  "id": "walker",
+  "sprite": "en_walker",
+  "height_m": 2.0,
+  "note": "front-facing, cropped at the shins: no feet in frame, so no foot-plant IK - the shamble comes from spine/shoulder/arm/head motion",
+  "space": "normalised sprite space, origin bottom-left, y up",
+  "joints": [
+    { "name": "pelvis",    "parent": -1, "x": 0.511, "y": 0.448 },
+    { "name": "spine",     "parent": 0,  "x": 0.516, "y": 0.570 },
+    { "name": "chest",     "parent": 1,  "x": 0.529, "y": 0.691 },
+    { "name": "neck",      "parent": 2,  "x": 0.583, "y": 0.753 },
+    { "name": "head",      "parent": 3,  "x": 0.618, "y": 0.823 },
+
+    { "name": "shoulderL", "parent": 2,  "x": 0.398, "y": 0.731 },
+    { "name": "elbowL",    "parent": 5,  "x": 0.269, "y": 0.525 },
+    { "name": "handL",     "parent": 6,  "x": 0.170, "y": 0.227 },
+
+    { "name": "shoulderR", "parent": 2,  "x": 0.708, "y": 0.724 },
+    { "name": "elbowR",    "parent": 8,  "x": 0.774, "y": 0.525 },
+    { "name": "handR",     "parent": 9,  "x": 0.842, "y": 0.327 },
+
+    { "name": "hipL",      "parent": 0,  "x": 0.452, "y": 0.422 },
+    { "name": "kneeL",     "parent": 11, "x": 0.435, "y": 0.161 },
+
+    { "name": "hipR",      "parent": 0,  "x": 0.573, "y": 0.422 },
+    { "name": "kneeR",     "parent": 13, "x": 0.595, "y": 0.161 }
+  ],
+  "gait": {
+    "bob_m": 0.055,
+    "sway_m": 0.030,
+    "root_tilt_deg": 2.6,
+    "spine_deg": 1.6,
+    "chest_deg": 2.2,
+    "head_deg": 3.2,
+    "head_lag": 0.35,
+    "arm_swing_deg": 15.0,
+    "elbow_deg": 9.0,
+    "hip_deg": 2.4,
+    "knee_deg": 3.0,
+    "asymmetry": 0.72
+  }
+}

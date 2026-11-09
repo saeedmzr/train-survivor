@@ -19,6 +19,28 @@ tools/deploy.sh
 `tools/deploy.sh` builds, installs and launches on the attached device. Logs land in
 `unity/Logs/build.log`; live device log: `adb logcat -s Unity:V`.
 
+### Windows (git-bash)
+
+Same flow, different paths — `tools/deploy-win.sh --avd` boots the AVD first, then builds,
+installs and launches. It resolves the launcher activity (`UnityPlayerActivity` or the newer
+`AppUIActivity`) from the package instead of hardcoding it.
+
+```
+C:/Program Files/Unity/Hub/Editor/6000.0.85f2/Editor/Unity.exe   UNITY_EDITOR
+C:/Users/<user>/Android/sdk                                      ANDROID_SDK
+```
+
+The SDK holds only `platform-tools`, `emulator` and `system-images;android-35;google_apis;x86_64`;
+the NDK/JDK come from Unity's bundled `AndroidPlayer`. AVD `train_survivor` (Pixel 6, API 35,
+portrait, 4 GB, 8 cores) lives in `~/.android/avd` and needs WHPX (`emulator -accel-check`).
+Default `-gpu host` renders correctly.
+
+Trap: the very first build out of a freshly cloned, never-imported `unity/` folder can ship a
+player whose URP frame is empty — the lit meshes (train, rails, ground) never draw while the
+unlit Sprite3D billboards do. Let the editor finish one import (opening the project once is
+enough) and rebuild; that build is correct. Diagnose with `dev.diag=1` in `tune.txt`: the dump
+prints the active pipeline asset, quality level and per-renderer `isVisible`/shader.
+
 Two emulator traps: it runs with `-no-audio`, so audio can only be proven by log
 (`dev.audiolog=1`), and it must be started as a long-lived background job — if the job that
 launched it is reaped, qemu dies with it (exit 137) and `adb` reports no devices.

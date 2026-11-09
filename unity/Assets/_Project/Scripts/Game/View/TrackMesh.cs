@@ -42,6 +42,15 @@ namespace TrainSurvivor.Game.View
             mf.sharedMesh.vertices = verts;
             mf.sharedMesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
             mf.sharedMesh.normals = new[] { Vector3.up, Vector3.up, Vector3.up, Vector3.up };
+
+            // the quad had no UVs at all, so any ground texture sampled a single texel; wrap one
+            // tile every 6 m so gravel reads at train scale
+            const float tile = 6f;
+            mf.sharedMesh.uv = new[]
+            {
+                new Vector2(-half / tile, -half / tile), new Vector2(-half / tile, half / tile),
+                new Vector2(half / tile, half / tile),   new Vector2(half / tile, -half / tile)
+            };
             mf.sharedMesh.RecalculateBounds();
 
             var mr = go.AddComponent<MeshRenderer>();
