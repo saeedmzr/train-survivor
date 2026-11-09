@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TrainSurvivor.Core;
+using TrainSurvivor.Game.Audio;
 using TrainSurvivor.Game.View;
 
 namespace TrainSurvivor.Game.UI
@@ -403,6 +404,8 @@ namespace TrainSurvivor.Game.UI
             }
             else if (UiFactory.Hit(_retryRect, tap))
             {
+                // Retry had no feedback of its own; the click is the confirmation.
+                if (AudioDirector.Instance != null) AudioDirector.Instance.UiConfirm();
                 HideBanner();
                 w.ResetRun();
             }
