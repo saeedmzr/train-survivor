@@ -10,7 +10,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 UNITY="$HOME/Unity/Hub/Editor/6000.0.85f2/Editor/Unity"
 AH="$HOME/Unity/Hub/Editor/6000.0.85f2/Editor/Data/PlaybackEngines/AndroidPlayer"
 ADB="$AH/SDK/platform-tools/adb"
-PKG="com.trainsurvivor.game/com.unity3d.player.UnityPlayerActivity"
+PKG="com.trainsurvivor.game"
 
 MODE="arm64"
 APK=""
@@ -46,11 +46,16 @@ echo "== waiting for device =="
 "$ADB" wait-for-device
 until [[ "$("$ADB" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" ]]; do sleep 2; done
 
+# Unity 6 picks the launcher activity at build time (UnityPlayerActivity or the newer
+# AppUIActivity); resolve it instead of hardcoding one.
+ACTIVITY="$("$ADB" shell cmd package resolve-activity --brief "$PKG" 2>/dev/null | tr -d '\r' | tail -1)"
+[[ "$ACTIVITY" == */* ]] || ACTIVITY="$PKG/com.unity3d.player.UnityPlayerActivity"
+
 echo "== install =="
 "$ADB" install -r "$APK"
 
 echo "== launch =="
-"$ADB" shell am force-stop com.trainsurvivor.game >/dev/null 2>&1 || true
-"$ADB" shell am start -n "$PKG" >/dev/null
+"$ADB" shell am force-stop "$PKG" >/dev/null 2>&1 || true
+"$ADB" shell am start -n "$ACTIVITY" >/dev/null
 "$ADB" logcat -c
 echo "done. live log:  $ADB logcat -s Unity:V"

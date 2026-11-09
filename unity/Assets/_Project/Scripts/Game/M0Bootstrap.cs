@@ -21,10 +21,17 @@ namespace TrainSurvivor.Game
         public Camera Cam { get; private set; }
         void Awake()
         {
+            // AppUI (the Unity 6 player activity) enables EnhancedTouch on mobile before the
+            // input update type is set; InputSystem 1.20 then builds Finger histories with
+            // InputUpdateType.None at native device discovery. We read Touchscreen.current /
+            // Mouse.current directly and never use EnhancedTouch, so turn that layer off.
+            UnityEngine.InputSystem.EnhancedTouch.EnhancedTouchSupport.Disable();
+
             Application.targetFrameRate = 60;
             QualitySettings.vSyncCount = 0;
 
             DevTuning.Load();
+            FrameProbe.AttachIfRequested(gameObject);
 
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
@@ -43,6 +50,7 @@ namespace TrainSurvivor.Game
             BuildEnemies();
             BuildCamera();
             BuildFx();
+            BuildProjectiles();
             BuildWorldArt();
             BuildHud();
 
@@ -232,6 +240,14 @@ namespace TrainSurvivor.Game
             go.transform.SetParent(transform, false);
             Fx = go.AddComponent<Effects>();
             Fx.Build(Train);
+        }
+
+        /// <summary>The real round driver binds to this World and turns timer damage off.</summary>
+        void BuildProjectiles()
+        {
+            var go = new GameObject("Projectiles");
+            go.transform.SetParent(transform, false);
+            go.AddComponent<ProjectileDriver>().Build(Loop, Train, Fx);
         }
 
         void BuildHud()

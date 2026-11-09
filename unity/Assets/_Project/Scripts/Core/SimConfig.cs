@@ -23,14 +23,17 @@ namespace TrainSurvivor.Core
         public const float ChargeBonus = 0.40f;      // +40% fire rate at full charge
 
         // --- weapons ---
-        public const float GunDamage = 3f;
-        public const float GunInterval = 0.5f;       // seconds between shots, per gun
+        // Restored to the values the balance suite encodes: the 3 dmg / 0.5 s pass made a
+        // barricade (90-230 hp) unbreakable at the 1 starting gun and let a single walker
+        // out-heal the ram. 10 dmg at 0.12 s is 83 dps per gun.
+        public const float GunDamage = 10f;
+        public const float GunInterval = 0.12f;      // seconds between shots, per gun
         public const float GunRange = 34f;           // guns hold fire beyond this — zombies must close in
         public const float RearTargetRange = 2f;     // don't shoot things this far behind
         public const float PierceDamageMul = 0.6f;
 
         // --- ram (Change A) ---
-        public const float RamDamage = 10f;
+        public const float RamDamage = 35f;
         public const float RamRange = 3f;
         public const float RamMinSpeed = 7.2f;       // 60% of MoveSpeed
         public const float RamCooldown = 0.35f;
@@ -42,7 +45,12 @@ namespace TrainSurvivor.Core
         public const float FireTrailAhead = 2f;
 
         // --- enemies ---
-        public const float ContactRange = 5.5f;      // stops and bites from here
+        // Contact is measured from the convoy hull, not the locomotive's centre point: the old
+        // centre-distance test let walkers "reach" the train from inside the rear wagons.
+        public const float ContactRange = 3f;        // gap from the hull at which a bite lands
+        public const float TrainNose = 4.1f;         // loco half-length ahead of Train.S
+        public const float WagonSpan = 6.6f;         // length of one freight wagon
+        public const float TrainHalfWidth = 1.6f;    // hull half-width
         public const float WalkerHp = 30f;
         public const float WalkerSpeed = 2.2f;
         public const float WalkerDamage = 6f;

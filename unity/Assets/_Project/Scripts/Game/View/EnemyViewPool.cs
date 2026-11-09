@@ -27,6 +27,7 @@ namespace TrainSurvivor.Game.View
             public float Phase;
             public float Step;      // walk-cycle phase, in frames
             public EnemyKind Kind;
+            public HitProxy Proxy;  // ballistics target for sprite species
         }
 
         /// <summary>Six poses per species (tools/make_enemy_walk.py), packed as en_<id>_f1..f5.</summary>
@@ -88,7 +89,8 @@ namespace TrainSurvivor.Game.View
             return new Body
             {
                 Sprite = SpriteBillboard.Create(transform, "Zombie" + index),
-                Phase = index * 0.63f
+                Phase = index * 0.63f,
+                Proxy = HitProxy.CreateCapsule(transform, "ZombieHit" + index, 0.5f, 1.8f)
             };
         }
 
@@ -159,12 +161,21 @@ namespace TrainSurvivor.Game.View
                 body.Sprite.Tilt = roll * 0.55f;   // the frames already lean; keep this subtle
                 body.Sprite.Squash = new Vector2(2f - squash, squash);
                 body.Kind = e.Kind;
+
+                if (body.Proxy != null)
+                {
+                    float h = g.Height * HeightBoost;
+                    body.Proxy.SetCapsuleSize(h * 0.3f, h * 0.9f);
+                    body.Proxy.Bind(e.Id, false);
+                    body.Proxy.Move(pos + Vector3.up * (h * 0.5f));
+                }
             }
 
             for (int i = used; i < _pool.Count; i++)
             {
                 var b = _pool[i];
                 if (b.Sprite.Visible) b.Sprite.Hide();
+                if (b.Proxy != null) b.Proxy.Disable();
             }
         }
     }

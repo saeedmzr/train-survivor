@@ -33,6 +33,11 @@ namespace TrainSurvivor.Game
 
         void Update()
         {
+            // View-driven impacts resolve in LateUpdate (they need the physics sweep). Their
+            // SimEvents land after the last step, so dispatch them here before Advance clears
+            // the queue — otherwise a kill from a real bullet never reaches gore/audio.
+            DispatchPending();
+
             if (Paused) { StepsLastFrame = 0; return; }
 
             Intent intent = Input != null ? Input.Current : Intent.Stop;
@@ -51,9 +56,20 @@ namespace TrainSurvivor.Game
                 {
                     for (int i = 0; i < World.Events.Count; i++) SimEventRaised(World.Events[i]);
                 }
+                // Drain here too: Advance clears at its start, but leaving the last step's
+                // events in the list would make the next frame's DispatchPending replay them.
+                World.Events.Clear();
             }
 
             if (StepsLastFrame == 3) _acc = 0f;   // don't spiral after a hitch
+        }
+
+        /// <summary>Drains events raised outside a step (view-side projectile impacts).</summary>
+        void DispatchPending()
+        {
+            if (SimEventRaised == null || World.Events.Count == 0) return;
+            for (int i = 0; i < World.Events.Count; i++) SimEventRaised(World.Events[i]);
+            World.Events.Clear();
         }
     }
 }

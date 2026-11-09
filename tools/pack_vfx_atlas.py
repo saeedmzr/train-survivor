@@ -155,8 +155,9 @@ def main():
     sprites.append(("shadow", shadow()))
     sprites.append(("dot", glow_dot()))
 
-    # soft dot for the particle systems: they sample a whole texture, not an atlas UV
-    spark = glow_dot(64, core=(240, 250, 255), halo=(90, 200, 255))
+    # soft dot for the particle systems: they sample a whole texture, not an atlas UV.
+    # Warm, not cyan: the spark material is amber, and a blue texture read as blue specks.
+    spark = glow_dot(64, core=(255, 250, 235), halo=(255, 160, 60))
     spark.save(os.path.join(ATLAS_DIR, "spark_dot.png"))
 
     place = None

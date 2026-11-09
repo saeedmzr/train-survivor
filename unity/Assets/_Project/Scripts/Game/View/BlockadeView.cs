@@ -8,6 +8,7 @@ namespace TrainSurvivor.Game.View
     public sealed class BlockadeView : MonoBehaviour
     {
         readonly List<SpriteBillboard> _pool = new List<SpriteBillboard>();
+        readonly List<HitProxy> _proxies = new List<HitProxy>();
 
         public void Build()
         {
@@ -17,7 +18,13 @@ namespace TrainSurvivor.Game.View
 
         SpriteBillboard Get(int i)
         {
-            while (_pool.Count <= i) _pool.Add(SpriteBillboard.Create(transform, "Blockade" + _pool.Count));
+            while (_pool.Count <= i)
+            {
+                _pool.Add(SpriteBillboard.Create(transform, "Blockade" + _pool.Count));
+                // Ballistics proxy: a wall is a wide flat slab, not a capsule.
+                _proxies.Add(HitProxy.CreateBox(transform, "BlockadeHit" + _proxies.Count,
+                                                new Vector3(2.8f, 2.6f, 1.5f)));
+            }
             return _pool[i];
         }
 
@@ -47,10 +54,20 @@ namespace TrainSurvivor.Game.View
 
                 var bb = Get(used++);
                 bb.Show(sprite, height, Color.white, Mathf.Clamp01(b.Flash) * 0.5f);
-                bb.transform.position = TrackSpace.Point(b.S, b.X, 0f);
+                Vector3 at = TrackSpace.Point(b.S, b.X, 0f);
+                bb.transform.position = at;
+
+                var proxy = _proxies[used - 1];
+                proxy.SetBoxSize(new Vector3(2.8f, height * 0.9f, 1.5f));
+                proxy.Bind(b.Id, true);
+                proxy.Move(at + Vector3.up * (height * 0.45f));
             }
 
-            for (int i = used; i < _pool.Count; i++) _pool[i].Hide();
+            for (int i = used; i < _pool.Count; i++)
+            {
+                _pool[i].Hide();
+                _proxies[i].Disable();
+            }
         }
     }
 }

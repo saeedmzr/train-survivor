@@ -27,7 +27,11 @@ namespace TrainSurvivor.Core
     public enum SimEventKind
     {
         Shot, Kill, ContactHit, Ram, Brake, Cleared, Died,
-        BlockadeHit, BlockadeBroken, PickupTaken, LevelUp, CardChosen, Blast
+        BlockadeHit, BlockadeBroken, PickupTaken, LevelUp, CardChosen, Blast,
+        /// <summary>A player round actually struck an enemy. ContactHit is the train being
+        /// bitten and stays a separate event: this one drives hit audio/VFX and carries the
+        /// projectile that landed.</summary>
+        EnemyHit
     }
 
     /// <summary>Player intent for one tick. Touch release = Stopped = guns live.</summary>
@@ -53,6 +57,8 @@ namespace TrainSurvivor.Core
         public float ToS, ToX;       // where it landed
         public float Damage;
         public int GunIndex;
+        /// <summary>Unique id of the projectile this shot/impact refers to (0 when none).</summary>
+        public int ProjectileId;
     }
 
     /// <summary>The nine cards on the art sheet. Index order matches the sprite names.</summary>

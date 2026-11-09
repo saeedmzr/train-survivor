@@ -20,6 +20,8 @@ namespace TrainSurvivor.Game.View
             public Vector3 From, To;
             public float T, Dur;
             public bool Live;
+            public int TargetId;
+            public bool Blockade;
         }
 
         sealed class Splat
@@ -43,6 +45,10 @@ namespace TrainSurvivor.Game.View
         /// <summary>Dev only (tune.txt dev.bulletTime): stretches the flight so a single frame
         /// can be caught mid-shot for screenshots. 1 = shipping speed.</summary>
         float _flightScale = 1f;
+
+        /// <summary>False while ProjectileDriver owns the rounds: the old homing tracer is a
+        /// duplicate visual and must not draw a second bullet or impact.</summary>
+        bool _timerTracers = true;
 
         readonly List<Bullet> _bullets = new List<Bullet>(48);
         readonly List<Splat> _flashes = new List<Splat>(48);
@@ -145,7 +151,15 @@ namespace TrainSurvivor.Game.View
             switch (e.Kind)
             {
                 case SimEventKind.Shot:
-                    FireBullet(e, world);
+                    // A real driver draws the round from the barrel; the timer tracer would be a
+                    // second, homing bullet on top of it.
+                    if (!world.ViewDrivenProjectiles) FireBullet(e, world);
+                    break;
+                case SimEventKind.EnemyHit:
+                    // Bullet hurt, not the train being bitten (ContactHit): a hit flash on the
+                    // body the round actually struck.
+                    ShowOne(_flashes, "impact_core", TrackSpace.Point(e.ToS, e.ToX, 1.0f), 1.15f, 0.10f, Color.white);
+                    BurstSparksAt(e.ToS, e.ToX, 5, _sparks);
                     break;
                 case SimEventKind.Brake:
                     if (world.Train.Speed < 1.5f) BurstSparks(world.Train.S, 22, _sparks);
@@ -178,6 +192,30 @@ namespace TrainSurvivor.Game.View
             }
         }
 
+        // ---------------------------------------------------------------- driver hooks
+
+        /// <summary>Turn the legacy homing tracer off while a real projectile driver owns hit
+        /// timing, and back on if that driver goes away.</summary>
+        public void SetTimerTracers(bool on)
+        {
+            _timerTracers = on;
+            if (on) return;
+            for (int i = 0; i < _bullets.Count; i++)
+            {
+                _bullets[i].Live = false;
+                _bullets[i].Sprite.Hide();
+            }
+        }
+
+        /// <summary>Muzzle bloom at the barrel that actually fired (driver-driven shots).</summary>
+        public void MuzzleFlash(Vector3 at)
+        {
+            ShowOne(_flashes, "muzzle_core", at, 1.5f, 0.08f, Color.white);
+        }
+
+        /// <summary>A round struck something that is not an entity (scenery): sparks only.</summary>
+        public void ImpactAt(Vector3 at) => Impact(at);
+
         // ---------------------------------------------------------------- shots
 
         void FireBullet(SimEvent e, World world)
@@ -194,7 +232,9 @@ namespace TrainSurvivor.Game.View
             b.T = 0f;
             b.Dur = Mathf.Clamp(Vector3.Distance(from, to) / BulletSpeed, 0.045f, 0.13f) * _flightScale;
             b.Live = true;
-            b.Sprite.Show("bullet_core", 1.2f, Color.white);
+            b.TargetId = e.EnemyId > 0 ? e.EnemyId : e.BlockadeId;
+            b.Blockade = e.BlockadeId > 0;
+            b.Sprite.Show("bullet_core", 1.9f, Color.white);
             b.Sprite.transform.position = from;
 
             // muzzle flash: a short hot burst at the barrel, not a light source
@@ -298,11 +338,43 @@ namespace TrainSurvivor.Game.View
         void Update()
         {
             float dt = Time.deltaTime;
+            var aimLoop = GetComponentInParent<GameLoop>();
+            World aimWorld = aimLoop != null ? aimLoop.World : null;
 
             for (int i = 0; i < _bullets.Count; i++)
             {
                 var b = _bullets[i];
-                if (!b.Live) continue;
+                if (!_timerTracers || !b.Live) continue;
+
+                // home onto the live target: damage lands by id a few ticks later, so the tracer
+                // must land where the enemy/wall actually is, not where it was at the trigger
+                if (aimWorld != null && b.TargetId > 0)
+                {
+                    if (b.Blockade)
+                    {
+                        for (int ti = 0; ti < aimWorld.BlockadeCount; ti++)
+                        {
+                            Blockade bl = aimWorld.Blockades[ti];
+                            if (bl.Alive && bl.Id == b.TargetId)
+                            {
+                                b.To = TrackSpace.Point(bl.S, bl.X, 1.0f);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int ti = 0; ti < aimWorld.EnemyCount; ti++)
+                        {
+                            Enemy e = aimWorld.Enemies[ti];
+                            if (e.Alive && e.Id == b.TargetId)
+                            {
+                                b.To = TrackSpace.Point(e.S, e.X, 1.0f);
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 b.T += dt;
                 float k = Mathf.Clamp01(b.T / b.Dur);

@@ -16,6 +16,8 @@ namespace TrainSurvivor.Game.View
     /// </summary>
     public sealed class DistrictScenery : MonoBehaviour
     {
+        /// <summary>Layer the chase camera raycasts against (see ProjectSettings/TagManager).</summary>
+        const int SceneryLayer = 6;
         public static DistrictScenery Instance { get; private set; }
 
         [Header("Placement")]
@@ -24,7 +26,7 @@ namespace TrainSurvivor.Game.View
         [Tooltip("Nothing is placed closer to the rails than this")]
         public float combatClear = 6.5f;
         [Tooltip("How far ahead of the train scenery is built")]
-        public float windowAhead = 110f;
+        public float windowAhead = 140f;
         [Tooltip("How far behind the train scenery is kept alive")]
         public float windowBehind = 35f;
         [Tooltip("Buildings sit at least this far out")]
@@ -44,6 +46,7 @@ namespace TrainSurvivor.Game.View
             public Renderer Rd;
             public float BaseScale = 1f;   // measured fit, never assume the FBX import scale
             public float FootLocal;        // local bounds min Y at scale 1, for ground contact
+            public float Radius;           // half diagonal of the XZ footprint at scale 1
         }
 
         readonly Dictionary<string, List<Prop>> _pools = new Dictionary<string, List<Prop>>();
@@ -53,12 +56,14 @@ namespace TrainSurvivor.Game.View
         readonly List<Renderer> _activeLampRenderers = new List<Renderer>();
 
         bool _logged;
+        bool _verbose;
 
         public bool Active => _pools.Count > 0;
 
         void Awake()
         {
             Instance = this;
+            _verbose = TrainSurvivor.Game.DevTuning.Get("dev.verbose", 0f) > 0.5f;
 
             DressGround();
 
@@ -92,8 +97,21 @@ namespace TrainSurvivor.Game.View
                 _lampLights.Add(l);
             }
 
-            Debug.Log(string.Format("[env] district ready: {0} types, {1} props, seed {2}, clear {3} m",
-                _pools.Count, CountProps(), seed, combatClear));
+            if (_verbose)
+                Debug.Log(string.Format("[env] district ready: {0} types, {1} props, seed {2}, clear {3} m",
+                    _pools.Count, CountProps(), seed, combatClear));
+        }
+
+        /// <summary>
+        /// Explicit per-asset import correction, applied to the imported visual child. The FBX
+        /// were authored with mixed orientations, so each asset is pinned individually.
+        /// </summary>
+        static Quaternion AssetRotation(string name)
+        {
+            // Every source FBX is authored Z-up; -90X converts Z-up to Unity Y-up.
+            // dev.rot.<name> overrides one asset at runtime for A/B inspection.
+            float deg = TrainSurvivor.Game.DevTuning.Get("dev.rot." + name, -90f);
+            return Quaternion.Euler(deg, 0f, 0f);
         }
 
         void Add(string name, int count, float targetSize, bool byHeight)
@@ -113,52 +131,69 @@ namespace TrainSurvivor.Game.View
                 mat = new Material(shader) { name = name + "Mat" };
                 if (tex != null) mat.SetTexture("_BaseMap", tex);
                 mat.SetColor("_BaseColor", tex != null ? Color.white : FallbackTint(name));
-                Debug.Log(string.Format("[env] tex {0}: {1}", name, tex != null ? tex.name : "MISSING"));
+                if (_verbose)
+                    Debug.Log(string.Format("[env] tex {0}: {1}", name, tex != null ? tex.name : "MISSING"));
                 mat.SetFloat("_Smoothness", 0.18f);
             }
 
             var list = new List<Prop>();
             for (int i = 0; i < count; i++)
             {
-                var go = Instantiate(prefab, transform);
-                go.name = name + "_" + i;
-                go.transform.localPosition = Vector3.zero;
-                go.transform.localRotation = Quaternion.identity;
-                go.transform.localScale = Vector3.one;
+                // Neutral pooled root: the placement pass owns its world position, yaw and
+                // variant scale. The imported asset lives under it as "Visual" and keeps the
+                // explicit import correction, which placement must never touch.
+                var root = new GameObject(name + "_" + i);
+                root.transform.SetParent(transform, false);
+                root.transform.localPosition = Vector3.zero;
+                root.transform.localRotation = Quaternion.identity;
+                root.transform.localScale = Vector3.one;
 
-                // Fit from measured bounds: Tripo FBX files carry their own unit scale, and
-                // overwriting localScale with 1 renders them centimetre-tall and invisible.
-                Bounds b = WorldBounds(go);
+                var model = Instantiate(prefab, root.transform);
+                model.name = "Visual";
+                model.transform.localPosition = Vector3.zero;
+                model.transform.localRotation = AssetRotation(name);
+                model.transform.localScale = Vector3.one;
+
+                // Orient before measuring, then fit the visual in the root's local units.
+                Bounds b = WorldBounds(model);
                 float size = byHeight ? b.size.y : Mathf.Max(b.size.x, b.size.z);
                 float k = size > 0.0001f ? targetSize / size : 1f;
-                go.transform.localScale = Vector3.one * k;
-                Bounds fitted = WorldBounds(go);
+                model.transform.localScale = Vector3.one * k;
 
-                // Re-root the mesh so the instance origin sits exactly on the ground. Measured
-                // once here; the visual lives under a holder, so later scaling never re-floats it.
-                var holder = new GameObject("Visual");
-                holder.transform.SetParent(go.transform, false);
-                var kids = new List<Transform>();
-                foreach (Transform c in go.transform) if (c != holder.transform) kids.Add(c);
-                foreach (var kid in kids) kid.SetParent(holder.transform, true);
-                holder.transform.localPosition = new Vector3(0f, -fitted.min.y / Mathf.Max(k, 0.0001f), 0f);
+                // Ground the visual on the root's plane in world space (root scale is 1 here).
+                float minY = WorldBounds(model).min.y;
+                model.transform.position += Vector3.up * (root.transform.position.y - minY);
+
+                if (_verbose)
+                    Debug.Log(string.Format("[env] orient {0}: {1} size {2:0.00}x{3:0.00}x{4:0.00}",
+                        name, AssetRotation(name).eulerAngles, b.size.x, b.size.y, b.size.z));
+
                 if (mat != null)
-                    foreach (var r in go.GetComponentsInChildren<Renderer>()) r.sharedMaterial = mat;
+                    foreach (var r in model.GetComponentsInChildren<Renderer>()) r.sharedMaterial = mat;
 
-                // lamp lenses glow amber; the prop itself stays unlit-added so mobile stays cheap
+                // Collider measured after grounding, expressed in the root's local frame so the
+                // placement yaw/scale carry it correctly.
+                Bounds wb = WorldBounds(model);
+                root.layer = SceneryLayer;
+                var box = root.AddComponent<BoxCollider>();
+                box.center = root.transform.InverseTransformPoint(wb.center);
+                box.size = wb.size;
+                float radius = 0.5f * Mathf.Sqrt(wb.size.x * wb.size.x + wb.size.z * wb.size.z);
+
                 if (name == "lamp" && mat != null)
                 {
                     mat.EnableKeyword("_EMISSION");
                     mat.SetColor("_EmissionColor", lampColour * 1.6f);
                 }
 
-                go.SetActive(false);
+                root.SetActive(false);
                 list.Add(new Prop
                 {
-                    Go = go,
-                    Rd = go.GetComponentInChildren<Renderer>(),
-                    BaseScale = k,
-                    FootLocal = 0f
+                    Go = root,
+                    Rd = root.GetComponentInChildren<Renderer>(),
+                    BaseScale = 1f,
+                    FootLocal = 0f,
+                    Radius = radius
                 });
             }
             _pools[name] = list;
@@ -263,10 +298,12 @@ namespace TrainSurvivor.Game.View
             yaw = r1 * 360f;
             scale = 1f + (r2 * 2f - 1f) * scaleJitter;
 
-            if (roll < 22)
+            if (roll < 26)
             {
-                // buildings only every third slot, well back, so they never crowd the corridor
-                type = (slot % 7 < 2) ? (((h >> 24) & 1) == 0 ? "warehouse" : "brickbuilding") : null;
+                // Industrial clusters: roughly every third candidate slot on a side, so the
+                // skyline reads as a district instead of one lone warehouse per kilometer.
+                bool building = ((h >> 24) % 3) != 0;
+                type = building ? (((h >> 26) & 1) == 0 ? "warehouse" : "brickbuilding") : null;
                 lateral = side * (buildingLateral + r1 * 8f);
             }
             else if (roll < 34)
@@ -296,6 +333,12 @@ namespace TrainSurvivor.Game.View
             }
         }
 
+        float _lastSyncS = float.MaxValue;
+        int _lastStage = -1;
+        World _lastWorld;
+
+        /// <summary>A district slot is fixed in world space, so rebuilding every frame is pure
+        /// churn. Re-place only when the train has moved half a slot (or the stage changed).</summary>
         void LateUpdate()
         {
             var loop = GetComponentInParent<GameLoop>();
@@ -307,6 +350,15 @@ namespace TrainSurvivor.Game.View
         {
             if (!Active || world == null) return;
 
+            float s0 = world.Train.S;
+            int stage = world.Train.Stage;
+            if (world == _lastWorld && stage == _lastStage &&
+                Mathf.Abs(s0 - _lastSyncS) < 0.5f) return;
+
+            _lastWorld = world;
+            _lastStage = stage;
+            _lastSyncS = s0;
+
             foreach (var kv in _pools)
                 foreach (var p in kv.Value)
                     if (p.Go.activeSelf) p.Go.SetActive(false);
@@ -314,7 +366,6 @@ namespace TrainSurvivor.Game.View
             _activeLamps.Clear();
             _activeLampRenderers.Clear();
 
-            float s0 = world.Train.S;
             int first = Mathf.FloorToInt((s0 - windowBehind) / slotStep);
             int last = Mathf.CeilToInt((s0 + windowAhead) / slotStep);
 
@@ -322,39 +373,33 @@ namespace TrainSurvivor.Game.View
             {
                 for (int side = -1; side <= 1; side += 2)
                 {
-                    Pick(i * 2 + (side > 0 ? 1 : 0), side, out string type, out float lateral,
-                         out float yaw, out float scale);
+                    int slot = i * 2 + (side > 0 ? 1 : 0);
+                    Pick(slot, side, out string type, out float lateral, out float yaw, out float scale);
                     if (type == null) continue;
 
-                    var list = _pools[type];
-                    int idx = _used.TryGetValue(type, out int u) ? u : 0;
-                    if (idx >= list.Count) continue;
-                    _used[type] = idx + 1;
-
-                    Prop p = list[idx];
                     float s = i * slotStep;
-                    Vector3 pos = TrackSpace.Point(s, lateral, 0.02f);
-                    float finalScale = p.BaseScale * scale;
-                    pos.y = -p.FootLocal * finalScale + 0.02f;
-                    p.Go.transform.SetPositionAndRotation(
-                        pos,
-                        TrackSpace.Facing(s) * Quaternion.Euler(0f, yaw, 0f));
-                    p.Go.transform.localScale = Vector3.one * finalScale;
-                    p.Go.SetActive(true);
+                    if (!Place(type, s, lateral, yaw, scale)) continue;
 
-                    if (type == "lamp")
+                    // Yard clutter beside a building closes the empty apron between the rails
+                    // and the facade without narrowing the combat corridor.
+                    if (type == "warehouse" || type == "brickbuilding")
                     {
-                        _activeLamps.Add(p.Go.transform);
-                        if (p.Rd != null) _activeLampRenderers.Add(p.Rd);
+                        uint h = Hash((uint)(slot * 92837111) ^ (uint)(seed * 689287499));
+                        string yard = ((h & 1) == 0) ? "crate" : "barrel";
+                        float yardLat = side * (combatClear + 4.6f + ((h >> 8) & 3) * 1.1f);
+                        Place(yard, s + 2.4f, yardLat, ((h >> 12) & 63) * 5.7f,
+                              0.9f + ((h >> 18) & 3) * 0.07f);
                     }
                 }
             }
 
-            if (!_logged && _activeLamps.Count > 0)
+            if (_verbose && !_logged)
             {
                 _logged = true;
-                Debug.Log(string.Format("[env] placed {0} props, {1} lamps, first prop {2}",
-                    _used.Count, _activeLamps.Count, _activeLamps[0].position));
+                int active = 0;
+                foreach (var kv in _used) active += kv.Value;
+                Debug.Log(string.Format("[env] placed {0} props in view at S {1:0.0} ({2} lamps)",
+                    active, s0, _activeLamps.Count));
             }
 
             // light only the lamps nearest the train, capped for mobile
@@ -370,6 +415,38 @@ namespace TrainSurvivor.Game.View
                 _lampLights[i].transform.position = lamp.position + Vector3.up * 4.8f;
                 _lampLights[i].enabled = true;
             }
+        }
+
+        /// <summary>Place one pooled prop, enforcing a footprint-aware clearance from the rails.</summary>
+        bool Place(string type, float s, float lateral, float yaw, float scale)
+        {
+            if (!_pools.TryGetValue(type, out var list)) return false;
+            int idx = _used.TryGetValue(type, out int u) ? u : 0;
+            if (idx >= list.Count) return false;
+            _used[type] = idx + 1;
+
+            Prop p = list[idx];
+            float finalScale = p.BaseScale * scale;
+            // A random yaw can swing a 26 m warehouse corner toward the track: clamp by the
+            // measured footprint radius, not by a fixed facade offset.
+            float minLateral = combatClear + p.Radius * finalScale + 0.5f;
+            if (Mathf.Abs(lateral) < minLateral)
+                lateral = (lateral < 0f ? -1f : 1f) * minLateral;
+
+            Vector3 pos = TrackSpace.Point(s, lateral, 0.02f);
+            pos.y = -p.FootLocal * finalScale + 0.02f;
+            p.Go.transform.SetPositionAndRotation(
+                pos,
+                TrackSpace.Facing(s) * Quaternion.Euler(0f, yaw, 0f));
+            p.Go.transform.localScale = Vector3.one * finalScale;
+            p.Go.SetActive(true);
+
+            if (type == "lamp")
+            {
+                _activeLamps.Add(p.Go.transform);
+                if (p.Rd != null) _activeLampRenderers.Add(p.Rd);
+            }
+            return true;
         }
     }
 }

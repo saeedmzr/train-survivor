@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TrainSurvivor.Core;
+using TrainSurvivor.Game.Audio;
 
 namespace TrainSurvivor.Game.View
 {
@@ -22,9 +23,17 @@ namespace TrainSurvivor.Game.View
         // measured in Blender: the shamble covers 1.35 m of ground per second at playback 1.0
         // and 1x model scale (32 steps over 9.96 s, ~0.42 m each); scaling the model scales it
         const float WalkGroundSpeedUnit = 1.35f;
+        // measured ground distance per footfall; the gait already supplies the speed
+        const float FootstepStride = 1.35f;
+        // the swing cue fires a third of the way into the attack clip, not on the trigger
+        const float AttackCueFraction = 0.3f;
+        // beyond this the cue is inaudible-by-design (volume shaping only, never 3D fade).
+        // 40 m matches the gun range: walkers are usually killed during the approach, so a
+        // 22 m cue radius left footsteps and swings silent in normal play.
+        const float CueRange = 40f;
 
         [Tooltip("Yaw offset on top of facing the train, to correct the model's authored forward axis")]
-        public float facingYaw = 0f;
+        public float facingYaw = 0f;     // authored rig forward matches +Z; 180 showed its back
 
         [Tooltip("Scale multiplier on top of the automatic 2 m fit")]
         public float scaleBias = 1f;
@@ -46,18 +55,31 @@ namespace TrainSurvivor.Game.View
             public int EnemyId = -1;
             public float FreeAt;
             public string Playing;
+            public Vector3 LastPos;
+            public float LastT;
+            public float Gait;          // measured ground speed, m/s
+            public Transform Root;      // prefab root child; guards against clip root motion
+            public Vector3 RootLocal;
+            public HitProxy Proxy;      // ballistics target, moved with the body
+            public float StepAccum;     // metres walked since the last footstep cue
+            public float SwingAt;       // time the current attack clip reaches its swing
         }
 
         readonly List<Body> _pool = new List<Body>();
         readonly List<AnimationClip> _clips = new List<AnimationClip>();
         int _diag;
         float _diagAt;
+        Camera _walkerCam;
+        readonly List<Camera> _hiddenCams = new List<Camera>();
+        bool _rootLogged;
+        bool _verbose;
 
         public bool Active => _prefab != null && _walk != null;
 
         void Awake()
         {
             Instance = this;
+            _verbose = TrainSurvivor.Game.DevTuning.Get("dev.verbose", 0f) > 0.5f;
             _prefab = Resources.Load<GameObject>(ModelResource);
             if (_prefab == null)
             {
@@ -85,11 +107,29 @@ namespace TrainSurvivor.Game.View
             _fitScale = ComputeFit(probe);
             Destroy(probe);
 
-            Debug.Log(string.Format(
-                "[walker3d] ready: walk {0:0.00}s attack {1:0.00}s death {2:0.00}s fit {3:0.00} clips {4}",
-                _walkLen, _attackLen, _deathLen, _fitScale, _clips.Count));
+            if (_verbose)
+                Debug.Log(string.Format(
+                    "[walker3d] ready: walk {0:0.00}s attack {1:0.00}s death {2:0.00}s fit {3:0.00} clips {4}",
+                    _walkLen, _attackLen, _deathLen, _fitScale, _clips.Count));
 
             for (int i = 0; i < PoolSize; i++) _pool.Add(Spawn(i));
+
+            if (TrainSurvivor.Game.DevTuning.Get("dev.walkercam", 0f) > 0.5f)
+            {
+                var camGo = new GameObject("WalkerInspectCam");
+                _walkerCam = camGo.AddComponent<Camera>();
+                _walkerCam.depth = 90f;
+                _walkerCam.fieldOfView = 38f;
+                _walkerCam.nearClipPlane = 0.1f;
+                _walkerCam.clearFlags = CameraClearFlags.Skybox;
+                foreach (var c in Camera.allCameras)
+                {
+                    if (c == _walkerCam) continue;
+                    _hiddenCams.Add(c);
+                    c.enabled = false;
+                }
+                if (_verbose) Debug.Log("[walker3d] inspection camera on");
+            }
         }
 
         void OnEnable()
@@ -102,6 +142,12 @@ namespace TrainSurvivor.Game.View
         {
             var loop = GetComponentInParent<GameLoop>();
             if (loop != null) loop.SimEventRaised -= OnSimEvent;
+        }
+
+        void OnDestroy()
+        {
+            for (int i = 0; i < _hiddenCams.Count; i++)
+                if (_hiddenCams[i] != null) _hiddenCams[i].enabled = true;
         }
 
         void OnSimEvent(SimEvent ev)
@@ -141,8 +187,13 @@ namespace TrainSurvivor.Game.View
             anim.cullingType = AnimationCullingType.AlwaysAnimate;
             foreach (var c in _clips) anim.AddClip(c, c.name);
 
+            Transform root = go.transform.childCount > 0 ? go.transform.GetChild(0) : null;
             go.SetActive(false);
-            return new Body { Go = go, Anim = anim };
+            // Ballistics proxy lives outside the scaled/rotated model: the collider is authored
+            // in world metres and only follows the body's position.
+            var proxy = HitProxy.CreateCapsule(transform, "WalkerHit" + index, 0.55f, 2.4f);
+            return new Body { Go = go, Anim = anim, Root = root, Proxy = proxy,
+                              RootLocal = root != null ? root.localPosition : Vector3.zero };
         }
 
         void Play(Body b, AnimationClip clip, bool loop, float speed = 1f)
@@ -156,9 +207,13 @@ namespace TrainSurvivor.Game.View
             b.Go.SetActive(true);
         }
 
-        Quaternion FaceTrain(Vector3 from, float trainS)
+        /// <summary>Nearest point on the actual convoy hull (nose to tail), not the loco centre.</summary>
+        Quaternion FaceConvoy(Vector3 from, float ownS, float trainS, int wagons)
         {
-            Vector3 target = TrackSpace.Point(trainS, 0f, 0f);
+            float nose = trainS + SimConfig.TrainNose;
+            float tail = trainS - SimConfig.WagonSpan * Mathf.Max(1, wagons);
+            float cs = Mathf.Clamp(ownS, tail, nose);
+            Vector3 target = TrackSpace.Point(cs, 0f, 0f);
             Vector3 dir = target - from;
             dir.y = 0f;
             if (dir.sqrMagnitude < 0.0001f) return Quaternion.Euler(0f, facingYaw, 0f);
@@ -200,23 +255,59 @@ namespace TrainSurvivor.Game.View
                 Body body = _pool[used++];
                 Vector3 pos = TrackSpace.Point(e.S, e.X, 0f);
                 body.Go.transform.position = pos;
-                body.Go.transform.rotation = FaceTrain(pos, trainS);
+                body.Go.transform.rotation = FaceConvoy(pos, e.S, trainS, world.Train.Wagons);
+
+                if (body.Proxy != null)
+                {
+                    body.Proxy.Bind(e.Id, false);
+                    body.Proxy.Move(pos + Vector3.up * 1.2f);
+                }
 
                 if (body.EnemyId != e.Id)
                 {
                     body.EnemyId = e.Id;
                     body.FreeAt = 0f;
+                    body.LastPos = pos;
+                    body.LastT = now;
+                    body.Gait = e.Speed;
+                    body.StepAccum = 0f;
+                    body.SwingAt = 0f;
                     Play(body, _walk, true);
                 }
 
-                // true distance to the train, not just along the rails: they now close
-                // in from the side, so the shot/attack range has to be 2D
-                float dS = e.S - trainS;
-                bool attacking = Mathf.Sqrt(dS * dS + e.X * e.X) <= AttackRange;
+                // Gait from measured world displacement, so contact/slow cases do not moonwalk.
+                float dt = now - body.LastT;
+                if (dt > 0.0001f)
+                {
+                    float inst = Vector3.Distance(pos, body.LastPos) / dt;
+                    body.Gait = Mathf.Lerp(body.Gait, inst, 0.35f);
+                }
+                body.LastPos = pos;
+                body.LastT = now;
+
+                // Distance to the nearest convoy hull point, not to the locomotive centre: the
+                // sim bites at the hull (wagons included), so a rear/side attacker must read as
+                // attacking here too or its attack clip and swing cue never start.
+                float hullTail = trainS - SimConfig.WagonSpan * Mathf.Max(1, world.Train.Wagons);
+                float hullNose = trainS + SimConfig.TrainNose;
+                float hullClampS = Mathf.Clamp(e.S, hullTail, hullNose);
+                float alongHull = e.S - hullClampS;
+                float lateralHull = Mathf.Max(0f, Mathf.Abs(e.X) - SimConfig.TrainHalfWidth);
+                float hullGap = Mathf.Sqrt(alongHull * alongHull + lateralHull * lateralHull);
+                bool attacking = hullGap <= AttackRange;
+                float cueClose = Mathf.Clamp01(1f - hullGap / CueRange);
 
                 if (attacking && _attack != null && body.Playing != "Attack")
                 {
                     body.FreeAt = now + _attackLen;
+                    body.SwingAt = now + _attackLen * AttackCueFraction;
+                    Play(body, _attack, false);
+                }
+                else if (attacking && _attack != null && body.Playing == "Attack" && now > body.FreeAt)
+                {
+                    // Still biting: restart the clip so every attack cycle has its swing.
+                    body.FreeAt = now + _attackLen;
+                    body.SwingAt = now + _attackLen * AttackCueFraction;
                     Play(body, _attack, false);
                 }
                 else if (!attacking && body.Playing == "Attack" && now > body.FreeAt)
@@ -226,8 +317,74 @@ namespace TrainSurvivor.Game.View
                 else if (body.Playing == "Walk")
                 {
                     var st = body.Anim[_walk.name];
-                    // playback follows the ground speed, so the planted foot does not slide
-                    if (st != null) st.speed = Mathf.Clamp(e.Speed / _walkGroundSpeed, 0.3f, 3f);
+                    // playback tracks measured ground speed: no stride/slide mismatch
+                    if (st != null)
+                        st.speed = attacking ? 0f : Mathf.Clamp(body.Gait / _walkGroundSpeed, 0.05f, 3f);
+                }
+
+                // Attack and footstep cues are view cues: the swing fires when the clip reaches
+                // its contact beat, footsteps are earned by measured stride while walking.
+                var audio = AudioDirector.Instance;
+                if (audio != null)
+                {
+                    if (body.SwingAt > 0f && now >= body.SwingAt)
+                    {
+                        body.SwingAt = 0f;
+                        if (attacking) audio.WalkerSwing(cueClose);
+                    }
+                    else if (!attacking && body.SwingAt > 0f)
+                    {
+                        body.SwingAt = 0f;
+                    }
+
+                    bool walking = body.Playing == "Walk" && !attacking && body.Gait > 0.25f;
+                    if (walking && dt > 0.0001f)
+                    {
+                        body.StepAccum += body.Gait * dt;
+                        if (body.StepAccum >= FootstepStride)
+                        {
+                            body.StepAccum -= FootstepStride;
+                            audio.WalkerFootstep(cueClose);
+                        }
+                    }
+                    else
+                    {
+                        body.StepAccum = 0f;
+                    }
+                }
+
+                // Legacy clips can carry root translation; keep the visual on the sim's position.
+                if (body.Root != null)
+                {
+                    Vector3 before = body.Root.localPosition;
+                    body.Root.localPosition = body.RootLocal;
+                    if (!_rootLogged)
+                    {
+                        _rootLogged = true;
+                        Debug.Log(string.Format("[walker3d] clip root offset {0} (clip {1})",
+                            (before - body.RootLocal).magnitude, body.Playing));
+                    }
+                }
+
+                if (_walkerCam != null && used == 1)
+                {
+                    var rs = body.Go.GetComponentsInChildren<Renderer>();
+                    Bounds wb = rs.Length > 0 ? rs[0].bounds : new Bounds(body.Go.transform.position, Vector3.one * 4f);
+                    for (int ri = 1; ri < rs.Length; ri++) wb.Encapsulate(rs[ri].bounds);
+                    float h = Mathf.Max(1f, wb.size.y);
+                    // Frame the whole body, feet included: eye lower than the old 0.6h and a
+                    // look point near the waist, from a fixed distance derived from the vFOV.
+                    float d = (h * 0.5f) / Mathf.Tan(_walkerCam.fieldOfView * Mathf.Deg2Rad * 0.5f) * 1.7f;
+                    float hullS = Mathf.Clamp(e.S, trainS - SimConfig.WagonSpan * Mathf.Max(1, world.Train.Wagons),
+                                                     trainS + SimConfig.TrainNose);
+                    Vector3 toTrain = TrackSpace.Point(hullS, 0f, 0f) - pos;
+                    toTrain.y = 0f;
+                    if (toTrain.sqrMagnitude < 0.0001f) toTrain = Vector3.forward;
+                    toTrain.Normalize();
+                    Vector3 side = Vector3.Cross(Vector3.up, toTrain).normalized;
+                    _walkerCam.transform.position = pos + toTrain * d + side * (0.28f * d)
+                                                        + Vector3.up * (h * 0.38f);
+                    _walkerCam.transform.LookAt(new Vector3(wb.center.x, pos.y + h * 0.46f, wb.center.z));
                 }
             }
 
@@ -238,8 +395,9 @@ namespace TrainSurvivor.Game.View
                 Body body = _pool[used++];
                 body.EnemyId = -1;
                 Vector3 pos = TrackSpace.Point(_pending[d].S, _pending[d].X, 0f);
+                if (body.Proxy != null) body.Proxy.Disable();
                 body.Go.transform.position = pos;
-                body.Go.transform.rotation = FaceTrain(pos, trainS);
+                body.Go.transform.rotation = FaceConvoy(pos, _pending[d].S, trainS, world.Train.Wagons);
                 body.FreeAt = now + _deathLen;
                 Play(body, _death, false);
             }
@@ -252,6 +410,7 @@ namespace TrainSurvivor.Game.View
                 if (!holdingCorpse)
                 {
                     if (b.Go.activeSelf) b.Go.SetActive(false);
+                    if (b.Proxy != null) b.Proxy.Disable();
                     b.EnemyId = -1;
                     b.Playing = null;
                 }

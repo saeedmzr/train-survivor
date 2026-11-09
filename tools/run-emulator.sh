@@ -13,7 +13,6 @@ AVD="${1:-TrainSurvivor34}"
 exec "$AH/SDK/emulator/emulator" \
   -avd "$AVD" \
   -no-snapshot \
-  -no-audio \
   -gpu host \
   -memory 4096 \
   -cores 6

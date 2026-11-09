@@ -11,6 +11,10 @@ namespace TrainSurvivor.Game.View
         const float RailHalfWidth = 0.075f;
         const float RailInset = 0.72f;
         const float SampleStep = 2f;
+        // Rails must exist under the rear freight cars at a fresh start (S=0). The longest
+        // convoy is 6 wagons, so its tail is about -43 m; -70 leaves a visible safety margin.
+        const float TrackStart = -70f;
+        const float TrackEnd = TrackPath.Length + 40f;
 
         public static void Build(Transform parent)
         {
@@ -61,14 +65,14 @@ namespace TrainSurvivor.Game.View
         /// <summary>One quad strip, optionally mirrored to the left of the centerline.</summary>
         static void BuildRibbon(Transform parent, string name, float halfWidth, float inset, float y, Material mat)
         {
-            int segments = Mathf.CeilToInt((TrackPath.Length + 60f) / SampleStep);
+            int segments = Mathf.CeilToInt((TrackEnd - TrackStart) / SampleStep);
             var verts = new List<Vector3>(segments * 2 + 2);
             var tris = new List<int>(segments * 6);
             var normals = new List<Vector3>(segments * 2 + 2);
 
             for (int i = 0; i <= segments; i++)
             {
-                float s = i * SampleStep - 20f;
+                float s = TrackStart + i * SampleStep;
                 Vector3 c = TrackSpace.Point(s, inset, y);
                 Vector3 r = TrackSpace.Right(s) * halfWidth;
                 verts.Add(c - r);
@@ -88,7 +92,7 @@ namespace TrainSurvivor.Game.View
         static void BuildSleepers(Transform parent)
         {
             const float spacing = 2.6f;
-            int count = Mathf.CeilToInt(TrackPath.Length / spacing);
+            int count = Mathf.CeilToInt((TrackPath.Length - TrackStart) / spacing);
             var verts = new List<Vector3>(count * 4);
             var tris = new List<int>(count * 6);
             var normals = new List<Vector3>(count * 4);
@@ -97,7 +101,7 @@ namespace TrainSurvivor.Game.View
 
             for (int i = 0; i < count; i++)
             {
-                float s = i * spacing;
+                float s = TrackStart + i * spacing;
                 Vector3 c = TrackSpace.Point(s, 0f, 0.055f);
                 Vector3 r = TrackSpace.Right(s) * halfLen;
                 Vector3 f = TrackSpace.Right(s) * 0f + (TrackSpace.Point(s + halfDepth, 0f) - c);

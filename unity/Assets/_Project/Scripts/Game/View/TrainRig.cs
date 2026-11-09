@@ -19,6 +19,7 @@ namespace TrainSurvivor.Game.View
         Material _body, _accent, _metal, _glass;
         Material _locoMat;
         bool _warnedMissingModel;
+        bool _verbose;
 
         // Gun mount plates, measured from the meshes (Blender axes: x right, y forward, z up;
         // Unity takes x, z, y). One on the loco roof, two on each wagon roof.
@@ -36,6 +37,7 @@ namespace TrainSurvivor.Game.View
             new Vector3(0.50f, 0.923f, 0.703f),
         };
         readonly Dictionary<Transform, Transform> _wagonModel = new Dictionary<Transform, Transform>();
+        readonly Dictionary<Transform, Vector3[]> _plateCache = new Dictionary<Transform, Vector3[]>();
         Transform _locoModel;
 
         public Vector3 LeadPosition => _wagons.Count > 0 ? _wagons[0].position : transform.position;
@@ -47,9 +49,11 @@ namespace TrainSurvivor.Game.View
             _accent = Palette.Get("TrainAccent", Palette.Accent);
             _metal = Palette.Get("Metal", Palette.Metal);
             _glass = Palette.Get("CabGlass", new Color(0.05f, 0.09f, 0.14f));
+            _verbose = DevTuning.Get("dev.verbose", 0f) > 0.5f;
 
             BuildLocomotive();
-            for (int i = 1; i < wagons; i++) BuildFreightWagon(i);
+            // StartingWagons counts the freight cars behind the engine: 1 means loco + 1 wagon.
+            for (int i = 1; i <= wagons; i++) BuildFreightWagon(i);
 
             BuildGuns(Mathf.Max(1, guns));
         }
@@ -123,54 +127,60 @@ namespace TrainSurvivor.Game.View
                 return false;
             }
 
-            // The export's axis convention is not reliable: stand it up on its wheels first, then
-            // put its longest horizontal axis down the track. Both steps are measured, not assumed.
-            Bounds Measure()
+            // Stand it up, then lay its long axis down the track; measured in the car root's
+            // local frame so a yawed (curved-track) parent cannot change fit or centring.
+            Bounds MeasureLocal()
             {
-                Bounds bb = renderers[0].bounds;
-                for (int i = 1; i < renderers.Length; i++) bb.Encapsulate(renderers[i].bounds);
+                bool any = false;
+                Bounds bb = new Bounds();
+                foreach (var r in renderers)
+                {
+                    var lb = r.localBounds;
+                    for (int c = 0; c < 8; c++)
+                    {
+                        var corner = new Vector3(
+                            (c & 1) == 0 ? lb.min.x : lb.max.x,
+                            (c & 2) == 0 ? lb.min.y : lb.max.y,
+                            (c & 4) == 0 ? lb.min.z : lb.max.z);
+                        Vector3 p = root.InverseTransformPoint(r.transform.TransformPoint(corner));
+                        if (!any) { bb = new Bounds(p, Vector3.zero); any = true; }
+                        else bb.Encapsulate(p);
+                    }
+                }
                 return bb;
             }
 
-            Bounds b = Measure();
+            Bounds b = MeasureLocal();
             if (b.size.y > Mathf.Max(b.size.x, b.size.z) * 1.2f)
             {
-                // the sign matters: -90 and +90 both make the box the right shape, but only one
-                // leaves the roof up. dev.locoPitch overrides it without a rebuild.
                 float pitch = DevTuning.Get("dev.locoPitch", -90f);
                 model.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
-                b = Measure();
-                Debug.Log("[loco] model was lying along Y — pitched " + pitch);
+                b = MeasureLocal();
+                if (_verbose) Debug.Log("[loco] model was lying along Y - pitched " + pitch);
             }
             if (b.size.x > b.size.z * 1.2f)
             {
-                var q = model.transform.localRotation;
-                model.transform.localRotation = q * Quaternion.Euler(0f, 90f, 0f);
-                b = Measure();
-                Debug.Log("[loco] length was along X — yawed 90");
+                model.transform.localRotation = model.transform.localRotation * Quaternion.Euler(0f, 90f, 0f);
+                b = MeasureLocal();
             }
 
-            // authored facing correction: the export points its cab at -Z, which is the side the chase
-            // camera looks at, so 0 keeps the cab (not the smoke-box door) facing the player
             float yaw = DevTuning.Get("dev.locoYaw", 0f);
             model.transform.localRotation = model.transform.localRotation * Quaternion.Euler(0f, yaw, 0f);
 
-            b = Measure();
+            b = MeasureLocal();
             float scale = LocoLength / Mathf.Max(b.size.z, 0.01f);
             model.transform.localScale = Vector3.one * scale;
 
-            // re-measure and drop onto the rail, centred on the wagon pivot
-            b = Measure();
-            Vector3 localCenter = root.InverseTransformPoint(b.center);
-            float dropTo = root.position.y;
-            model.transform.localPosition = new Vector3(-localCenter.x, dropTo - b.min.y, -localCenter.z);
+            b = MeasureLocal();
+            model.transform.localPosition = new Vector3(-b.center.x, -b.min.y, -b.center.z);
 
             _locoMat = MakeLocoMaterial();
             if (_locoMat != null)
                 foreach (var r in renderers) r.sharedMaterial = _locoMat;
 
-            Debug.Log(string.Format("[loco] model ready: {0} renderers, scale {1:0.00}, size {2} yaw {3}",
-                renderers.Length, scale, b.size.ToString("0.0"), yaw));
+            if (_verbose)
+                Debug.Log(string.Format("[loco] model ready: {0} renderers, scale {1:0.00}, size {2} yaw {3}",
+                    renderers.Length, scale, b.size.ToString("0.0"), yaw));
             return true;
         }
 
@@ -191,12 +201,7 @@ namespace TrainSurvivor.Game.View
             return mat;
         }
 
-
-        /// <summary>
-        /// Instantiate a modelled asset under a wagon/gun root: stand it up, put its long axis down
-        /// the track, scale it to the wanted length or height, and sit it on the floor of its parent.
-        /// Returns false if the model cannot be used, so callers fall back to primitives.
-        /// </summary>
+        /// <summary>Fit a prefab under a car root, measuring in that root's local frame.</summary>
         Transform PlaceModel(GameObject prefab, Transform parent, string albedoResource,
                         float targetLength, float targetHeight, float yaw)
         {
@@ -215,34 +220,47 @@ namespace TrainSurvivor.Game.View
             var renderers = model.GetComponentsInChildren<Renderer>();
             if (renderers.Length == 0) return null;
 
-            Bounds Measure()
+            Bounds MeasureLocal()
             {
-                Bounds bb = renderers[0].bounds;
-                for (int i = 1; i < renderers.Length; i++) bb.Encapsulate(renderers[i].bounds);
+                bool any = false;
+                Bounds bb = new Bounds();
+                foreach (var r in renderers)
+                {
+                    var lb = r.localBounds;
+                    for (int c = 0; c < 8; c++)
+                    {
+                        var corner = new Vector3(
+                            (c & 1) == 0 ? lb.min.x : lb.max.x,
+                            (c & 2) == 0 ? lb.min.y : lb.max.y,
+                            (c & 4) == 0 ? lb.min.z : lb.max.z);
+                        Vector3 p = parent.InverseTransformPoint(r.transform.TransformPoint(corner));
+                        if (!any) { bb = new Bounds(p, Vector3.zero); any = true; }
+                        else bb.Encapsulate(p);
+                    }
+                }
                 return bb;
             }
 
-            Bounds b = Measure();
+            Bounds b = MeasureLocal();
             if (b.size.y > Mathf.Max(b.size.x, b.size.z) * 1.15f)
             {
                 model.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
-                b = Measure();
+                b = MeasureLocal();
             }
             if (b.size.x > b.size.z * 1.15f)
             {
                 model.transform.localRotation = model.transform.localRotation * Quaternion.Euler(0f, 90f, 0f);
-                b = Measure();
+                b = MeasureLocal();
             }
             model.transform.localRotation = model.transform.localRotation * Quaternion.Euler(0f, yaw, 0f);
 
-            b = Measure();
+            b = MeasureLocal();
             float lengthScale = targetLength / Mathf.Max(b.size.z, 0.01f);
             float heightScale = targetHeight / Mathf.Max(b.size.y, 0.01f);
             model.transform.localScale = Vector3.one * Mathf.Min(lengthScale, heightScale);
 
-            b = Measure();
-            Vector3 localCenter = parent.InverseTransformPoint(b.center);
-            model.transform.localPosition = new Vector3(-localCenter.x, -localCenter.y + b.extents.y, -localCenter.z);
+            b = MeasureLocal();
+            model.transform.localPosition = new Vector3(-b.center.x, -b.min.y, -b.center.z);
 
             var tex = Resources.Load<Texture2D>(albedoResource);
             var shader = Shader.Find("Universal Render Pipeline/Lit");
@@ -258,17 +276,47 @@ namespace TrainSurvivor.Game.View
         }
 
 
-        /// <summary>World position of a mount plate, from the model's current world bounds.</summary>
-        Vector3 PlatePoint(Transform model, Vector3 frac)
+        /// <summary>
+        /// Mount points for a model, measured ONCE from renderer local geometry into the wagon
+        /// parent's local frame. Stable on curves because no per-frame world AABB is used.
+        /// Gun child renderers are excluded so a mounted turret never moves its own slot.
+        /// </summary>
+        /// <summary>Renderer bounds of a model expressed in the car root's local frame.</summary>
+        bool TryLocalBounds(Transform parent, Transform model, out Bounds b)
         {
-            var rs = model.GetComponentsInChildren<Renderer>();
-            if (rs.Length == 0) return model.position;
-            Bounds b = rs[0].bounds;
-            for (int i = 1; i < rs.Length; i++) b.Encapsulate(rs[i].bounds);
-            return new Vector3(
-                b.min.x + frac.x * b.size.x,
-                b.min.y + frac.y * b.size.y,
-                b.min.z + frac.z * b.size.z);
+            b = new Bounds();
+            bool any = false;
+            foreach (var r in model.GetComponentsInChildren<Renderer>())
+            {
+                if (r.GetComponentInParent<GunRig>() != null) continue;
+                var lb = r.localBounds;
+                for (int c = 0; c < 8; c++)
+                {
+                    var corner = new Vector3(
+                        (c & 1) == 0 ? lb.min.x : lb.max.x,
+                        (c & 2) == 0 ? lb.min.y : lb.max.y,
+                        (c & 4) == 0 ? lb.min.z : lb.max.z);
+                    Vector3 p = parent.InverseTransformPoint(r.transform.TransformPoint(corner));
+                    if (!any) { b = new Bounds(p, Vector3.zero); any = true; }
+                    else b.Encapsulate(p);
+                }
+            }
+            return any;
+        }
+
+        Vector3[] Anchors(Transform parent, Transform model, Vector3[] fracs)
+        {
+            if (!TryLocalBounds(parent, model, out var b))
+            {
+                Debug.LogError("[mount] no renderers for " + model.name + " — no guns mounted");
+                return new Vector3[0];
+            }
+            var pts = new Vector3[fracs.Length];
+            for (int i = 0; i < fracs.Length; i++)
+                pts[i] = b.min + Vector3.Scale(fracs[i], b.size);
+            if (_verbose)
+                Debug.Log(string.Format("[mount] {0} anchors {1} | {2}", model.name, pts[0], pts.Length > 1 ? pts[1].ToString() : "-"));
+            return pts;
         }
 
         struct Mount
@@ -302,9 +350,10 @@ namespace TrainSurvivor.Game.View
                     continue;
                 }
 
-                var mounts = w == 0 ? LocoMounts : WagonMounts;
-                for (int m = 0; m < mounts.Length; m++)
-                    list.Add(new Mount { Parent = parent, Model = model, Local = mounts[m] });
+                Vector3[] fracs = w == 0 ? LocoMounts : WagonMounts;
+                Vector3[] pts = Anchors(parent, model, fracs);
+                for (int m = 0; m < pts.Length; m++)
+                    list.Add(new Mount { Parent = parent, Model = model, Local = pts[m] });
             }
             return list;
         }
@@ -375,6 +424,75 @@ namespace TrainSurvivor.Game.View
             for (int i = 0; i < count; i++) BuildGun(i);
         }
 
+        /// <summary>Copy a single-mesh turret into one side of a horizontal cut, keeping the
+        /// original vertices/UVs/materials. The lower part becomes the fixed pedestal.</summary>
+        static readonly Dictionary<Mesh, Mesh[]> _splitCache = new Dictionary<Mesh, Mesh[]>();
+        static readonly Dictionary<Mesh, float> _cutCache = new Dictionary<Mesh, float>();
+
+        /// <summary>
+        /// Split the turret in RECOIL-LOCAL space (the frame the pitch hinge lives in), so the
+        /// imported rotation/scale cannot invalidate the cut. Vertices and normals are baked into
+        /// that frame; UVs, submeshes and materials are carried over unchanged.
+        /// </summary>
+        Mesh[] SplitTurretPart(Transform src, Mesh mesh, Transform frame, float cutFrac, out float cutPlane)
+        {
+            if (_splitCache.TryGetValue(mesh, out var cached))
+            {
+                cutPlane = _cutCache.TryGetValue(mesh, out float cachedCut) ? cachedCut : 0f;
+                return cached;
+            }
+
+            var verts = mesh.vertices;
+            var norms = mesh.normals;
+            var uvs = mesh.uv;
+            var local = new Vector3[verts.Length];
+            var localN = norms != null && norms.Length == verts.Length ? new Vector3[norms.Length] : null;
+            float minY = float.MaxValue, maxY = float.MinValue;
+            for (int i = 0; i < verts.Length; i++)
+            {
+                local[i] = frame.InverseTransformPoint(src.TransformPoint(verts[i]));
+                minY = Mathf.Min(minY, local[i].y);
+                maxY = Mathf.Max(maxY, local[i].y);
+                if (localN != null) localN[i] = frame.InverseTransformDirection(src.TransformDirection(norms[i]));
+            }
+            float cutY = Mathf.Lerp(minY, maxY, cutFrac);
+
+            int subCount = Mathf.Max(1, mesh.subMeshCount);
+            var meshes = new Mesh[2];
+            for (int side = 0; side < 2; side++)
+            {
+                bool upper = side == 1;
+                var nm = new Mesh { name = mesh.name + (upper ? "_upper" : "_base") };
+                nm.vertices = local;
+                if (localN != null) nm.normals = localN;
+                if (uvs != null && uvs.Length == verts.Length) nm.uv = uvs;
+                nm.subMeshCount = subCount;
+                for (int s = 0; s < subCount; s++)
+                {
+                    int[] srcTris = mesh.GetTriangles(s);
+                    var keep = new List<int>(srcTris.Length);
+                    for (int t = 0; t + 2 < srcTris.Length; t += 3)
+                    {
+                        float cy = (local[srcTris[t]].y + local[srcTris[t + 1]].y + local[srcTris[t + 2]].y) / 3f;
+                        if ((cy >= cutY) == upper)
+                        {
+                            keep.Add(srcTris[t]); keep.Add(srcTris[t + 1]); keep.Add(srcTris[t + 2]);
+                        }
+                    }
+                    nm.SetTriangles(keep.ToArray(), s);
+                }
+                nm.RecalculateBounds();
+                meshes[side] = nm;
+            }
+            _splitCache[mesh] = meshes;
+            _cutCache[mesh] = cutY;
+            cutPlane = cutY;
+            if (_verbose)
+                Debug.Log(string.Format("[gun] split frame cut {0:0.000} (y {1:0.000}..{2:0.000}, {3:0.00}% )",
+                    cutY, minY, maxY, cutFrac * 100f));
+            return meshes;
+        }
+
         void BuildGun(int i)
         {
             // mount (fixed to the wagon) -> yaw pivot -> recoil sleeve -> turret model
@@ -386,10 +504,8 @@ namespace TrainSurvivor.Game.View
             {
                 Mount slot = mounts[Mathf.Min(i, mounts.Count - 1)];
                 mount.SetParent(slot.Parent, false);
-                Vector3 world = slot.Model != null
-                    ? PlatePoint(slot.Model, slot.Local)
-                    : slot.Parent.TransformPoint(slot.Local);
-                mount.localPosition = slot.Parent.InverseTransformPoint(world) + Vector3.up * 0.03f;
+                // Local mount from cached geometry: stable through yaw, curves and wagon adds.
+                mount.localPosition = slot.Local + Vector3.up * 0.03f;
             }
             else
             {
@@ -399,8 +515,11 @@ namespace TrainSurvivor.Game.View
             var yaw = new GameObject("Yaw").transform;
             yaw.SetParent(mount, false);
 
+            var pitch = new GameObject("Pitch").transform;
+            pitch.SetParent(yaw, false);
+
             var recoil = new GameObject("Recoil").transform;
-            recoil.SetParent(yaw, false);
+            recoil.SetParent(pitch, false);
 
             var turretPrefab = Resources.Load<GameObject>("Models/turret");
             Transform model = null;
@@ -411,39 +530,144 @@ namespace TrainSurvivor.Game.View
             muzzle.SetParent(recoil, false);
             if (model != null)
             {
+                // Pedestal pivot: recentre the mesh so its base centre sits at the mount origin.
+                // Centring the whole AABB would orbit the pedestal as the gun yaws.
+                Bounds lb = new Bounds(model.position, Vector3.zero);
                 var rs = model.GetComponentsInChildren<Renderer>();
-                if (rs.Length > 0)
+                bool first = true;
+                foreach (var r in rs)
                 {
-                    Bounds b = rs[0].bounds;
-                    for (int k = 1; k < rs.Length; k++) b.Encapsulate(rs[k].bounds);
-                    muzzle.position = new Vector3(b.center.x, b.center.y, b.max.z);
+                    var lbb = r.localBounds;
+                    for (int c = 0; c < 8; c++)
+                    {
+                        var corner = new Vector3(
+                            (c & 1) == 0 ? lbb.min.x : lbb.max.x,
+                            (c & 2) == 0 ? lbb.min.y : lbb.max.y,
+                            (c & 4) == 0 ? lbb.min.z : lbb.max.z);
+                        Vector3 p = recoil.InverseTransformPoint(r.transform.TransformPoint(corner));
+                        if (first) { lb = new Bounds(p, Vector3.zero); first = false; }
+                        else lb.Encapsulate(p);
+                    }
                 }
+                model.localPosition -= new Vector3(lb.center.x, lb.min.y, lb.center.z);
+
+                Bounds lb2 = new Bounds(model.position, Vector3.zero);
+                first = true;
+                foreach (var r in rs)
+                {
+                    var lbb = r.localBounds;
+                    for (int c = 0; c < 8; c++)
+                    {
+                        var corner = new Vector3(
+                            (c & 1) == 0 ? lbb.min.x : lbb.max.x,
+                            (c & 2) == 0 ? lbb.min.y : lbb.max.y,
+                            (c & 4) == 0 ? lbb.min.z : lbb.max.z);
+                        Vector3 p = recoil.InverseTransformPoint(r.transform.TransformPoint(corner));
+                        if (first) { lb2 = new Bounds(p, Vector3.zero); first = false; }
+                        else lb2.Encapsulate(p);
+                    }
+                }
+                muzzle.localPosition = new Vector3(0f, lb2.center.y, lb2.max.z);
             }
             else
             {
                 muzzle.localPosition = new Vector3(0f, 0.35f, 1.1f);
             }
 
-            // muzzle flash: an unlit quad at the tip, enabled for a few frames per shot
-            var flashGo = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Object.Destroy(flashGo.GetComponent<Collider>());
-            flashGo.name = "MuzzleFlash";
-            flashGo.transform.SetParent(muzzle, false);
-            flashGo.transform.localScale = new Vector3(0.62f, 0.62f, 1f);
-            // a bespoke URP/Unlit material gets its shader stripped from the Android build and
-            // renders magenta; reuse the tracer material that already ships in Resources/M0
-            var flashMat = Resources.Load<Material>("M0/Tracer");
-            if (flashMat == null) flashMat = Resources.Load<Material>("M0/Spark");
-            if (flashMat != null) flashGo.GetComponent<Renderer>().sharedMaterial = flashMat;
-            else Debug.LogWarning("[gun] no flash material found");
-            var flash = flashGo.GetComponent<Renderer>();
-            flash.enabled = false;
+            // Muzzle flash is drawn by Effects ("muzzle_core") at this same muzzle transform;
+            // a second quad here re-used the blue tracer material and read as a blue slab.
+
+            if (model != null)
+            {
+                var mf = model.GetComponent<MeshFilter>();
+                var smr = model.GetComponent<MeshRenderer>();
+                var mesh = mf != null ? mf.sharedMesh : null;
+                if (mesh != null && mesh.isReadable && smr != null)
+                {
+                    Mesh[] parts = SplitTurretPart(model, mesh, recoil, 0.34f, out float hingeY);
+                    var baseGo = new GameObject(model.name + "_Base");
+                    baseGo.transform.SetParent(mount, false);
+                    baseGo.AddComponent<MeshFilter>().sharedMesh = parts[0];
+                    baseGo.AddComponent<MeshRenderer>().sharedMaterials = smr.sharedMaterials;
+
+                    var upperGo = new GameObject(model.name + "_Upper");
+                    upperGo.transform.SetParent(recoil, false);
+                    upperGo.AddComponent<MeshFilter>().sharedMesh = parts[1];
+                    upperGo.AddComponent<MeshRenderer>().sharedMaterials = smr.sharedMaterials;
+
+                    Object.Destroy(model.gameObject);
+                    model = upperGo.transform;
+
+                    // Barrel tip centre, not the mesh AABB centre: the muzzle sits on the bore
+                    // axis so the alignment gate and the spawned round match the visible barrel.
+                    var uverts = parts[1].vertices;
+                    float maxZ = parts[1].bounds.max.z;
+                    float tipX = 0f, tipY = 0.9f;
+                    int tipN = 0;
+                    for (int vi = 0; vi < uverts.Length; vi++)
+                    {
+                        if (uverts[vi].z < maxZ - 0.08f) continue;
+                        tipX += uverts[vi].x;
+                        tipY += uverts[vi].y;
+                        tipN++;
+                    }
+                    if (tipN > 0) { tipX /= tipN; tipY /= tipN; }
+                    muzzle.localPosition = new Vector3(tipX, tipY, maxZ);
+
+                    // Real trunnion axis measured from the side discs: pitch about X at the
+                    // circular bearing, not the planar cut. The recoil sleeve is offset back by
+                    // the same vector so the resting pose is unchanged.
+                    const float trunnionY = 0.845f;
+                    const float trunnionZ = -0.26f;
+                    pitch.localPosition = new Vector3(0f, trunnionY, trunnionZ);
+                    recoil.localPosition = new Vector3(0f, -trunnionY, -trunnionZ);
+
+                    // Closed overlapping sleeve/pin in the turret's own material: it stays with
+                    // yaw and hides the cut and stem while the receiver pitches and recoils.
+                    AddTrunnionSleeve(yaw, smr.sharedMaterials[0], trunnionY, trunnionZ);
+
+                    if (_verbose)
+                        Debug.Log(string.Format("[gun] split ok base {0} upper {1} muzzle {2} hinge {3:0.000} trunnion y{4:0.000} z{5:0.000}",
+                            parts[0].vertexCount, parts[1].vertexCount, muzzle.localPosition,
+                            hingeY, trunnionY, trunnionZ));
+                }
+                else
+                {
+                    Debug.LogWarning("[gun] turret mesh NOT readable — base still moves with recoil");
+                }
+            }
 
             var rig = mount.gameObject.AddComponent<GunRig>();
             rig.gunIndex = i;
-            rig.Init(GetComponentInParent<GameLoop>(), mount, yaw, recoil, muzzle, flash, model);
+            rig.Init(GetComponentInParent<GameLoop>(), mount, yaw, pitch, recoil, muzzle, model);
 
             _guns.Add(mount);
+        }
+
+        void AddTrunnionSleeve(Transform yawParent, Material mat, float trunnionY, float trunnionZ)
+        {
+            if (yawParent == null || mat == null) return;
+
+            // Stem collar: closed overlap from the pedestal into the pitching receiver, in the
+            // turret's own material. It stays with yaw, so pitch/recoil can never open the joint
+            // to air. Sized to sit inside the existing bracket silhouette.
+            var collar = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            collar.name = "TrunnionCollar";
+            Object.Destroy(collar.GetComponent<Collider>());
+            collar.transform.SetParent(yawParent, false);
+            collar.transform.localPosition = new Vector3(0f, 0.62f, -0.24f);
+            collar.transform.localScale = new Vector3(0.60f, 0.34f, 0.60f);
+            collar.GetComponent<MeshRenderer>().sharedMaterial = mat;
+
+            // Trunnion pin through both side bearings: a fixed shaft the receiver rotates on.
+            var pin = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            pin.name = "TrunnionPin";
+            Object.Destroy(pin.GetComponent<Collider>());
+            pin.transform.SetParent(yawParent, false);
+            pin.transform.localPosition = new Vector3(0f, trunnionY, trunnionZ);
+            pin.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            pin.transform.localScale = new Vector3(0.18f, 0.64f, 0.18f);
+            pin.GetComponent<MeshRenderer>().sharedMaterial = mat;
         }
 
         Transform MakeBox(Transform parent, string name, Vector3 pos, Vector3 scale, Material mat, float yaw = 0f)
@@ -480,6 +704,73 @@ namespace TrainSurvivor.Game.View
             w.localRotation = Quaternion.Euler(0f, 0f, 90f);
         }
 
+        Camera _gunCam;
+        bool _gunCamBuilt;
+        readonly List<Camera> _hiddenCams = new List<Camera>();
+
+        /// <summary>
+        /// Fixed inspection view of one turret, framed from the gun's own renderer bounds.
+        /// dev.gunscam=1 enables it; dev.gunscam.gun selects the mount (0 = loco plate 1).
+        /// No timed side toggle: the pose is explicit and every frame is the same shot.
+        /// </summary>
+        void UpdateGunCam()
+        {
+            if (!_gunCamBuilt)
+            {
+                if (TrainSurvivor.Game.DevTuning.Get("dev.gunscam", 0f) < 0.5f) return;
+                _gunCamBuilt = true;
+                var go = new GameObject("GunInspectCam");
+                _gunCam = go.AddComponent<Camera>();
+                _gunCam.depth = 100f;
+                _gunCam.fieldOfView = 42f;
+                _gunCam.nearClipPlane = 0.05f;
+                _gunCam.clearFlags = CameraClearFlags.Skybox;
+
+                // Only this camera renders while inspecting; restore the rest on teardown.
+                foreach (var c in Camera.allCameras)
+                {
+                    if (c == _gunCam) continue;
+                    _hiddenCams.Add(c);
+                    c.enabled = false;
+                }
+                if (_verbose) Debug.Log("[mount] inspection camera on (explicit bounds pose)");
+            }
+
+            if (_gunCam == null || _guns.Count == 0) return;
+
+            int gi = Mathf.Clamp((int)TrainSurvivor.Game.DevTuning.Get("dev.gunscam.gun", 0f),
+                                 0, _guns.Count - 1);
+            Transform gun = _guns[gi];
+
+            Bounds b = new Bounds(gun.position, Vector3.zero);
+            bool any = false;
+            foreach (var r in gun.GetComponentsInChildren<Renderer>())
+            {
+                if (r == null) continue;
+                if (!any) { b = r.bounds; any = true; }
+                else b.Encapsulate(r.bounds);
+            }
+            if (!any) b = new Bounds(gun.position + Vector3.up * 1.2f, Vector3.one * 2f);
+
+            Vector3 focus = b.center;
+            float size = Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z));
+            float d = Mathf.Max(2.6f, size * 1.75f + 0.9f);
+
+            // Behind and to the side of the car (back is -forward), at a positive world-up
+            // height. The old '-back * 6' pointed AHEAD of the loco and cropped it.
+            Vector3 right = LeadRotation * Vector3.right;
+            Vector3 back = LeadRotation * Vector3.back;
+            _gunCam.transform.position = focus + back * (d * 0.35f) + right * (d * 0.95f)
+                                        + Vector3.up * (b.size.y * 0.45f);
+            _gunCam.transform.LookAt(focus);
+        }
+
+        void OnDestroy()
+        {
+            for (int i = 0; i < _hiddenCams.Count; i++)
+                if (_hiddenCams[i] != null) _hiddenCams[i].enabled = true;
+        }
+
         public void LateUpdate()
         {
             var loop = GetComponentInParent<GameLoop>();
@@ -487,10 +778,16 @@ namespace TrainSurvivor.Game.View
 
             float s = loop.World.Train.S;
 
-            int wantWagons = Mathf.Min(SimConfig.MaxWagons, loop.World.Train.Wagons);
+            // _wagons[0] is the locomotive; Train.Wagons counts the freight cars behind it.
+            int wantWagons = Mathf.Min(SimConfig.MaxWagons + 1, loop.World.Train.Wagons + 1);
             while (_wagons.Count < wantWagons) BuildFreightWagon(_wagons.Count);
 
             int wantGuns = Mathf.Min(SimConfig.MaxGuns, loop.World.Train.Guns);
+            // Capacity-aware: one mount per plate (2 on the loco, 2 per wagon). Guns past the
+            // plate count stay in inventory but get no geometry, instead of stacking on the
+            // last plate the way Mathf.Min(i, count-1) used to.
+            int mountsAvailable = BuildMounts().Count;
+            wantGuns = Mathf.Min(wantGuns, mountsAvailable);
             while (_guns.Count < wantGuns) BuildGun(_guns.Count);
 
             for (int i = 0; i < _wagons.Count; i++)
@@ -500,6 +797,8 @@ namespace TrainSurvivor.Game.View
                     TrackSpace.Point(ws, 0f, 0f),
                     TrackSpace.Facing(ws));
             }
+
+            UpdateGunCam();
 
             int guns = loop.World.Train.Guns;
             for (int i = 0; i < _guns.Count; i++) _guns[i].gameObject.SetActive(i < guns);
@@ -514,6 +813,17 @@ namespace TrainSurvivor.Game.View
             var rig = _guns[i].GetComponent<GunRig>();
             if (rig != null && rig.muzzle != null) return rig.muzzle.position;
             return _guns[i].TransformPoint(new Vector3(0f, 0.15f, 1.35f));
+        }
+
+        /// <summary>The aimed barrel axis of the gun that fired, so its round leaves the muzzle
+        /// along that barrel rather than toward a point in sim space.</summary>
+        public Vector3 MuzzleForward(int gunIndex)
+        {
+            if (_guns.Count == 0) return transform.forward;
+            int i = Mathf.Clamp(gunIndex, 0, _guns.Count - 1);
+            var rig = _guns[i].GetComponent<GunRig>();
+            if (rig != null && rig.muzzle != null) return rig.muzzle.forward;
+            return _guns[i].forward;
         }
     }
 }

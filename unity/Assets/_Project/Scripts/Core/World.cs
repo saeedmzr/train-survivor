@@ -43,6 +43,10 @@ namespace TrainSurvivor.Core
         /// <summary>Dev switch: zombies can close in without being shot, for testing damage.</summary>
         public bool GunsEnabled = true;
 
+        /// <summary>Two physical plates per car: locomotive plus every freight wagon.</summary>
+        public const int GunsPerPlate = 2;
+        public int GunCapacity => GunsPerPlate * (1 + Train.Wagons);
+
         // ---------------------------------------------------------------- gun aim (view -> sim)
         // The turrets live in the view, so the sim cannot know where a barrel points. The view
         // reports (target, aligned) per gun and the sim fires only when the barrel is on target,
@@ -50,26 +54,38 @@ namespace TrainSurvivor.Core
         // old way so the sim stays playable headless.
         public readonly int[] GunTargetId = new int[SimConfig.MaxGuns];
         public readonly bool[] GunAligned = new bool[SimConfig.MaxGuns];
+        public readonly bool[] GunTargetIsBlockade = new bool[SimConfig.MaxGuns];
         public bool GunAimDriven;
 
         /// <summary>A bullet in flight: damage lands where the tracer lands, not when the gun fires.</summary>
         struct Projectile
         {
-            public int EnemyId;
+            public int TargetId;
+            public bool Blockade;
             public float Damage;
             public float Delay;
             public bool Ignite;
+            public int GunIndex;
             public float S;
             public float X;
+            public int Id;
+            public float Age;
         }
 
         readonly List<Projectile> _flying = new List<Projectile>();
 
-        public void SetGunAim(int gun, int targetId, bool aligned)
+        /// <summary>When true a real projectile driver owns hit timing: StepProjectiles only
+        /// ages and expires records, and damage arrives through ResolveImpact.</summary>
+        public bool ViewDrivenProjectiles;
+        const float ProjectileLife = 4f;
+        int _nextProjectileId = 1;
+
+        public void SetGunAim(int gun, int targetId, bool aligned, bool blockade = false)
         {
             if (gun < 0 || gun >= GunTargetId.Length) return;
             GunTargetId[gun] = targetId;
             GunAligned[gun] = aligned;
+            GunTargetIsBlockade[gun] = blockade;
             GunAimDriven = true;
         }
 
@@ -79,6 +95,30 @@ namespace TrainSurvivor.Core
             for (int i = 0; i < EnemyCount; i++)
                 if (Enemies[i].Alive && Enemies[i].Id == id) return i;
             return -1;
+        }
+
+        int IndexOfBlockade(int id)
+        {
+            if (id <= 0) return -1;
+            for (int i = 0; i < BlockadeCount; i++)
+                if (Blockades[i].Alive && Blockades[i].Id == id) return i;
+            return -1;
+        }
+
+        /// <summary>
+        /// Distance from a point to the convoy hull: along the body it is the lateral gap past the
+        /// half-width, at the ends the gap past the nose/tail. Walkers therefore stop beside the
+        /// train, never inside the wagons and never on the boiler.
+        /// </summary>
+        float HullGap(float s, float x)
+        {
+            float nose = Train.S + SimConfig.TrainNose;
+            float tail = Train.S - SimConfig.WagonSpan * (Train.Wagons < 1 ? 1 : Train.Wagons);
+            float cs = s < tail ? tail : (s > nose ? nose : s);
+            float along = s - cs;
+            float lateral = (x < 0f ? -x : x) - SimConfig.TrainHalfWidth;
+            if (lateral < 0f) lateral = 0f;
+            return (float)Math.Sqrt(along * along + lateral * lateral);
         }
 
         /// <summary>Dev switch: drop a walker near the train every few seconds so the death animation
@@ -130,7 +170,9 @@ namespace TrainSurvivor.Core
             Train.Kills = 0;
             Train.Guns = SimConfig.StartingGuns;
             Train.Wagons = SimConfig.StartingWagons;
-            Train.MaxHp = SimConfig.BaseHp + SimConfig.WagonHp * (Train.Wagons - 1);
+            // Wagons counts freight cars; the locomotive is always present.
+            Train.MaxHp = SimConfig.BaseHp + SimConfig.WagonHp * Train.Wagons;
+            Train.Guns = Math.Min(Train.Guns, GunCapacity);
             Train.Hp = Train.MaxHp;
             Array.Clear(Train.CardStacks, 0, Train.CardStacks.Length);
 
@@ -197,7 +239,7 @@ namespace TrainSurvivor.Core
                     }
                     break;
                 case CardId.ExtraGun:
-                    if (Train.Guns < SimConfig.MaxGuns) Train.Guns++;
+                    if (Train.Guns < SimConfig.MaxGuns && Train.Guns < GunCapacity) Train.Guns++;
                     break;
             }
         }
@@ -229,7 +271,7 @@ namespace TrainSurvivor.Core
             Train.Mode = TrainMode.Stopped;
 
             // Milestones from the design doc: a gun every 3 stages, a wagon every 5.
-            if (Train.Stage % 3 == 0 && Train.Guns < SimConfig.MaxGuns) Train.Guns++;
+            if (Train.Stage % 3 == 0 && Train.Guns < SimConfig.MaxGuns && Train.Guns < GunCapacity) Train.Guns++;
             if (Train.Stage % 5 == 0 && Train.Wagons < SimConfig.MaxWagons)
             {
                 Train.Wagons++;
@@ -246,11 +288,20 @@ namespace TrainSurvivor.Core
             BuildStage(true);
         }
 
+        /// <summary>Raised whenever a stage is built (new run or next stage). A view-owned
+        /// projectile driver drops its rounds here so a round from the old track can never
+        /// resolve against the new one.</summary>
+        public Action StageRebuilt;
+
         void BuildStage(bool populate)
         {
             EnemyCount = 0;
             PickupCount = 0;
             BlockadeCount = 0;
+
+            // Pending rounds belong to the previous stage's ids: never let them land later.
+            _flying.Clear();
+            StageRebuilt?.Invoke();
 
             StageLength = Math.Min(TrackPath.Length - 40f,
                                    SimConfig.StageBaseLength + SimConfig.StageLengthPerStage * (Train.Stage - 1));
@@ -437,7 +488,7 @@ namespace TrainSurvivor.Core
                 float gap = e.S - Train.S;   // >0 means ahead of the train, <0 means behind it
                 float ds = -gap;             // vector from the enemy to the train, along S
                 float dx = 0f - e.X;         // and across the rails (the train sits on the centreline)
-                float dist = (float)Math.Sqrt(ds * ds + dx * dx);
+                float dist = HullGap(e.S, e.X);
 
                 // Walk straight at the train from whatever angle they spawned on. The old code only
                 // stepped along S and decayed X, which funnelled everything onto the rails; now they
@@ -560,18 +611,28 @@ namespace TrainSurvivor.Core
             int volley = 1 + Train.CardStacksOf(CardId.Multishot);
             int pierce = Train.CardStacksOf(CardId.PiercingRounds);
 
-            for (int g = 0; g < Train.Guns && g < _gunCd.Length; g++)
+            int firing = Math.Min(Train.Guns, GunCapacity);
+            for (int g = 0; g < firing && g < _gunCd.Length; g++)
             {
                 _gunCd[g] -= dt * rate;
                 if (_gunCd[g] > 0f) continue;
 
                 // when the view drives the turrets, respect the barrel: no aim, no shot
                 int aimedEnemy = -1;
+                int aimedBlockade = -1;
                 if (GunAimDriven)
                 {
                     if (!GunAligned[g]) continue;
-                    aimedEnemy = IndexOfEnemy(GunTargetId[g]);
-                    if (aimedEnemy < 0) continue;
+                    if (GunTargetIsBlockade[g])
+                    {
+                        aimedBlockade = IndexOfBlockade(GunTargetId[g]);
+                        if (aimedBlockade < 0) continue;
+                    }
+                    else
+                    {
+                        aimedEnemy = IndexOfEnemy(GunTargetId[g]);
+                        if (aimedEnemy < 0) continue;
+                    }
                 }
 
                 int hits = 0;
@@ -586,6 +647,11 @@ namespace TrainSurvivor.Core
                         enemy = aimedEnemy;
                         blockade = -1;
                     }
+                    else if (aimedBlockade >= 0)
+                    {
+                        enemy = -1;
+                        blockade = aimedBlockade;
+                    }
                     else if (!FindNearestTarget(out enemy, out blockade)) break;
 
                     float dmg = SimConfig.GunDamage * Train.StageDamageScale
@@ -593,10 +659,40 @@ namespace TrainSurvivor.Core
 
                     if (blockade >= 0)
                     {
-                        DamageBlockade(blockade, dmg, g);
+                        int pidB = _nextProjectileId++;
+                        ref Blockade b = ref Blockades[blockade];
+                        float bds = b.S - Train.S;
+                        float bdx = b.X - _gunOffsetX[g];
+                        float bdist = (float)Math.Sqrt(bds * bds + bdx * bdx);
+
+                        _flying.Add(new Projectile
+                        {
+                            TargetId = b.Id,
+                            Blockade = true,
+                            Damage = dmg,
+                            Delay = Math.Min(0.13f, Math.Max(0.045f, bdist / 170f)),
+                            GunIndex = g,
+                            S = b.S,
+                            X = b.X,
+                            Id = pidB
+                        });
+
+                        Events.Add(new SimEvent
+                        {
+                            Kind = SimEventKind.Shot,
+                            ProjectileId = pidB,
+                            BlockadeId = b.Id,
+                            FromS = Train.S,
+                            FromX = _gunOffsetX[g],
+                            ToS = b.S,
+                            ToX = b.X,
+                            Damage = dmg,
+                            GunIndex = g
+                        });
                     }
                     else
                     {
+                        int pidE = _nextProjectileId++;
                         ref Enemy e = ref Enemies[enemy];
                         _hitIds[hits] = e.Id;
 
@@ -609,17 +705,21 @@ namespace TrainSurvivor.Core
                         float dist = (float)Math.Sqrt(ds * ds + dx * dx);
                         _flying.Add(new Projectile
                         {
-                            EnemyId = e.Id,
+                            TargetId = e.Id,
+                            Blockade = false,
                             Damage = dmg,
                             Delay = Math.Min(0.13f, Math.Max(0.045f, dist / 170f)),
                             Ignite = ignite,
+                            GunIndex = g,
                             S = e.S,
-                            X = e.X
+                            X = e.X,
+                            Id = pidE
                         });
 
                         Events.Add(new SimEvent
                         {
                             Kind = SimEventKind.Shot,
+                            ProjectileId = pidE,
                             EnemyId = e.Id,
                             FromS = Train.S,
                             FromX = _gunOffsetX[g],
@@ -641,11 +741,76 @@ namespace TrainSurvivor.Core
         /// Bullets travel: each queued hit waits for its flight time, then lands. Damage therefore
         /// arrives when the tracer arrives, and a target that dies mid-flight simply eats the shot.
         /// </summary>
+        /// <summary>Consume one pending round at its real impact. Exactly once per id.</summary>
+        public bool ResolveImpact(int projectileId, bool isBlockade, int entityId)
+        {
+            for (int i = 0; i < _flying.Count; i++)
+            {
+                if (_flying[i].Id != projectileId) continue;
+                Projectile p = _flying[i];
+                _flying.RemoveAt(i);
+
+                if (isBlockade)
+                {
+                    int bi = IndexOfBlockade(entityId >= 0 ? entityId : p.TargetId);
+                    if (bi < 0 || !Blockades[bi].Alive) return false;
+                    DamageBlockade(bi, p.Damage, p.GunIndex);
+                    return true;
+                }
+
+                int idx = IndexOfEnemy(entityId >= 0 ? entityId : p.TargetId);
+                if (idx < 0 || !Enemies[idx].Alive) return false;
+
+                ref Enemy e = ref Enemies[idx];
+                e.Hp -= p.Damage;
+                e.Flash = 1f;
+                if (p.Ignite && e.Burn <= 0f) { e.Burn = 3f; e.BurnDps = 8f; }
+
+                // A real round connected: announce the hurt separately from the train's
+                // ContactHit, carrying the exact projectile so the view can match its trace.
+                Events.Add(new SimEvent
+                {
+                    Kind = SimEventKind.EnemyHit,
+                    EnemyId = e.Id,
+                    EnemyKind = e.Kind,
+                    ProjectileId = projectileId,
+                    ToS = e.S,
+                    ToX = e.X,
+                    Damage = p.Damage,
+                    GunIndex = p.GunIndex
+                });
+
+                if (e.Hp <= 0f) Kill(ref e);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>Drop a pending round without damage (miss, despawn, cancelled shot).</summary>
+        public bool CancelProjectile(int projectileId)
+        {
+            for (int i = 0; i < _flying.Count; i++)
+            {
+                if (_flying[i].Id != projectileId) continue;
+                _flying.RemoveAt(i);
+                return true;
+            }
+            return false;
+        }
+
         void StepProjectiles(float dt)
         {
             for (int i = _flying.Count - 1; i >= 0; i--)
             {
                 Projectile p = _flying[i];
+                p.Age += dt;
+                if (ViewDrivenProjectiles)
+                {
+                    // A real projectile driver decides the hit; here we only reap abandoned rounds.
+                    if (p.Age < ProjectileLife) { _flying[i] = p; continue; }
+                    _flying.RemoveAt(i);
+                    continue;
+                }
                 p.Delay -= dt;
                 if (p.Delay > 0f)
                 {
@@ -655,7 +820,15 @@ namespace TrainSurvivor.Core
 
                 _flying.RemoveAt(i);
 
-                int idx = IndexOfEnemy(p.EnemyId);
+                if (p.Blockade)
+                {
+                    int bi = IndexOfBlockade(p.TargetId);
+                    if (bi < 0) continue;                  // wall already gone
+                    DamageBlockade(bi, p.Damage, p.GunIndex);
+                    continue;
+                }
+
+                int idx = IndexOfEnemy(p.TargetId);
                 if (idx < 0) continue;                 // target already gone
 
                 ref Enemy e = ref Enemies[idx];
@@ -677,6 +850,24 @@ namespace TrainSurvivor.Core
         {
             enemyIndex = -1;
             blockadeIndex = -1;
+
+            // Stopped or held against a barricade, a wall within braking distance is the objective:
+            // shoot through it even while walkers are clawing at the hull, otherwise the train is
+            // pinned forever. (Releasing the throttle flips Blocked -> Stopped, so both states count.)
+            if (Train.Mode != TrainMode.Moving)
+            {
+                float wallGap = float.MaxValue;
+                for (int i = 0; i < BlockadeCount; i++)
+                {
+                    ref Blockade b = ref Blockades[i];
+                    if (!b.Alive) continue;
+                    float g = b.S - Train.S;
+                    if (g < -1f || g > SimConfig.BlockStopDistance + 1.5f) continue;
+                    if (g < wallGap) { wallGap = g; blockadeIndex = i; }
+                }
+                if (blockadeIndex >= 0) return true;
+            }
+
             float best = float.MaxValue;
 
             for (int i = 0; i < EnemyCount; i++)
