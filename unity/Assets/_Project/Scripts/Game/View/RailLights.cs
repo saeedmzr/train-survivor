@@ -15,13 +15,13 @@ namespace TrainSurvivor.Game.View
     {
         [Header("Layout")]
         [Tooltip("Metres between fixtures along the track")]
-        public float spacing = 20f;
+        public float spacing = 15f;
         [Tooltip("How far behind the locomotive the pool extends")]
         public float behind = 25f;
         [Tooltip("How far ahead the pool extends")]
         public float ahead = 95f;
         [Tooltip("Fixed number of live fixtures — this is the lighting budget")]
-        public int poolSize = 6;
+        public int poolSize = 7;
         [Tooltip("Distance from the centreline to the sleeper end")]
         public float lateral = 0.95f;
         [Tooltip("Fixture head height above the sleeper")]
@@ -29,16 +29,20 @@ namespace TrainSurvivor.Game.View
 
         [Header("Light")]
         public Color colour = new Color(1f, 0.62f, 0.28f);
-        public float intensity = 6f;
-        public float range = 16f;
-        [Range(30f, 120f)] public float spotAngle = 85f;
+        public float intensity = 11f;
+        public float range = 15f;
+        [Range(30f, 120f)] public float spotAngle = 74f;
 
+        bool _logged;
         GameObject[] _roots;
         Light[] _lights;
         static Material _bodyMat;
 
+        bool _off;
+
         void Awake()
         {
+            _off = DevTuning.Get("dev.raillights", 1f) < 0.5f;   // A/B perf switch
             _roots = new GameObject[Mathf.Max(1, poolSize)];
             _lights = new Light[_roots.Length];
             for (int i = 0; i < _roots.Length; i++) _roots[i] = Build(i);
@@ -75,7 +79,7 @@ namespace TrainSurvivor.Game.View
             l.intensity = intensity;
             l.range = range;
             l.spotAngle = spotAngle;
-            l.innerSpotAngle = spotAngle * 0.45f;
+            l.innerSpotAngle = spotAngle * 0.55f;
             l.shadows = LightShadows.None;     // budget: pools only, no shadow maps
             _lights[i] = l;
             return root;
@@ -104,6 +108,7 @@ namespace TrainSurvivor.Game.View
         public void Sync(World world)
         {
             if (world == null) return;
+            if (_off) return;
 
             float s0 = world.Train.S;
             int first = Mathf.FloorToInt((s0 - behind) / spacing);
@@ -121,8 +126,11 @@ namespace TrainSurvivor.Game.View
 
                 // aim down and across the track so both rails sit inside the pool
                 Vector3 inward = -side * TrackSpace.Right(s);
-                // ~32 deg below the horizontal: the cone lands across both rails, not at the post
-                Vector3 dir = (inward * 0.85f + Vector3.down * 0.53f).normalized;
+                // Aim at the centreline: horizontal run is the lateral offset, drop is the mast
+                // height, so down:inward = height:lateral (~2.4). The 74 deg cone then covers
+                // both rails symmetrically plus the sleepers.
+                float ratio = Mathf.Max(0.5f, height / Mathf.Max(0.2f, lateral));
+                Vector3 dir = (inward * 1f + Vector3.down * ratio).normalized;
                 _lights[used].transform.position = p + Vector3.up * height;
                 _lights[used].transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
                 _lights[used].enabled = true;
@@ -130,6 +138,16 @@ namespace TrainSurvivor.Game.View
             }
 
             for (int i = used; i < _roots.Length; i++) _roots[i].SetActive(false);
+
+            if (!_logged && used > 0)
+            {
+                _logged = true;
+                var l = _lights[0];
+                Debug.Log(string.Format(
+                    "[rail] placed {0}/{1} first at {2} enabled {3} type {4} int {5:0.0} range {6:0.0} angle {7:0}",
+                    used, _roots.Length, l.transform.position, l.enabled,
+                    l.type, l.intensity, l.range, l.spotAngle));
+            }
         }
     }
 }
