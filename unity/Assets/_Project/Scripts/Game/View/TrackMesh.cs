@@ -8,8 +8,6 @@ namespace TrainSurvivor.Game.View
     public static class TrackMesh
     {
         const float BallastHalfWidth = 3.1f;
-        const float RailHalfWidth = 0.11f;   // 22 cm rail head: reads as steel, not a hairline
-        const float RailInset = 0.72f;
         const float SampleStep = 2f;
         // Rails must exist under the rear freight cars at a fresh start (S=0). The longest
         // convoy is 6 wagons, so its tail is about -43 m; -70 leaves a visible safety margin.
@@ -21,16 +19,13 @@ namespace TrainSurvivor.Game.View
             BuildGround(parent);
             BuildRibbon(parent, "Ballast", BallastHalfWidth, 0f, 0f,
                         Textured("Ballast", Palette.Ballast, "ballast"));
-            // dark web under each head gives the rail a visible cross-section from behind
-            BuildRibbon(parent, "WebLeft", RailHalfWidth * 1.55f, RailInset, 0.045f,
-                        Palette.Get("RailWeb", Palette.RailWeb));
-            BuildRibbon(parent, "WebRight", RailHalfWidth * 1.55f, -RailInset, 0.045f,
-                        Palette.Get("RailWeb", Palette.RailWeb));
-            BuildRibbon(parent, "RailLeft", RailHalfWidth, RailInset, 0.12f,
-                        Palette.Get("Rail", Palette.Rail));
-            BuildRibbon(parent, "RailRight", RailHalfWidth, -RailInset, 0.12f,
-                        Palette.Get("Rail", Palette.Rail));
-            BuildSleepers(parent);
+
+            // Steel and sleepers now come from the supplied models: the rail is the measured
+            // cross-section swept along the route, the sleepers are the timber prefab with its
+            // baseplates straddling the rail feet. The old flat rail/web ribbons and the flat
+            // sleeper quads are retired here.
+            TrackRails.Build(parent, TrackStart, TrackEnd);
+            TrackSleepers.Build(parent, TrackStart, TrackPath.Length);
         }
 
         static void BuildGround(Transform parent)
@@ -123,35 +118,6 @@ namespace TrainSurvivor.Game.View
             }
 
             AddMeshObject(parent, name + "_" + Mathf.RoundToInt(inset * 100f), verts, tris, normals, mat, uvs);
-        }
-
-        static void BuildSleepers(Transform parent)
-        {
-            const float spacing = 2.15f;        // closer sleeper pitch reads at chase scale
-            int count = Mathf.CeilToInt((TrackPath.Length - TrackStart) / spacing);
-            var verts = new List<Vector3>(count * 4);
-            var tris = new List<int>(count * 6);
-            var normals = new List<Vector3>(count * 4);
-            const float halfLen = 1.35f;
-            const float halfDepth = 0.22f;
-
-            for (int i = 0; i < count; i++)
-            {
-                float s = TrackStart + i * spacing;
-                Vector3 c = TrackSpace.Point(s, 0f, 0.055f);
-                Vector3 r = TrackSpace.Right(s) * halfLen;
-                Vector3 f = TrackSpace.Right(s) * 0f + (TrackSpace.Point(s + halfDepth, 0f) - c);
-
-                int b = verts.Count;
-                verts.Add(c - r - f); verts.Add(c + r - f);
-                verts.Add(c + r + f); verts.Add(c - r + f);
-                for (int n = 0; n < 4; n++) normals.Add(Vector3.up);
-
-                tris.Add(b); tris.Add(b + 2); tris.Add(b + 1);
-                tris.Add(b); tris.Add(b + 3); tris.Add(b + 2);
-            }
-
-            AddMeshObject(parent, "Sleepers", verts, tris, normals, Palette.Get("Sleeper", Palette.Sleeper));
         }
 
         static void AddMeshObject(Transform parent, string name, List<Vector3> verts, List<int> tris,
