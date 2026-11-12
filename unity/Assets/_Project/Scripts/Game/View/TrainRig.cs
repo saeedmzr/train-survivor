@@ -626,6 +626,11 @@ namespace TrainSurvivor.Game.View
                     // yaw and hides the cut and stem while the receiver pitches and recoils.
                     AddTrunnionSleeve(yaw, smr.sharedMaterials[0], trunnionY, trunnionZ);
 
+                    // Cap the planar cut on both halves. Without this the receiver's hollow
+                    // skirt is visible through the cut at high depression (the "hinge wedge"):
+                    // each half now presents a solid bearing plate instead of open backfaces.
+                    AddCutCaps(mount, recoil, parts[0], parts[1], hingeY);
+
                     if (_verbose)
                         Debug.Log(string.Format("[gun] split ok base {0} upper {1} muzzle {2} hinge {3:0.000} trunnion y{4:0.000} z{5:0.000}",
                             parts[0].vertexCount, parts[1].vertexCount, muzzle.localPosition,
@@ -668,6 +673,86 @@ namespace TrainSurvivor.Game.View
             pin.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
             pin.transform.localScale = new Vector3(0.18f, 0.64f, 0.18f);
             pin.GetComponent<MeshRenderer>().sharedMaterial = mat;
+        }
+
+        /// <summary>
+        /// Two thin bearing plates at the split plane, one per half. The turret mesh is a
+        /// hollow shell cut by a plane; when the receiver pitches 70 degrees the open cut is
+        /// visible as a wedge of interior backfaces. Capping each half closes it without
+        /// moving the base, the hinge or the muzzle: the base cap stays on the mount, the
+        /// upper cap travels with the recoil sleeve.
+        /// </summary>
+        void AddCutCaps(Transform mount, Transform recoil, Mesh baseMesh, Mesh upperMesh, float cutY)
+        {
+            if (mount == null || recoil == null) return;
+            Material mat = FlatMetal();
+
+            float minX = float.MaxValue, maxX = float.MinValue;
+            float minZ = float.MaxValue, maxZ = float.MinValue;
+            CollectCut(baseMesh, cutY, ref minX, ref maxX, ref minZ, ref maxZ);
+            CollectCut(upperMesh, cutY, ref minX, ref maxX, ref minZ, ref maxZ);
+            if (minX > maxX) return;
+
+            float cx = (minX + maxX) * 0.5f;
+            float cz = (minZ + maxZ) * 0.5f;
+            float rx = ((maxX - minX) * 0.5f + 0.03f) * 0.94f;
+            float rz = ((maxZ - minZ) * 0.5f + 0.03f) * 0.94f;
+
+            // Base cap: the split assigns whole triangles by centroid, so the base's top edge
+            // can sit above the cut plane and show a strip of interior skin.
+            var capBase = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            capBase.name = "TurretCutCapBase";
+            Object.Destroy(capBase.GetComponent<Collider>());
+            capBase.transform.SetParent(mount, false);
+            capBase.transform.localPosition = new Vector3(cx, cutY + 0.18f, cz);
+            capBase.transform.localScale = new Vector3(rx * 2f, 0.035f, rz * 2f);
+            capBase.GetComponent<MeshRenderer>().sharedMaterial = mat;
+
+            // Upper cap: closes the receiver's open bottom, slightly inset so it stays inside
+            // the silhouette at rest and only shows as the receiver's underside when the gun
+            // depresses.
+            var capUpper = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            capUpper.name = "TurretCutCapUpper";
+            Object.Destroy(capUpper.GetComponent<Collider>());
+            capUpper.transform.SetParent(recoil, false);
+            capUpper.transform.localPosition = new Vector3(cx, cutY - 0.06f, cz);
+            capUpper.transform.localScale = new Vector3(rx * 1.7f, 0.035f, rz * 1.7f);
+            capUpper.GetComponent<MeshRenderer>().sharedMaterial = mat;
+
+            if (_verbose)
+                Debug.Log(string.Format("[gun] cut caps at y {0:0.000} centre ({1:0.00},{2:0.00}) radius ({3:0.00},{4:0.00})",
+                    cutY, cx, cz, rx, rz));
+        }
+
+        static Material _flatMetal;
+
+        /// <summary>Untextured steel for the turret ring/cap. The atlas materials tile the
+        /// whole sheet onto a primitive cylinder, which reads as camouflage; a flat URP/Lit
+        /// metal is what a machined bearing should look like.</summary>
+        static Material FlatMetal()
+        {
+            if (_flatMetal != null) return _flatMetal;
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null) shader = Shader.Find("Standard");
+            _flatMetal = new Material(shader) { name = "TurretRingSteel" };
+            _flatMetal.color = new Color(0.34f, 0.36f, 0.39f, 1f);
+            if (_flatMetal.HasProperty("_Smoothness")) _flatMetal.SetFloat("_Smoothness", 0.5f);
+            if (_flatMetal.HasProperty("_Metallic")) _flatMetal.SetFloat("_Metallic", 0.65f);
+            return _flatMetal;
+        }
+
+        static void CollectCut(Mesh mesh, float cutY, ref float minX, ref float maxX, ref float minZ, ref float maxZ)
+        {
+            if (mesh == null) return;
+            var v = mesh.vertices;
+            for (int i = 0; i < v.Length; i++)
+            {
+                if (Mathf.Abs(v[i].y - cutY) > 0.06f) continue;
+                minX = Mathf.Min(minX, v[i].x);
+                maxX = Mathf.Max(maxX, v[i].x);
+                minZ = Mathf.Min(minZ, v[i].z);
+                maxZ = Mathf.Max(maxZ, v[i].z);
+            }
         }
 
         Transform MakeBox(Transform parent, string name, Vector3 pos, Vector3 scale, Material mat, float yaw = 0f)

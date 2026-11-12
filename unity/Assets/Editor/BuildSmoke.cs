@@ -31,6 +31,54 @@ namespace TrainSurvivor.EditorTools
             Build(AndroidArchitecture.X86_64, "TrainSurvivor-emulator.apk");
         }
 
+        /// <summary>Same emulator target under a distinct file name, so the previously
+        /// verified APK stays on disk while a new pass is checked.</summary>
+        [MenuItem("Train Survivor/Build (Emulator x86_64, Stage1 fix)")]
+        public static void BuildEmulatorStage1Fix()
+        {
+            Build(AndroidArchitecture.X86_64, "TrainSurvivor-stage1fix.apk");
+        }
+
+        /// <summary>Distinct-name build for the grounded-stride pass. ARM64 is not installed
+        /// in this editor (no IL2CPP arm64 module), so this stays on the existing x86_64
+        /// toolchain rather than changing the machine's Unity setup.</summary>
+        [MenuItem("Train Survivor/Build (Emulator x86_64, grounded stride)")]
+        public static void BuildEmulatorStride()
+        {
+            Build(AndroidArchitecture.X86_64, "TrainSurvivor-stage1gait.apk");
+        }
+
+        /// <summary>Grounded stride plus the AudioDirector constructor fix (RateGate no longer
+        /// touches Time.time in a field initialiser), kept under its own file name so the
+        /// earlier APKs stay intact.</summary>
+        [MenuItem("Train Survivor/Build (Emulator x86_64, stride + audio fix)")]
+        public static void BuildEmulatorStride2()
+        {
+            Build(AndroidArchitecture.X86_64, "TrainSurvivor-stage1gait2.apk");
+        }
+
+        /// <summary>Stage 1 revision: milestone-only convoy growth, acid death burst, new HUD,
+        /// mix rebalance. Distinct name so earlier APKs stay intact.</summary>
+        [MenuItem("Train Survivor/Build (Emulator x86_64, Stage1 revision)")]
+        public static void BuildEmulatorRev()
+        {
+            Build(AndroidArchitecture.X86_64, "TrainSurvivor-stage1rev.apk");
+        }
+
+        /// <summary>Stage 1 card set + district composition + mix pass.</summary>
+        [MenuItem("Train Survivor/Build (Emulator x86_64, cards + district)")]
+        public static void BuildEmulatorCards()
+        {
+            Build(AndroidArchitecture.X86_64, "TrainSurvivor-stage1cards.apk");
+        }
+
+        /// <summary>Cards + district + HP readout fix (one rounding rule, clamped to max).</summary>
+        [MenuItem("Train Survivor/Build (Emulator x86_64, HP fix)")]
+        public static void BuildEmulatorHpFix()
+        {
+            Build(AndroidArchitecture.X86_64, "TrainSurvivor-stage1hp.apk");
+        }
+
         /// <summary>Kept for tools/deploy.sh compatibility.</summary>
         public static void BuildAndroid()
         {

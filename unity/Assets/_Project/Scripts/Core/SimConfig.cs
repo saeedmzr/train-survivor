@@ -13,7 +13,7 @@ namespace TrainSurvivor.Core
         public const float BaseHp = 100f;
         public const float WagonHp = 35f;
         public const int StartingGuns = 1;
-        public const int StartingWagons = 1;
+        public const int StartingWagons = 0;   // stage starts with the locomotive alone
         public const int MaxGuns = 12;
         public const int MaxWagons = 6;
 

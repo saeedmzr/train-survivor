@@ -20,6 +20,7 @@ import json
 import os
 import random
 import re
+import sys
 import threading
 import time
 import urllib.error
@@ -32,15 +33,33 @@ from typing import Any, Dict, List, Optional
 
 # --------------------------------------------------------------------------- config
 
-PROJECT_ROOT = "/home/saeed/projects/train-survivor"
+def _default_root() -> str:
+    """Repo root: env override, else the Windows checkout, else the Linux one."""
+    env = os.environ.get("TS_PROJECT_ROOT")
+    if env:
+        return env
+    candidates = ["C:/Users/saeed/projects/train-survivor",
+                  "/home/saeed/projects/train-survivor"]
+    for cand in candidates:
+        if os.path.isdir(cand):
+            return cand
+    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+PROJECT_ROOT = _default_root()
 UNITY_ROOT = os.path.join(PROJECT_ROOT, "unity")
+STATE_DIR = os.environ.get("TS_MCP_STATE_DIR",
+                           os.path.join(os.path.expanduser("~"), ".train-survivor-mcp"))
 SESSION_ID = "train-survivor-project-polish2"
+# The gateway's default model can mismatch the configured provider (it did: DeepSeek
+# rejects anthropic/claude-opus-4.6). A per-run model keeps the bridge working.
+RUN_MODEL = os.environ.get("HERMES_RUN_MODEL", "deepseek-flash")
 SERVER_NAME = "train-survivor-mcp"
 SERVER_VERSION = "1.0.0"
 
 HERMES_API = os.environ.get("HERMES_API_BASE", "http://127.0.0.1:8642").rstrip("/")
-STATE_PATH = os.environ.get("TS_MCP_STATE", "/home/saeed/.config/train-survivor-mcp/state.json")
-KEY_PATH = os.environ.get("TS_MCP_KEY_FILE", "/home/saeed/.config/train-survivor-mcp/api.key")
+STATE_PATH = os.environ.get("TS_MCP_STATE", os.path.join(STATE_DIR, "state.json"))
+KEY_PATH = os.environ.get("TS_MCP_KEY_FILE", os.path.join(STATE_DIR, "api.key"))
 LISTEN_HOST = os.environ.get("TS_MCP_HOST", "127.0.0.1")
 LISTEN_PORT = int(os.environ.get("TS_MCP_PORT", "8765"))
 
@@ -134,6 +153,8 @@ def _hermes(path: str, method: str = "GET", body: Optional[dict] = None) -> dict
 
 def _start_run(task: str) -> dict:
     payload = {"input": task, "session_id": SESSION_ID, "instructions": INSTRUCTIONS}
+    if RUN_MODEL:
+        payload["model"] = RUN_MODEL
     accepted = _hermes("/v1/runs", method="POST", body=payload)
     run_id = accepted.get("run_id")
     if not run_id:
@@ -481,7 +502,7 @@ def _tool_result(structured: dict, is_error: bool = False,
 # marker. The server reads the file itself and appends a native MCP image block, so the
 # model never has to copy base64. Strictly limited to the evidence directory.
 
-EVIDENCE_ROOT = "/home/saeed/train-survivor-evidence"
+EVIDENCE_ROOT = os.environ.get("TS_MCP_EVIDENCE", os.path.join(os.path.expanduser("~"), "train-survivor-evidence"))
 MAX_IMAGE_BYTES = 256 * 1024
 MAX_IMAGES = 2
 _IMAGE_MIME = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
@@ -774,9 +795,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Allow", "POST")
             self.send_header("Content-Length", "0")
             self.end_headers()
+        elif path.startswith("/.well-known/oauth"):
+            # This server has no OAuth. An empty 404 is the unambiguous "no metadata
+            # here"; a JSON body makes tunnel-client parse it as a broken metadata
+            # document and log "protected resource metadata missing resource".
+            self._send(404, b"", "text/plain")
         else:
-            # Includes /.well-known/oauth-* — this server has no auth, so the
-            # tunnel-client OAuth probe must see 404, not 405.
             self._send(404, b'{"error":"not found"}')
 
     do_HEAD = do_GET
@@ -812,12 +836,25 @@ class Handler(BaseHTTPRequestHandler):
         self._send(200, json.dumps(reply).encode())
 
 
+class _QuietServer(ThreadingHTTPServer):
+    """Clients (tunnel-client, curl probes) drop keep-alive sockets constantly;
+    socketserver prints a full traceback for each reset unless we swallow it."""
+
+    daemon_threads = True
+    allow_reuse_address = True
+
+    def handle_error(self, request, client_address):
+        exc = sys.exc_info()[1]
+        if isinstance(exc, (ConnectionResetError, ConnectionAbortedError, BrokenPipeError)):
+            return
+        super().handle_error(request, client_address)
+
+
 def main() -> None:
     os.makedirs(os.path.dirname(STATE_PATH), mode=0o700, exist_ok=True)
     _load_state()
     threading.Thread(target=_poller, name="run-poller", daemon=True).start()
-    server = ThreadingHTTPServer((LISTEN_HOST, LISTEN_PORT), Handler)
-    server.daemon_threads = True
+    server = _QuietServer((LISTEN_HOST, LISTEN_PORT), Handler)
     print(f"{SERVER_NAME} {SERVER_VERSION} on http://{LISTEN_HOST}:{LISTEN_PORT}/mcp "
           f"(project {PROJECT_ROOT}, session {SESSION_ID})", flush=True)
     server.serve_forever()

@@ -12,11 +12,11 @@ namespace TrainSurvivor.Game.Audio
     /// </summary>
     public sealed class AudioTap : MonoBehaviour
     {
-        public int maxSeconds = 6;
+        public int maxSeconds = 12;
 
         float[] _buf;
         int _n;
-        int _rate;
+        int _rate = 48000;
         int _ch;
 
         public int Callbacks;
@@ -24,6 +24,10 @@ namespace TrainSurvivor.Game.Audio
         public double SumSq;
         public long Frames;
         public bool Ready => _buf != null && _n >= _buf.Length;
+
+        // AudioSettings.outputSampleRate is a main-thread-only call; reading it from
+        // OnAudioFilterRead throws UnityException on the audio thread and killed the capture.
+        void Awake() { _rate = Mathf.Max(8000, AudioSettings.outputSampleRate); }
 
         public int Channels => _ch;
         public int SampleRate => _rate;
@@ -34,7 +38,6 @@ namespace TrainSurvivor.Game.Audio
             if (_buf == null)
             {
                 _ch = Mathf.Max(1, channels);
-                _rate = Mathf.Max(8000, AudioSettings.outputSampleRate);
                 _buf = new float[_rate * maxSeconds * _ch];
             }
 

@@ -39,6 +39,264 @@ namespace TrainSurvivor.Tests
         }
 
         [Test]
+        public void ApprovedProgressionIsPerLevel()
+        {
+            // Stage 1 contract: a gun every 5 levels, a wagon every 10, two guns per car max.
+            var w = World.Empty();
+            int guard = 0;
+            while (w.Train.Level < 5 && guard++ < 60) w.GrantXp(w.Train.XpToNext);
+            Assert.AreEqual(5, w.Train.Level);
+            Assert.AreEqual(SimConfig.StartingGuns + 1, w.Train.Guns, "level 5 grants a second gun");
+            Assert.AreEqual(SimConfig.StartingWagons, w.Train.Wagons, "no wagon before level 10");
+
+            while (w.Train.Level < 10 && guard++ < 120) w.GrantXp(w.Train.XpToNext);
+            Assert.AreEqual(10, w.Train.Level);
+            Assert.AreEqual(SimConfig.StartingWagons + 1, w.Train.Wagons, "level 10 grants a wagon");
+            Assert.AreEqual(SimConfig.StartingGuns + 2, w.Train.Guns, "levels 5 and 10 each grant a gun");
+            Assert.LessOrEqual(w.Train.Guns, w.GunCapacity, "never more guns than plates");
+            Assert.AreEqual(2, w.GunCapacity / (1 + w.Train.Wagons), "two plates per car");
+        }
+
+        [Test]
+        public void MilestoneTableThroughLevel20()
+        {
+            // Exact contract: the stage starts with the locomotive alone; every 5 levels adds a
+            // gun, every 10 adds a freight wagon, and the wagon lands before the gun on LV10/20.
+            var w = World.Empty();
+            Assert.AreEqual(0, w.Train.Wagons, "fresh run: locomotive only, no freight car");
+            Assert.AreEqual(1, w.Train.Guns, "fresh run: exactly one gun");
+            Assert.AreEqual(1, w.Train.Stage);
+
+            var expect = new (int lvl, int wagons, int guns)[]
+            {
+                (4, 0, 1), (5, 0, 2), (9, 0, 2), (10, 1, 3),
+                (15, 1, 4), (20, 2, 5)
+            };
+            int guard = 0, next = 0;
+            while (w.Train.Level < 20 && guard++ < 400)
+            {
+                w.GrantXp(w.Train.XpToNext);
+                while (next < expect.Length && w.Train.Level == expect[next].lvl)
+                {
+                    Assert.AreEqual(expect[next].wagons, w.Train.Wagons, "wagons at LV" + expect[next].lvl);
+                    Assert.AreEqual(expect[next].guns, w.Train.Guns, "guns at LV" + expect[next].lvl);
+                    Assert.LessOrEqual(w.Train.Guns, w.GunCapacity, "guns never exceed plates");
+                    next++;
+                }
+            }
+            Assert.AreEqual(20, w.Train.Level);
+            Assert.AreEqual(6, next, "every milestone level was checked");
+        }
+
+        [Test]
+        public void CardsNeverGrantWagonsOrGuns()
+        {
+            // Ordinary upgrades must not bypass the milestone rule, whatever the card used to do.
+            var w = World.Empty();
+            int wagons = w.Train.Wagons, guns = w.Train.Guns;
+            w.GrantCard(CardId.ExtraGun);
+            w.GrantCard(CardId.ExtraWagon);
+            w.GrantCard(CardId.ExtraGun);
+            Assert.AreEqual(wagons, w.Train.Wagons, "no card may add a wagon");
+            Assert.AreEqual(guns, w.Train.Guns, "no card may add a gun");
+            Assert.Greater(w.Train.FireRateMultiplier, 1f, "spare barrels still improve the guns");
+        }
+
+        [Test]
+        public void OffersDrawOnlyTheApprovedNine()
+        {
+            var w = World.Empty();
+            var seen = new System.Collections.Generic.HashSet<CardId>();
+            for (int round = 0; round < 40; round++)
+            {
+                w.ResetRun(false);
+                for (int i = 0; i <= round % 5; i++) w.GrantXp(w.Train.XpToNext);
+                Assert.IsTrue(w.OfferPending, "a level-up always offers unless the pool is empty");
+                int count = w.OfferCount;
+                Assert.That(count, Is.InRange(1, 3));
+                var inOffer = new System.Collections.Generic.HashSet<CardId>();
+                for (int i = 0; i < count; i++)
+                {
+                    var id = w.OfferAt(i);
+                    Assert.Contains(id, Cards.Approved, "only approved cards may be offered");
+                    Assert.IsTrue(inOffer.Add(id), "no duplicate inside one offer");
+                    seen.Add(id);
+                }
+                // one combat, one survival when the pool allows it
+                int combat = 0, survival = 0;
+                for (int i = 0; i < count; i++)
+                {
+                    if (Cards.RoleOf(w.OfferAt(i)) == CardRole.Combat) combat++;
+                    if (Cards.RoleOf(w.OfferAt(i)) == CardRole.Survival) survival++;
+                }
+                if (count == 3) { Assert.AreEqual(1, combat, "exactly one combat pick"); Assert.AreEqual(1, survival, "exactly one survival pick"); }
+            }
+            Assert.GreaterOrEqual(seen.Count, 7, "the pool actually rotates through the set");
+        }
+
+        [Test]
+        public void CapsAndHealGatingHideCards()
+        {
+            var w = World.Empty();
+            for (int i = 0; i < 3; i++) w.GrantCard(CardId.HeavyHitter);
+            Assert.IsFalse(w.Eligible(CardId.HeavyHitter), "maxed card is ineligible");
+
+            // heal only while hurt: full HP -> hidden, damaged -> offered again
+            Assert.IsFalse(w.Eligible(CardId.FixItUp), "no heal at full HP");
+            w.ApplyDamage(60f);
+            Assert.IsTrue(w.Eligible(CardId.FixItUp), "heal offered when hurt");
+
+            for (int i = 0; i < 3; i++) w.GrantCard(CardId.HeavyHitter);
+            Assert.AreEqual(3, w.Train.CardStacksOf(CardId.HeavyHitter), "rank cap is hard");
+        }
+
+        [Test]
+        public void GlobalStatsMoveWithCards()
+        {
+            var w = World.Empty();
+            float dmg0 = w.Train.GunDamageMultiplier, rate0 = w.Train.FireRateMultiplier;
+            float range0 = w.Train.GunRangeMultiplier, aim0 = w.Train.AimSpeedMultiplier;
+            float spd0 = w.Train.MoveSpeedMultiplier, armor0 = w.Train.DamageTakenMultiplier;
+            float xp0 = w.Train.XpGainMultiplier;
+            float hp0 = w.Train.MaxHp;
+
+            w.GrantCard(CardId.HeavyHitter);
+            w.GrantCard(CardId.FastFire);
+            w.GrantCard(CardId.LongReach);
+            w.GrantCard(CardId.QuickAim);
+            w.GrantCard(CardId.StrongArmor);
+            w.GrantCard(CardId.FullSteam);
+            w.GrantCard(CardId.FastLearner);
+
+            Assert.AreEqual(dmg0 * 1.12f, w.Train.GunDamageMultiplier, 0.0001f, "heavy hitter: +12% shot damage");
+            Assert.AreEqual(rate0 * 1.08f, w.Train.FireRateMultiplier, 0.0001f, "fast fire: +8% shots/sec");
+            Assert.AreEqual(range0 * 1.10f, w.Train.GunRangeMultiplier, 0.0001f, "long reach: +10% range");
+            Assert.AreEqual(aim0 * 1.20f, w.Train.AimSpeedMultiplier, 0.0001f, "quick aim: +20% slew");
+            Assert.AreEqual(spd0 * 1.08f, w.Train.MoveSpeedMultiplier, 0.0001f, "full steam: +8% held speed");
+            Assert.AreEqual(0.92f, w.Train.DamageTakenMultiplier, 0.0001f, "strong armor: 8 points off");
+            Assert.AreEqual(xp0 * 1.10f, w.Train.XpGainMultiplier, 0.0001f, "fast learner: +10% kill XP");
+            Assert.AreEqual(hp0, w.Train.MaxHp, 0.01f, "no HP from these cards");
+        }
+
+        [Test]
+        public void ToughTrainUsesOneConsistentBase()
+        {
+            var w = World.Empty();
+            float baseHp = SimConfig.BaseHp + SimConfig.WagonHp * w.Train.Wagons;
+            float hpBefore = w.Train.Hp;
+            w.GrantCard(CardId.ToughTrain);
+            Assert.AreEqual(baseHp * 1.12f, w.Train.MaxHp, 0.01f, "max HP is the base convoy HP x rank");
+            Assert.AreEqual(hpBefore + baseHp * 0.12f, w.Train.Hp, 0.01f, "current HP rises with it");
+
+            w.Train.Wagons++;
+            w.GrantCard(CardId.ToughTrain);
+            float base2 = SimConfig.BaseHp + SimConfig.WagonHp * w.Train.Wagons;
+            Assert.AreEqual(base2 * 1.24f, w.Train.MaxHp, 0.01f, "wagon HP follows the same base");
+        }
+
+        [Test]
+        public void FastLearnerScalesFractionalKillXp()
+        {
+            var w = World.Empty();
+            w.GrantCard(CardId.FastLearner);
+            Assert.AreEqual(1.10f, w.Train.XpGainMultiplier, 0.0001f);
+            float before = w.Train.Xp;
+            w.GrantXp(0.5f);
+            Assert.Greater(w.Train.Xp, before, "fractional XP is preserved, not floored away");
+        }
+
+        [Test]
+        public void DoubleTapCannotTakeTwoCards()
+        {
+            var w = World.Empty();
+            while (!w.OfferPending && w.Train.Level < 6) w.GrantXp(w.Train.XpToNext);
+            Assert.IsTrue(w.OfferPending);
+            CardId first = w.OfferAt(0);
+            Assert.IsTrue(w.ChooseCard(0));
+            Assert.IsFalse(w.ChooseCard(0), "second tap on the same offer is refused");
+            Assert.AreEqual(1, w.Train.CardStacksOf(first));
+        }
+
+        [Test]
+        public void RetryClearsCardRanks()
+        {
+            var w = World.Empty();
+            w.GrantCard(CardId.HeavyHitter);
+            w.GrantCard(CardId.ToughTrain);
+            w.GrantXp(w.Train.XpToNext);
+            w.ResetRun(false);
+            Assert.AreEqual(0, w.Train.CardStacksOf(CardId.HeavyHitter));
+            Assert.AreEqual(0, w.Train.CardStacksOf(CardId.ToughTrain));
+            Assert.AreEqual(1f, w.Train.GunDamageMultiplier, 0.0001f);
+            Assert.AreEqual(SimConfig.BaseHp + SimConfig.WagonHp * w.Train.Wagons, w.Train.MaxHp, 0.01f);
+        }
+
+        [Test]
+        public void LegacyIdsKeepTheirEffect()
+        {
+            // persisted stacks from older builds must keep working, and never be re-offered
+            var w = World.Empty();
+            float rate0 = w.Train.FireRateMultiplier;
+            w.GrantCard(CardId.ExtraGun);
+            Assert.Greater(w.Train.FireRateMultiplier, rate0, "legacy spare barrels still speeds guns");
+            Assert.IsFalse(System.Array.IndexOf(Cards.Approved, CardId.ExtraGun) >= 0,
+                "retired ids are out of the offer pool");
+        }
+
+        [Test]
+        public void StageClearWithFractionalMaxHpKeepsHpInsideMax()
+        {
+            // Regression for the observed "168 / 167": TOUGH TRAIN x2 makes max HP 135 x 1.24 =
+            // 167.4, and the old HUD printed ceil(167.4) over round(167.4).
+            var w = World.Empty();
+            w.GrantCard(CardId.ToughTrain);
+            w.GrantCard(CardId.ToughTrain);
+            Assert.AreEqual(167.4f, w.Train.MaxHp, 0.01f, "fractional but exact convoy max HP");
+
+            w.ApplyDamage(100f);
+            Assert.Less(w.Train.Hp, w.Train.MaxHp);
+
+            // normal stage-clear entry point: drive to the end of the stage, take the card
+            w.Train.S = w.StageLength - 0.5f;
+            int guard = 0;
+            while (!w.OfferPending && guard++ < 600) w.Advance(SimConfig.Dt, Intent.Move);
+            Assert.IsTrue(w.OfferPending, "stage clear opens an offer");
+            Assert.IsTrue(w.ChooseCard(0), "the offered card can be taken");
+
+            Assert.LessOrEqual(w.Train.Hp, w.Train.MaxHp + 0.0001f, "current HP never exceeds max");
+            Assert.GreaterOrEqual(w.Train.Hp, 0f, "current HP never goes negative");
+            Assert.AreEqual(2, w.Train.Stage, "the stage actually advances");
+
+            // the two displayed integers must be consistent, whatever the fractional values are
+            int maxShown = (int)System.Math.Round(w.Train.MaxHp, System.MidpointRounding.AwayFromZero);
+            int hpShown = (int)System.Math.Round(w.Train.Hp, System.MidpointRounding.AwayFromZero);
+            hpShown = System.Math.Min(System.Math.Max(hpShown, 0), maxShown);
+            Assert.LessOrEqual(hpShown, maxShown, "displayed HP can never read above displayed max");
+            Assert.AreEqual(hpShown, System.Math.Min(System.Math.Max((int)System.Math.Round(w.Train.Hp), 0), maxShown),
+                "both numbers come from one rounding rule");
+
+            // the exact observed case: 167.4 / 167.4 used to print 168 over 167
+            Assert.AreEqual(167, maxShown, "167.4 max rounds to 167");
+            w.Train.Hp = w.Train.MaxHp;
+            int full = System.Math.Min((int)System.Math.Round(w.Train.Hp), maxShown);
+            Assert.AreEqual(maxShown, full, "at full health both numbers are identical");
+        }
+
+        [Test]
+        public void MultiLevelXpCrossesEveryMilestoneOnce()
+        {
+            // One huge XP dump must award each milestone exactly once, in order.
+            var w = World.Empty();
+            w.GrantXp(100000f);
+            Assert.GreaterOrEqual(w.Train.Level, 20);
+            Assert.AreEqual(System.Math.Min(1 + w.Train.Level / 10, SimConfig.MaxWagons), w.Train.Wagons,
+                "one wagon per ten levels, capped by the convoy limit");
+            Assert.AreEqual(System.Math.Min(1 + w.Train.Level / 5, System.Math.Min(SimConfig.MaxGuns, w.GunCapacity)), w.Train.Guns,
+                "one gun per five levels, capped by the plates");
+            Assert.LessOrEqual(w.Train.Guns, w.GunCapacity);
+        }
+
+        [Test]
         public void BrakeStopsWithinBrakeTime()
         {
             var w = World.Empty();
@@ -262,8 +520,11 @@ namespace TrainSurvivor.Tests
         {
             var w = World.Empty();
             int gunsBefore = w.Train.Guns;
+            float rateBefore = w.Train.FireRateMultiplier;
             w.GrantCard(CardId.ExtraGun);
-            Assert.AreEqual(gunsBefore + 1, w.Train.Guns, "extra gun must bolt on immediately");
+            // SPARE BARRELS: no free gun any more, the card accelerates the guns already fitted
+            Assert.AreEqual(gunsBefore, w.Train.Guns, "cards may not grant guns");
+            Assert.Greater(w.Train.FireRateMultiplier, rateBefore, "spare barrels raise fire rate");
 
             float hpBefore = w.Train.MaxHp;
             w.GrantCard(CardId.ReinforcedBoiler);
@@ -271,7 +532,7 @@ namespace TrainSurvivor.Tests
 
             int wagons = w.Train.Wagons;
             w.GrantCard(CardId.ExtraWagon);
-            Assert.AreEqual(wagons + 1, w.Train.Wagons);
+            Assert.AreEqual(wagons, w.Train.Wagons, "cards may not grant wagons");
         }
 
         [Test]

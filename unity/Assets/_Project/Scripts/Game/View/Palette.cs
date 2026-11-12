@@ -8,10 +8,11 @@ namespace TrainSurvivor.Game.View
     /// </summary>
     public static class Palette
     {
-        public static readonly Color Ballast   = new Color(0.115f, 0.12f, 0.135f);
-        public static readonly Color Rail      = new Color(0.62f, 0.66f, 0.70f);
-        public static readonly Color Sleeper   = new Color(0.19f, 0.15f, 0.12f);
-        public static readonly Color Ground    = new Color(0.07f, 0.075f, 0.09f);
+        public static readonly Color Ballast   = new Color(0.205f, 0.19f, 0.17f);   // graded grey-brown gravel
+        public static readonly Color RailWeb   = new Color(0.22f, 0.23f, 0.24f);
+        public static readonly Color Rail      = new Color(0.56f, 0.585f, 0.60f);  // weathered steel top
+        public static readonly Color Sleeper   = new Color(0.185f, 0.135f, 0.095f); // creosoted timber, dark against gravel
+        public static readonly Color Ground    = new Color(0.155f, 0.145f, 0.125f); // weathered packed yard; distance is handled by the terrain shader
         public static readonly Color Body      = new Color(0.16f, 0.18f, 0.22f);
         public static readonly Color Accent    = new Color(0.85f, 0.18f, 0.12f);
         public static readonly Color Metal     = new Color(0.55f, 0.58f, 0.62f);

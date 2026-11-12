@@ -8,7 +8,7 @@ namespace TrainSurvivor.Game.View
     public static class TrackMesh
     {
         const float BallastHalfWidth = 3.1f;
-        const float RailHalfWidth = 0.075f;
+        const float RailHalfWidth = 0.11f;   // 22 cm rail head: reads as steel, not a hairline
         const float RailInset = 0.72f;
         const float SampleStep = 2f;
         // Rails must exist under the rear freight cars at a fresh start (S=0). The longest
@@ -20,7 +20,12 @@ namespace TrainSurvivor.Game.View
         {
             BuildGround(parent);
             BuildRibbon(parent, "Ballast", BallastHalfWidth, 0f, 0f,
-                        Palette.Get("Ballast", Palette.Ballast));
+                        Textured("Ballast", Palette.Ballast, "ballast"));
+            // dark web under each head gives the rail a visible cross-section from behind
+            BuildRibbon(parent, "WebLeft", RailHalfWidth * 1.55f, RailInset, 0.045f,
+                        Palette.Get("RailWeb", Palette.RailWeb));
+            BuildRibbon(parent, "WebRight", RailHalfWidth * 1.55f, -RailInset, 0.045f,
+                        Palette.Get("RailWeb", Palette.RailWeb));
             BuildRibbon(parent, "RailLeft", RailHalfWidth, RailInset, 0.12f,
                         Palette.Get("Rail", Palette.Rail));
             BuildRibbon(parent, "RailRight", RailHalfWidth, -RailInset, 0.12f,
@@ -37,7 +42,9 @@ namespace TrainSurvivor.Game.View
             var mf = go.AddComponent<MeshFilter>();
             mf.sharedMesh = new Mesh { name = "GroundMesh" };
 
-            float half = 1500f;
+            // Cover the full route plus every side approach and rear chase position.
+            // Distance blending belongs in the terrain shader, never at a mesh edge.
+            float half = TrackPath.Length * 0.5f + 600f;
             var verts = new[]
             {
                 new Vector3(-half, 0f, -half), new Vector3(-half, 0f, half),
@@ -58,8 +65,34 @@ namespace TrainSurvivor.Game.View
             mf.sharedMesh.RecalculateBounds();
 
             var mr = go.AddComponent<MeshRenderer>();
-            mr.sharedMaterial = Palette.Get("Ground", Palette.Ground);
+            mr.sharedMaterial = Textured("Ground", Palette.Ground, "yard_ground", 26f);
             mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        }
+
+        /// <summary>Material with a tiling ground texture at world scale; cached per slot so the
+        /// whole district still batches into the same few draw calls.</summary>
+        static readonly System.Collections.Generic.Dictionary<string, Material> _mats =
+            new System.Collections.Generic.Dictionary<string, Material>();
+
+        static Material Textured(string slot, Color fallback, string tex, float repeat = 0f)
+        {
+            if (_mats.TryGetValue(slot, out var cached)) return cached;
+            // Never mutate the saved Resources material. Both terrain surfaces share the
+            // same URP distance path; rails, webs and sleepers retain their own materials.
+            var m = new Material(Palette.Get(slot, fallback));
+            m.shader = Resources.Load<Shader>("Shaders/TerrainDistance");
+            // DistrictScenery supplies the existing gravel texture and resets _BaseColor.
+            // Keep the packed-yard tint separate so that dressing cannot erase it.
+            m.SetColor("_TerrainTint", slot == "Ground" ? Palette.Ground / 0.34f : Color.white);
+            var t = Resources.Load<Texture2D>("Textures/" + tex);
+            if (t != null)
+            {
+                m.mainTexture = t;
+                m.mainTextureScale = repeat > 0f ? new Vector2(repeat, repeat) : Vector2.one;
+                m.color = Color.white;          // texture carries the colour
+            }
+            _mats[slot] = m;
+            return m;
         }
 
         /// <summary>One quad strip, optionally mirrored to the left of the centerline.</summary>
@@ -69,6 +102,7 @@ namespace TrainSurvivor.Game.View
             var verts = new List<Vector3>(segments * 2 + 2);
             var tris = new List<int>(segments * 6);
             var normals = new List<Vector3>(segments * 2 + 2);
+            var uvs = new List<Vector2>(segments * 2 + 2);
 
             for (int i = 0; i <= segments; i++)
             {
@@ -79,6 +113,8 @@ namespace TrainSurvivor.Game.View
                 verts.Add(c + r);
                 normals.Add(Vector3.up);
                 normals.Add(Vector3.up);
+                uvs.Add(new Vector2(0f, s / (halfWidth * 2.6f)));
+                uvs.Add(new Vector2(1f, s / (halfWidth * 2.6f)));
 
                 if (i == segments) continue;
                 int b = i * 2;
@@ -86,18 +122,18 @@ namespace TrainSurvivor.Game.View
                 tris.Add(b + 1); tris.Add(b + 2); tris.Add(b + 3);
             }
 
-            AddMeshObject(parent, name + "_" + Mathf.RoundToInt(inset * 100f), verts, tris, normals, mat);
+            AddMeshObject(parent, name + "_" + Mathf.RoundToInt(inset * 100f), verts, tris, normals, mat, uvs);
         }
 
         static void BuildSleepers(Transform parent)
         {
-            const float spacing = 2.6f;
+            const float spacing = 2.15f;        // closer sleeper pitch reads at chase scale
             int count = Mathf.CeilToInt((TrackPath.Length - TrackStart) / spacing);
             var verts = new List<Vector3>(count * 4);
             var tris = new List<int>(count * 6);
             var normals = new List<Vector3>(count * 4);
             const float halfLen = 1.35f;
-            const float halfDepth = 0.19f;
+            const float halfDepth = 0.22f;
 
             for (int i = 0; i < count; i++)
             {
@@ -120,6 +156,10 @@ namespace TrainSurvivor.Game.View
 
         static void AddMeshObject(Transform parent, string name, List<Vector3> verts, List<int> tris,
                                   List<Vector3> normals, Material mat)
+            => AddMeshObject(parent, name, verts, tris, normals, mat, null);
+
+        static void AddMeshObject(Transform parent, string name, List<Vector3> verts, List<int> tris,
+                                  List<Vector3> normals, Material mat, List<Vector2> uvs)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);
@@ -127,6 +167,7 @@ namespace TrainSurvivor.Game.View
             mesh.SetVertices(verts);
             mesh.SetTriangles(tris, 0);
             mesh.SetNormals(normals);
+            if (uvs != null) mesh.SetUVs(0, uvs);
             mesh.RecalculateBounds();
 
             go.AddComponent<MeshFilter>().sharedMesh = mesh;

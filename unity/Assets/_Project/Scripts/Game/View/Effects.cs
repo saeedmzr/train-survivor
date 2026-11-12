@@ -59,12 +59,19 @@ namespace TrainSurvivor.Game.View
         ParticleSystem _embers;
         Material _sparkMat;
         TrainRig _train;
+        Camera _cam;
+        readonly List<TracerView> _flares = new List<TracerView>(24);
+        int _flareCursor;
+        bool _vfxBeam;
         int _bulletCursor, _flashCursor, _splatCursor, _corpseCursor;
         float _trailCd;
 
         public void Build(TrainRig train)
         {
             _train = train;
+            _cam = Camera.main;
+            if (_cam == null) _cam = Object.FindObjectOfType<Camera>();
+            _vfxBeam = DevTuning.Get("dev.vfxbeam", 0f) > 0.5f;
             _flightScale = Mathf.Max(0.05f, DevTuning.Get("dev.bulletTime", 1f));
             ArtSprites.Preload();
             _sparkMat = Palette.Get("Spark", Palette.Neon);
@@ -86,6 +93,13 @@ namespace TrainSurvivor.Game.View
             corpseRoot.SetParent(transform, false);
             for (int i = 0; i < 18; i++)
                 _corpses.Add(new Corpse { Sprite = SpriteBillboard.Create(corpseRoot, "Corpse" + i) });
+
+            // Muzzle flares: the same tapered streak art as the tracer, held for a few
+            // frames at the barrel. Pooled, so a burst of fire never allocates.
+            var flareRoot = new GameObject("MuzzleFlares").transform;
+            flareRoot.SetParent(transform, false);
+            for (int i = 0; i < 24; i++)
+                _flares.Add(TracerView.Create(flareRoot, "Flare" + i, "proj_bullet_tracer"));
 
             BuildParticles();
         }
@@ -157,9 +171,10 @@ namespace TrainSurvivor.Game.View
                     break;
                 case SimEventKind.EnemyHit:
                     // Bullet hurt, not the train being bitten (ContactHit): a hit flash on the
-                    // body the round actually struck.
-                    ShowOne(_flashes, "impact_core", TrackSpace.Point(e.ToS, e.ToX, 1.0f), 1.15f, 0.10f, Color.white);
-                    BurstSparksAt(e.ToS, e.ToX, 5, _sparks);
+                    // body the round actually struck. Flesh, not steel — warm tint, embers.
+                    ShowOne(_flashes, "impact_core", TrackSpace.Point(e.ToS, e.ToX, 1.0f), 0.70f, 0.10f,
+                            new Color(1f, 0.62f, 0.42f));
+                    BurstSparksAt(e.ToS, e.ToX, 4, _embers);
                     break;
                 case SimEventKind.Brake:
                     if (world.Train.Speed < 1.5f) BurstSparks(world.Train.S, 22, _sparks);
@@ -207,14 +222,44 @@ namespace TrainSurvivor.Game.View
             }
         }
 
-        /// <summary>Muzzle bloom at the barrel that actually fired (driver-driven shots).</summary>
-        public void MuzzleFlash(Vector3 at)
+        /// <summary>Muzzle bloom at the barrel that actually fired (driver-driven shots):
+        /// a warm core plus a short cone of flame along the barrel, both pooled.</summary>
+        public void MuzzleFlash(Vector3 at, Vector3 dir)
         {
-            ShowOne(_flashes, "muzzle_core", at, 1.5f, 0.08f, Color.white);
+            ShowOne(_flashes, "muzzle_core", at, 0.62f, 0.055f, new Color(1f, 0.86f, 0.62f));
+            if (dir.sqrMagnitude < 1e-5f) return;
+
+            var flare = _flares[_flareCursor];
+            _flareCursor = (_flareCursor + 1) % _flares.Count;
+            flare.Show(at + dir.normalized * 0.18f, dir.normalized, _cam,
+                       1.95f, 1.15f, new Color(1f, 0.80f, 0.45f), 0.075f, 1f);
         }
 
-        /// <summary>A round struck something that is not an entity (scenery): sparks only.</summary>
-        public void ImpactAt(Vector3 at) => Impact(at);
+        /// <summary>Compatibility overload: a bloom with no direction (legacy tracer path).</summary>
+        public void MuzzleFlash(Vector3 at)
+        {
+            ShowOne(_flashes, "muzzle_core", at, 0.62f, 0.055f, new Color(1f, 0.86f, 0.62f));
+        }
+
+        /// <summary>A round struck something that is not an entity (scenery). Steel answers
+        /// differently from a body: a kinetic ring and white sparks, not a wet puff.</summary>
+        public void ImpactAt(Vector3 at, Vector3 dir, bool metal)
+        {
+            if (metal)
+            {
+                ShowOne(_flashes, "fx_impact_kinetic", at, 0.55f, 0.09f, new Color(0.85f, 0.95f, 1f));
+                _sparks.transform.position = at;
+                _sparks.Emit(10);
+            }
+            else
+            {
+                ShowOne(_flashes, "impact_core", at, 0.45f, 0.09f, new Color(1f, 0.58f, 0.42f));
+                _sparks.transform.position = at;
+                _sparks.Emit(4);
+            }
+        }
+
+        public void ImpactAt(Vector3 at) => ImpactAt(at, Vector3.forward, false);
 
         // ---------------------------------------------------------------- shots
 
@@ -234,18 +279,18 @@ namespace TrainSurvivor.Game.View
             b.Live = true;
             b.TargetId = e.EnemyId > 0 ? e.EnemyId : e.BlockadeId;
             b.Blockade = e.BlockadeId > 0;
-            b.Sprite.Show("bullet_core", 1.9f, Color.white);
+            b.Sprite.Show("bullet_core", 0.55f, Color.white);
             b.Sprite.transform.position = from;
 
-            // muzzle flash: a short hot burst at the barrel, not a light source
-            ShowOne(_flashes, "muzzle_core", from, 1.5f, 0.08f, Color.white);
+            // muzzle flash: a warm core plus a short flare down the barrel
+            MuzzleFlash(from, to - from);
         }
 
         void Impact(Vector3 at)
         {
-            ShowOne(_flashes, "impact_core", at, 1.35f, 0.11f, Color.white);
+            ShowOne(_flashes, "impact_core", at, 0.5f, 0.10f, new Color(1f, 0.62f, 0.42f));
             _sparks.transform.position = at;
-            _sparks.Emit(5);
+            _sparks.Emit(4);
         }
 
         // ---------------------------------------------------------------- death
@@ -401,6 +446,25 @@ namespace TrainSurvivor.Game.View
                 if (f.Life <= 0f) continue;
                 f.Life -= dt;
                 if (f.Life <= 0f) f.Sprite.Hide();
+            }
+
+            for (int i = 0; i < _flares.Count; i++) _flares[i].Tick(dt);
+
+            // Diagnostic: three fixed streaks in front of the camera answer "does this art
+            // render at all" independently of shot timing. dev.vfxbeam=1 only.
+            if (_vfxBeam && _cam != null)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Vector3 p = _cam.transform.position + _cam.transform.forward * 9f
+                              + _cam.transform.right * ((i - 1) * 1.6f)
+                              + _cam.transform.up * (0.4f - i * 0.35f);
+                    var f = _flares[i];
+                    Vector3 beamDir = (_cam.transform.forward + _cam.transform.right * 0.45f).normalized;
+                    f.Show(p, beamDir, _cam, 2.2f, 0.28f,
+                           new Color(1f, 0.85f, 0.55f), 1f, 1f);
+                    f.KeepAlive();
+                }
             }
 
             for (int i = 0; i < _corpses.Count; i++)

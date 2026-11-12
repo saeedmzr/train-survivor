@@ -29,6 +29,10 @@ namespace TrainSurvivor.Core
         readonly CardId[] _offer = new CardId[3];
         public CardId OfferAt(int i) => _offer[i];
         public bool OfferPending { get; private set; }
+        int _offerCount = 3;
+
+        /// <summary>How many cards this offer actually holds (a short pool can show fewer).</summary>
+        public int OfferCount => _offerCount;
         public OfferReason OfferKind { get; private set; }
         public int PendingOffers { get; private set; }
 
@@ -170,11 +174,11 @@ namespace TrainSurvivor.Core
             Train.Kills = 0;
             Train.Guns = SimConfig.StartingGuns;
             Train.Wagons = SimConfig.StartingWagons;
+            Array.Clear(Train.CardStacks, 0, Train.CardStacks.Length);
             // Wagons counts freight cars; the locomotive is always present.
-            Train.MaxHp = SimConfig.BaseHp + SimConfig.WagonHp * Train.Wagons;
+            Train.MaxHp = Train.MaxHpFor(Train.Wagons);
             Train.Guns = Math.Min(Train.Guns, GunCapacity);
             Train.Hp = Train.MaxHp;
-            Array.Clear(Train.CardStacks, 0, Train.CardStacks.Length);
 
             OfferPending = false;
             PendingOffers = 0;
@@ -185,7 +189,7 @@ namespace TrainSurvivor.Core
         /// <summary>Called when the player picks a card. Returns false if no offer is open.</summary>
         public bool ChooseCard(int index)
         {
-            if (!OfferPending || index < 0 || index >= 3) return false;
+            if (!OfferPending || index < 0 || index >= _offerCount) return false;
 
             CardId id = _offer[index];
             GrantCard(id);
@@ -211,6 +215,8 @@ namespace TrainSurvivor.Core
         /// Public because meta-progression and tests also grant cards directly.</summary>
         public void GrantCard(CardId id)
         {
+            int cap = Cards.Cap(id);
+            if (cap > 0 && Train.CardStacks[(int)id] >= cap) return;   // ranks are hard-capped
             Train.CardStacks[(int)id]++;
             ApplyCard(id);
         }
@@ -227,19 +233,33 @@ namespace TrainSurvivor.Core
             switch (id)
             {
                 case CardId.ReinforcedBoiler:
-                    Train.MaxHp *= 1.2f;
-                    Train.Hp = Math.Min(Train.MaxHp, Train.Hp + Train.MaxHp * 0.2f);
+                {
+                    float before = Train.MaxHp;
+                    Train.MaxHp = Train.MaxHpFor(Train.Wagons);
+                    Train.Hp = Math.Min(Train.MaxHp, Train.Hp + (Train.MaxHp - before) + Train.MaxHp * 0.2f);
                     break;
+                }
                 case CardId.ExtraWagon:
-                    if (Train.Wagons < SimConfig.MaxWagons)
-                    {
-                        Train.Wagons++;
-                        Train.MaxHp += SimConfig.WagonHp;
-                        Train.Hp += SimConfig.WagonHp;
-                    }
+                    // legacy FIELD REPAIR (retired from offers, kept for existing stacks)
+                    Train.Hp = Math.Min(Train.MaxHp, Train.Hp + Train.MaxHp * 0.40f);
                     break;
                 case CardId.ExtraGun:
-                    if (Train.Guns < SimConfig.MaxGuns && Train.Guns < GunCapacity) Train.Guns++;
+                    // legacy SPARE BARRELS: fire rate reads the stack in FireRateMultiplier
+                    break;
+                case CardId.ToughTrain:
+                {
+                    float before = Train.MaxHp;
+                    Train.MaxHp = Train.MaxHpFor(Train.Wagons);
+                    // matching current-HP increase, clamped so the invariant always holds
+                    Train.Hp = Math.Min(Train.MaxHp, Train.Hp + (Train.MaxHp - before));
+                    break;
+                }
+                case CardId.FixItUp:
+                    Train.Hp = Math.Min(Train.MaxHp, Train.Hp + Train.MaxHp * 0.25f);
+                    break;
+                // HEAVY HITTER / FAST FIRE / LONG REACH / QUICK AIM / STRONG ARMOR /
+                // FULL STEAM / FAST LEARNER are pure stat ranks read by the global multipliers.
+                default:
                     break;
             }
         }
@@ -248,16 +268,62 @@ namespace TrainSurvivor.Core
         {
             OfferPending = true;
             OfferKind = reason;
+            _offerCount = 3;
 
-            // Three distinct cards, drawn from the same seeded stream as everything else.
+            // Approved set only: three distinct eligible cards, one per role where possible,
+            // so a pick always covers combat, survival and a flex option.
+            var pool = new System.Collections.Generic.List<CardId>();
+            for (int i = 0; i < Cards.Approved.Length; i++)
+                if (Eligible(Cards.Approved[i])) pool.Add(Cards.Approved[i]);
+
             int n = 0;
-            while (n < 3)
+            PickRole(pool, CardRole.Combat, ref n);
+            PickRole(pool, CardRole.Survival, ref n);
+            PickRole(pool, CardRole.Flex, ref n);
+            while (n < 3 && pool.Count > 0)
             {
-                var card = (CardId)_rng.Range(0, Cards.Count);
-                bool dup = false;
-                for (int i = 0; i < n; i++) if (_offer[i] == card) dup = true;
-                if (!dup) _offer[n++] = card;
+                int pick = _rng.Range(0, pool.Count);
+                if (Has(_offer, n, pool[pick])) { pool.RemoveAt(pick); continue; }
+                _offer[n++] = pool[pick];
+                pool.RemoveAt(pick);
             }
+
+            // Nothing legal to offer (all capped and healthy): never stall the run on a modal
+            if (n == 0)
+            {
+                OfferPending = false;
+                if (PendingOffers > 0) PendingOffers--;
+                if (OfferKind == OfferReason.StageClear) NextStage();
+                return;
+            }
+            _offerCount = n;
+        }
+
+        /// <summary>True while a card may still be picked: under its cap, and heal only when hurt.</summary>
+        public bool Eligible(CardId id)
+        {
+            int cap = Cards.Cap(id);
+            if (cap > 0 && Train.CardStacks[(int)id] >= cap) return false;
+            if (id == CardId.FixItUp && Train.Hp >= Train.MaxHp * 0.75f) return false;
+            return true;
+        }
+
+        static bool Has(CardId[] arr, int n, CardId id)
+        {
+            for (int i = 0; i < n; i++) if (arr[i] == id) return true;
+            return false;
+        }
+
+        void PickRole(System.Collections.Generic.List<CardId> pool, CardRole role, ref int n)
+        {
+            if (n >= 3) return;
+            var idx = new System.Collections.Generic.List<int>();
+            for (int i = 0; i < pool.Count; i++)
+                if (Cards.RoleOf(pool[i]) == role) idx.Add(i);
+            if (idx.Count == 0) return;
+            int at = idx[_rng.Range(0, idx.Count)];
+            _offer[n++] = pool[at];
+            pool.RemoveAt(at);
         }
 
         void NextStage()
@@ -270,13 +336,9 @@ namespace TrainSurvivor.Core
             Train.ChargeWindow = 0f;
             Train.Mode = TrainMode.Stopped;
 
-            // Milestones from the design doc: a gun every 3 stages, a wagon every 5.
-            if (Train.Stage % 3 == 0 && Train.Guns < SimConfig.MaxGuns && Train.Guns < GunCapacity) Train.Guns++;
-            if (Train.Stage % 5 == 0 && Train.Wagons < SimConfig.MaxWagons)
-            {
-                Train.Wagons++;
-                Train.MaxHp += SimConfig.WagonHp;
-            }
+            // Progression follows levels, not stages (approved Stage 1 contract): the
+            // level-up path grants a gun every 5 levels and a freight wagon every 10.
+            // Clearing a stage only heals and rebuilds.
             Train.Hp = Math.Min(Train.MaxHp, Train.Hp + Train.MaxHp * 0.2f);
 
             BuildStage();
@@ -417,7 +479,8 @@ namespace TrainSurvivor.Core
             {
                 if (Train.Mode != TrainMode.Moving) Emit(SimEventKind.Brake, 0f); // leaving combat
                 Train.Mode = TrainMode.Moving;
-                Train.Speed = Math.Min(SimConfig.MoveSpeed, Train.Speed + SimConfig.MoveSpeed / SimConfig.AccelTime * dt);
+                float top = SimConfig.MoveSpeed * Train.MoveSpeedMultiplier;
+                Train.Speed = Math.Min(top, Train.Speed + top / SimConfig.AccelTime * dt);
                 Train.Charge = Math.Min(1f, Train.Charge + dt / SimConfig.ChargeFillTime);
 
                 // A blockade is a hard stop: the cowcatcher cannot punch through it.
@@ -431,7 +494,7 @@ namespace TrainSurvivor.Core
             else
             {
                 bool wasMoving = Train.Mode == TrainMode.Moving || Train.Mode == TrainMode.Blocked;
-                Train.Speed = Math.Max(0f, Train.Speed - SimConfig.MoveSpeed / SimConfig.BrakeTime * dt);
+                Train.Speed = Math.Max(0f, Train.Speed - SimConfig.MoveSpeed * Train.MoveSpeedMultiplier / SimConfig.BrakeTime * dt);
                 if (Train.Speed <= 0f && Train.Mode != TrainMode.Dead)
                 {
                     if (wasMoving)
@@ -592,6 +655,7 @@ namespace TrainSurvivor.Core
                 Train.Level++;
                 Train.XpToNext = SimConfig.XpBase + SimConfig.XpPerLevel * Train.Level;
                 PendingOffers++;
+                GrantLevelMilestones(Train.Level);
                 Emit(SimEventKind.LevelUp, 0f);
             }
 
@@ -600,6 +664,25 @@ namespace TrainSurvivor.Core
                 PendingOffers--;
                 BeginOffer(OfferReason.LevelUp);
             }
+        }
+
+        /// <summary>
+        /// Approved Stage 1 progression: one gun every 5 levels, one freight wagon every 10,
+        /// never more than two guns per car. A level that is both a gun and a wagon level
+        /// adds the wagon first so the new plate can take the gun.
+        /// </summary>
+        void GrantLevelMilestones(int level)
+        {
+            if (level % 10 == 0 && Train.Wagons < SimConfig.MaxWagons)
+            {
+                Train.Wagons++;
+                // recompute from the hull + wagons so rank bonuses stay consistent
+                float before = Train.MaxHp;
+                Train.MaxHp = Train.MaxHpFor(Train.Wagons);
+                Train.Hp = Math.Min(Train.MaxHp, Train.Hp + (Train.MaxHp - before));
+            }
+            if (level % 5 == 0 && Train.Guns < SimConfig.MaxGuns && Train.Guns < GunCapacity)
+                Train.Guns++;
         }
 
         void StepGuns(float dt)
@@ -654,7 +737,7 @@ namespace TrainSurvivor.Core
                     }
                     else if (!FindNearestTarget(out enemy, out blockade)) break;
 
-                    float dmg = SimConfig.GunDamage * Train.StageDamageScale
+                    float dmg = SimConfig.GunDamage * Train.GunDamageMultiplier * Train.StageDamageScale
                                 * (n == 0 ? 1f : SimConfig.PierceDamageMul);
 
                     if (blockade >= 0)
@@ -876,7 +959,7 @@ namespace TrainSurvivor.Core
                 if (!e.Alive) continue;
                 if (IsAlreadyHit(e.Id)) continue;
                 float gap = e.S - Train.S;
-                if (gap < -SimConfig.RearTargetRange || gap > SimConfig.GunRange) continue;
+                if (gap < -SimConfig.RearTargetRange || gap > SimConfig.GunRange * Train.GunRangeMultiplier) continue;
                 if (gap < best) { best = gap; enemyIndex = i; }
             }
 
@@ -885,7 +968,7 @@ namespace TrainSurvivor.Core
                 ref Blockade b = ref Blockades[i];
                 if (!b.Alive) continue;
                 float gap = b.S - Train.S;
-                if (gap < -1f || gap > SimConfig.GunRange) continue;
+                if (gap < -1f || gap > SimConfig.GunRange * Train.GunRangeMultiplier) continue;
                 if (gap < best) { best = gap; blockadeIndex = i; enemyIndex = -1; }
             }
 
@@ -947,9 +1030,12 @@ namespace TrainSurvivor.Core
             return best;
         }
 
+        /// <summary>Public for tests and dev tools: goes through the same armour path.</summary>
+        public void ApplyDamage(float amount) => DamageTrain(amount, -1);
+
         void DamageTrain(float amount, int sourceId)
         {
-            Train.Hp -= amount;
+            Train.Hp -= amount * Train.DamageTakenMultiplier;
             Events.Add(new SimEvent { Kind = SimEventKind.ContactHit, EnemyId = sourceId, Damage = amount });
 
             if (Train.Hp <= 0f)
@@ -1034,7 +1120,7 @@ namespace TrainSurvivor.Core
             if (_rng.Next01() < SimConfig.HealthPackChance)
                 DropPickup(PickupKind.HealthPack, e.S, e.X, Train.MaxHp * SimConfig.HealthPackHeal);
             else
-                DropPickup(PickupKind.XpGem, e.S, e.X, XpForKind(e.Kind));
+                DropPickup(PickupKind.XpGem, e.S, e.X, XpForKind(e.Kind) * Train.XpGainMultiplier);
         }
 
         static float XpForKind(EnemyKind kind) => SimConfig.Stat(kind).Xp;

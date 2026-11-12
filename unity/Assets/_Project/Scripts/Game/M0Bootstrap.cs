@@ -35,16 +35,24 @@ namespace TrainSurvivor.Game
 
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
-            RenderSettings.fogColor = new Color(0.075f, 0.095f, 0.135f);
-            RenderSettings.fogStartDistance = 70f;
-            RenderSettings.fogEndDistance = 220f;
+            // sickly green-grey haze: the world drops away past the fight
+            RenderSettings.fogColor = new Color(0.040f, 0.050f, 0.066f);   // cool blue dusk
+            RenderSettings.fogStartDistance = 42f;
+            RenderSettings.fogEndDistance = 165f;
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(0.30f, 0.34f, 0.42f);
-            RenderSettings.ambientEquatorColor = new Color(0.16f, 0.17f, 0.20f);
-            RenderSettings.ambientGroundColor = new Color(0.05f, 0.05f, 0.06f);
+            // night-wood palette: cold green sky bounce, near-black ground
+            RenderSettings.ambientSkyColor = new Color(0.095f, 0.115f, 0.155f);
+            RenderSettings.ambientEquatorColor = new Color(0.055f, 0.065f, 0.085f);
+            RenderSettings.ambientGroundColor = new Color(0.025f, 0.03f, 0.025f);
 
             BuildLighting();
             BuildTrack();
+
+            // lamps live on the track now, not in the scenery
+            var railLights = new GameObject("RailLights");
+            railLights.transform.SetParent(transform, false);
+            railLights.AddComponent<TrainSurvivor.Game.View.RailLights>();
+
             BuildSim();
             BuildTrain();
             BuildEnemies();
@@ -135,13 +143,19 @@ namespace TrainSurvivor.Game
         {
             var go = new GameObject("Sun");
             go.transform.SetParent(transform, false);
-            go.transform.rotation = Quaternion.Euler(42f, 155f, 0f);
+            go.transform.rotation = Quaternion.Euler(34f, 155f, 0f);
             var light = go.AddComponent<Light>();
             light.type = LightType.Directional;
-            light.color = new Color(1f, 0.93f, 0.82f);
-            light.intensity = 1.15f;
+            // cold, slightly green key light — reads as overcast dusk, not daylight
+            light.color = new Color(0.58f, 0.66f, 0.82f);   // cool dusk key
+            light.intensity = 0.62f;
             light.shadows = LightShadows.Soft;   // props need contact shadows or they float
-            light.shadowStrength = 0.72f;
+            light.shadowStrength = 0.80f;
+
+            // the sun follows the rails instead of sitting at a fixed angle
+            var rail = go.AddComponent<TrainSurvivor.Game.View.RailLight>();
+            rail.Sun = light;
+            rail.Pitch = 34f;
 
             var fill = new GameObject("Fill");
             fill.transform.SetParent(transform, false);
@@ -221,7 +235,10 @@ namespace TrainSurvivor.Game
             Cam.nearClipPlane = 0.15f;
             Cam.farClipPlane = 400f;
             Cam.clearFlags = CameraClearFlags.SolidColor;
-            Cam.backgroundColor = new Color(0.075f, 0.095f, 0.135f);
+            Cam.backgroundColor = new Color(0.50f, 0.545f, 0.60f);   // haze: ground blends into the horizon
+            // Terrain blends after lighting, to the actual clear colour (not the dark scene fog).
+            Shader.SetGlobalColor("_TerrainHorizonColor", QualitySettings.activeColorSpace == ColorSpace.Linear
+                ? Cam.backgroundColor.linear : Cam.backgroundColor);
             go.AddComponent<AudioListener>();
 
             var urpData = go.AddComponent<UniversalAdditionalCameraData>();

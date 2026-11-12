@@ -36,3 +36,10 @@ unity/mono_crash.*.blob
 *.aab
 *.unitypackage
 crashlytics-build.properties
+unity/ProjectSettings/McpSettings.json
+
+# generated run evidence (frames, logs, apks from test runs)
+evidence/
+
+# third-party Unity MCP bridge, installed by cloning (see pm_tester/README.md)
+unity/Packages/com.singtaa.unity-mcp/

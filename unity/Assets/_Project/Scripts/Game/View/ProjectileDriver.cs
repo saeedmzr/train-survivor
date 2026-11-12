@@ -22,6 +22,7 @@ namespace TrainSurvivor.Game.View
         sealed class Round
         {
             public SpriteBillboard Sprite;
+            public TracerView Tracer;
             public bool Live;
             public int Id;
             public int Gun;
@@ -52,8 +53,15 @@ namespace TrainSurvivor.Game.View
         const float MaxRange = 60f;
         const float TrailStep = 1.1f;
 
-        static readonly Color RoundTint = new Color(1f, 0.78f, 0.36f);
+        static readonly Color RoundTint = new Color(1f, 0.80f, 0.40f);
         static readonly Color TrailTint = new Color(1f, 0.58f, 0.18f);
+        static readonly Color TracerTint = new Color(1f, 0.86f, 0.56f);
+
+        /// <summary>Length/thickness of the tapered streak behind a round, metres. The art
+        /// only fills ~52% of the sprite width and ~20% of its height, so the quad is sized
+        /// up: at a 25 m chase distance this reads as a 10-14 px streak, not a hairline.</summary>
+        const float TracerLength = 3.4f;
+        const float TracerThickness = 0.55f;
 
         readonly Round[] _rounds = new Round[RoundCount];
         readonly Trail[] _trails = new Trail[TrailCount];
@@ -62,6 +70,7 @@ namespace TrainSurvivor.Game.View
         GameLoop _loop;
         TrainRig _train;
         Effects _fx;
+        Camera _cam;
         World _world;
         int _stage = -1;
         int _sceneryLayer = 6;
@@ -85,16 +94,27 @@ namespace TrainSurvivor.Game.View
 
             int layer = LayerMask.NameToLayer("Scenery");
             if (layer >= 0) _sceneryLayer = layer;
+            _cam = Camera.main;
+            if (_cam == null) _cam = Object.FindObjectOfType<Camera>();
 
             var roundsRoot = new GameObject("Rounds").transform;
             roundsRoot.SetParent(transform, false);
             for (int i = 0; i < _rounds.Length; i++)
-                _rounds[i] = new Round { Sprite = SpriteBillboard.Create(roundsRoot, "Round" + i, true) };
+            {
+                _rounds[i] = new Round
+                {
+                    Sprite = SpriteBillboard.Create(roundsRoot, "Round" + i, true),
+                    Tracer = TracerView.Create(roundsRoot, "Tracer" + i, "proj_bullet_tracer")
+                };
+            }
 
             var trailRoot = new GameObject("Trails").transform;
             trailRoot.SetParent(transform, false);
             for (int i = 0; i < _trails.Length; i++)
                 _trails[i] = new Trail { Sprite = SpriteBillboard.Create(trailRoot, "Trail" + i, true) };
+
+            Debug.Log(string.Format("[proj] tracer art={0} cam={1} pool={2}",
+                ArtSprites.Has("proj_bullet_tracer"), _cam != null ? _cam.name : "none", _rounds.Length));
 
             if (loop != null) loop.SimEventRaised += OnSimEvent;
             Bind(loop != null ? loop.World : null);
@@ -156,6 +176,7 @@ namespace TrainSurvivor.Game.View
                 if (_world != null) _world.CancelProjectile(r.Id);
                 r.Live = false;
                 r.Sprite.Hide();
+                if (r.Tracer != null) r.Tracer.Hide();
                 n++;
             }
             if (_verbose && n > 0) Debug.Log("[proj] cleared " + n + " round(s): " + reason);
@@ -193,10 +214,15 @@ namespace TrainSurvivor.Game.View
             r.Range = 0f;
             r.TrailAcc = 0f;
 
-            r.Sprite.Show("bullet_core", 1.7f, RoundTint);
+            r.Sprite.Show("bullet_core", 0.55f, RoundTint);
             r.Sprite.transform.position = from;
+            if (r.Tracer != null)
+            {
+                r.Tracer.Show(from, dir, _cam, TracerLength, TracerThickness, TracerTint, 0.09f, 1f);
+                r.Tracer.KeepAlive();
+            }
 
-            if (_fx != null) _fx.MuzzleFlash(from);
+            if (_fx != null) _fx.MuzzleFlash(from, dir);
 
             _accepted++;
             if (_verbose && _spawnLogs < 12)
@@ -230,6 +256,11 @@ namespace TrainSurvivor.Game.View
 
             float dt = Time.deltaTime;
             StepTrails(dt);
+            // Only retired streaks fade. A live round refreshes its tracer every frame, and
+            // ticking it as well would let a long frame (low fps / hitch) expire it before
+            // the next refresh and hide it mid-flight.
+            for (int i = 0; i < _rounds.Length; i++)
+                if (!_rounds[i].Live && _rounds[i].Tracer != null) _rounds[i].Tracer.Tick(dt);
             if (dt <= 0f) return;
 
             // Walker/blockade proxies are placed in other LateUpdates; query the freshest pose.
@@ -291,6 +322,7 @@ namespace TrainSurvivor.Game.View
                 }
 
                 Vector3 point = r.Pos + r.Dir * Mathf.Max(0f, _hits[best].distance);
+                r.Pos = point;
 
                 if (bestProxy != null)
                 {
@@ -311,6 +343,14 @@ namespace TrainSurvivor.Game.View
             }
 
             r.Sprite.transform.position = r.Pos;
+            PlaceTracer(r);
+        }
+
+        void PlaceTracer(Round r)
+        {
+            if (r.Tracer == null) return;
+            r.Tracer.Place(r.Pos, r.Dir, _cam);
+            r.Tracer.KeepAlive();
         }
 
         void Advance(Round r, float distance)
@@ -334,6 +374,8 @@ namespace TrainSurvivor.Game.View
             float after = HpOf(proxy.IsBlockade, proxy.EntityId);
             _impacts++;
 
+            if (r.Tracer != null) r.Tracer.FadeOut(0.06f);
+
             if (_verbose && _hitLogs < 12)
             {
                 _hitLogs++;
@@ -351,6 +393,8 @@ namespace TrainSurvivor.Game.View
             if (_world != null) _world.CancelProjectile(r.Id);
             _misses++;
 
+            if (r.Tracer != null) r.Tracer.FadeOut(0.06f);
+
             if (_verbose && _missLogs < 8)
             {
                 _missLogs++;
@@ -358,7 +402,18 @@ namespace TrainSurvivor.Game.View
                     r.Id, r.Gun, reason, at.x, at.y, at.z));
             }
 
-            if (reason == "scenery" && _fx != null) _fx.ImpactAt(at);
+            if (reason == "scenery" && _fx != null)
+            {
+                // Steel, not a body: brighter ring, white sparks, and a ping the flesh hit
+                // does not have. This is the only place a scenery strike is observable.
+                _fx.ImpactAt(at, r.Dir, true);
+                var audio = Audio.AudioDirector.Instance;
+                if (audio != null && _train != null)
+                {
+                    float d = Vector3.Distance(at, _train.transform.position);
+                    audio.ImpactMetal(Mathf.Clamp01(1f - d / 40f));
+                }
+            }
             Despawn(r);
         }
 

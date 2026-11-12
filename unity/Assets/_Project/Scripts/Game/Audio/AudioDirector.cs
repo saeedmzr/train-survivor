@@ -30,12 +30,17 @@ namespace TrainSurvivor.Game.Audio
                 _rate = rate;
                 _burst = burst;
                 _tokens = burst;
-                _last = Time.time;
+                // Never touch Time.* here: these are instance field initialisers on a
+                // MonoBehaviour, and Unity throws "get_time is not allowed to be called from a
+                // MonoBehaviour constructor", which aborted AudioDirector's constructor, left
+                // _pool/_clips null and took the whole M0Bootstrap.Awake down with it.
+                _last = -1f;
             }
 
             public bool Take()
             {
                 float now = Time.time;
+                if (_last < 0f) _last = now;
                 _tokens = Mathf.Min(_burst, _tokens + (now - _last) * _rate);
                 _last = now;
                 if (_tokens < 1f) return false;
@@ -55,13 +60,25 @@ namespace TrainSurvivor.Game.Audio
         int _next;
 
         float _ambientTimer;
-        float _master = 0.75f;
+        float _master = 0.69f;   // headroom: stacked shots + acid were peaking at 0.996
+        float _peakLogAt = 5f;
 
         [Tooltip("Volume of one machine-gun shot")]
-        [Range(0f, 1f)] public float shotVolume = 0.30f;
+        [Range(0f, 1f)] public float shotVolume = 0.42f;
         [Tooltip("Minimum gap between shot sounds — 12 guns at 8/s would otherwise machine-gun the mixer")]
         public float shotMinGap = 0.045f;
         float _lastShotAt = -1f;
+        float _ambienceDuck = 1f;   // dips under gunfire so the action stays on top
+
+        // --- bed: wind through the yard, wheels over rail joints, steel under load ---
+        AudioSource _ambient;
+        float _railAccum;
+        float _railSpacing = 12.5f;     // one rail joint; the clip holds the two-axle clack
+        float _lastRailAt = -1f;
+        float _creakTimer;
+
+        [Tooltip("Wind bed level at master 1")]
+        [Range(0f, 1f)] public float ambienceVolume = 0.11f;
 
         /// <summary>tune.txt dev.audiolog=1 logs every triggered clip. The emulator runs with
         /// -no-audio, so this log is the only way to see the mix fire on device.</summary>
@@ -86,14 +103,30 @@ namespace TrainSurvivor.Game.Audio
         {
             // No AudioListener existed anywhere in the scene, so nothing was ever rendered to
             // the device. Own one here (2D mix) unless a camera already provides it.
+            var existingListener = Object.FindObjectOfType<AudioListener>();
+            if (existingListener != null && existingListener.GetComponent<AudioLimiter>() == null)
+                existingListener.gameObject.AddComponent<AudioLimiter>();
+
             bool diag = DevTuning.Get("dev.audiodiag", 0f) > 0.5f;
             if (diag)
             {
-                var listenerGo = new GameObject("AudioListener+tap");
-                listenerGo.transform.SetParent(transform, false);
-                listenerGo.AddComponent<AudioListener>();
-                _tap = listenerGo.AddComponent<AudioTap>();
-                Debug.Log("[audio] diagnostic listener+tap created");
+                // Tap the listener that is actually rendering: a second AudioListener would
+                // be ignored by Unity and the tap would see silence.
+                var existing = Object.FindObjectOfType<AudioListener>();
+                if (existing != null)
+                {
+                    _tap = existing.gameObject.GetComponent<AudioTap>();
+                    if (_tap == null) _tap = existing.gameObject.AddComponent<AudioTap>();
+                    Debug.Log("[audio] diagnostic tap on listener " + existing.gameObject.name);
+                }
+                else
+                {
+                    var listenerGo = new GameObject("AudioListener+tap");
+                    listenerGo.transform.SetParent(transform, false);
+                    listenerGo.AddComponent<AudioListener>();
+                    _tap = listenerGo.AddComponent<AudioTap>();
+                    Debug.Log("[audio] diagnostic listener+tap created");
+                }
             }
             else if (Object.FindObjectOfType<AudioListener>() == null)
             {
@@ -112,6 +145,7 @@ namespace TrainSurvivor.Game.Audio
 
             foreach (var kind in (EnemyKind[])System.Enum.GetValues(typeof(EnemyKind)))
                 Load(EnemyVoice(kind));
+            Load("fx_acid");
 
             Load("fx_shot");
             Load("fx_hit");
@@ -131,6 +165,11 @@ namespace TrainSurvivor.Game.Audio
             Load("ui_click");
             Load("ui_confirm");
             Load("fx_engine");
+            Load("amb_wind");
+            Load("fx_rail");
+            Load("fx_creak");
+            Load("fx_hit_metal");
+            Load("fx_death_thud");
 
             // Locomotive bed: a looping source whose pitch/volume follow the throttle.
             var engine = gameObject.AddComponent<AudioSource>();
@@ -141,6 +180,21 @@ namespace TrainSurvivor.Game.Audio
             engine.clip = _clips.ContainsKey("fx_engine") ? _clips["fx_engine"] : null;
             if (engine.clip != null) engine.Play();
             _engine = engine;
+
+            // District bed: the same loop for the whole run, under everything else.
+            var wind = gameObject.AddComponent<AudioSource>();
+            wind.playOnAwake = false;
+            wind.loop = true;
+            wind.spatialBlend = 0f;
+            wind.volume = 0f;
+            wind.clip = _clips.ContainsKey("amb_wind") ? _clips["amb_wind"] : null;
+            if (wind.clip != null)
+            {
+                wind.volume = ambienceVolume * _master;
+                wind.Play();
+            }
+            _ambient = wind;
+            _creakTimer = Random.Range(6f, 12f);
 
             _verbose = DevTuning.Get("dev.audiolog", 0f) > 0.5f;
             if (diag)
@@ -194,18 +248,30 @@ namespace TrainSurvivor.Game.Audio
 
         // ---------------------------------------------------------------- view cues
 
-        /// <summary>One walker boot on the ground, driven by measured stride; rate-limited.</summary>
+        /// <summary>One walker boot on the ground, driven by measured stride; rate-limited.
+        /// Heavier at the hull than at the edge of the cue range, so the horde reads in
+        /// distance without a crowd of steps drowning the guns.</summary>
         public void WalkerFootstep(float closeness)
         {
             if (closeness <= 0.02f || !_stepGate.Take()) return;
-            Play("fx_step", Mathf.Lerp(0.10f, 0.30f, Mathf.Clamp01(closeness)), PitchJitter());
+            Play("fx_step", Mathf.Lerp(0.16f, 0.36f, Mathf.Clamp01(closeness)), PitchJitter());
         }
 
         /// <summary>One attack swing, fired when the Walker attack clip actually starts.</summary>
         public void WalkerSwing(float closeness)
         {
             if (closeness <= 0.02f || !_swingGate.Take()) return;
-            Play("fx_swing", Mathf.Lerp(0.10f, 0.30f, Mathf.Clamp01(closeness)), PitchJitter());
+            float k = Mathf.Clamp01(closeness);
+            Play("fx_swing", Mathf.Lerp(0.18f, 0.38f, k), PitchJitter());
+            // a close bite gets the walker's own voice under the swing, pitched with mood
+            if (k > 0.55f) Play("en_walker", Mathf.Lerp(0.10f, 0.26f, k), PitchJitter() * 1.08f);
+        }
+
+        /// <summary>A player round striking steel (scenery, not a body): a short bright
+        /// ping, deliberately distinct from the wet flesh impact.</summary>
+        public void ImpactMetal(float closeness)
+        {
+            Play("fx_hit_metal", Mathf.Lerp(0.14f, 0.34f, Mathf.Clamp01(closeness)), PitchJitter());
         }
 
         /// <summary>Retry / dialog confirmation.</summary>
@@ -219,9 +285,14 @@ namespace TrainSurvivor.Game.Audio
         void PlayShot()
         {
             float now = Time.time;
+            _ambienceDuck = Mathf.MoveTowards(_ambienceDuck, 1f, Time.deltaTime * 0.9f);
             if (now - _lastShotAt < shotMinGap) return;
             _lastShotAt = now;
-            Play("fx_shot", Mathf.Clamp01(shotVolume), PitchJitter() * 1.02f);
+            _ambienceDuck = 0.72f;
+            // punchy but controlled: a few percent of pitch/level variation per round keeps a
+            // burst from sounding like one looped sample without turning into a scattergun
+            Play("fx_shot", Mathf.Clamp01(shotVolume) * Random.Range(0.94f, 1f),
+                 PitchJitter() * Random.Range(0.96f, 1.04f));
         }
 
         // ---------------------------------------------------------------- sim events
@@ -232,6 +303,12 @@ namespace TrainSurvivor.Game.Audio
             {
                 case SimEventKind.Kill:
                     Play("fx_death", 0.55f, PitchJitter());
+                    // walker deaths pop with acid: short sizzle, pitched slightly per kill
+                    if (e.EnemyKind == EnemyKind.Walker)
+                        Play("fx_acid", 0.30f, Mathf.Lerp(0.92f, 1.08f, Random.value));
+                    // the body lands a beat after the kill: weight, not just a squelch
+                    Play("fx_death_thud", Mathf.Lerp(0.18f, 0.38f, Closeness(e.ToS)),
+                         PitchJitter() * 0.95f);
                     // the sim carries the species: the enemy is gone from the world by now
                     Play(EnemyVoice(e.EnemyKind), 0.5f, PitchJitter() * 1.06f);
                     break;
@@ -385,7 +462,49 @@ namespace TrainSurvivor.Game.Audio
                 // audible idle with master 0.75 stays at the old 0.05 absolute.
                 _engine.volume = w.Train.Mode == TrainMode.Dead ? 0f
                                                                : (0.065f + 0.21f * k) * _master;
-                _engine.pitch = 0.85f + 0.4f * k;
+                _engine.pitch = 0.86f + 0.34f * k;
+            }
+            if (_ambient != null)
+                _ambient.volume = ambienceVolume * _master * _ambienceDuck * (w.Train.Mode == TrainMode.Dead ? 0.6f : 1f);
+
+            // Rail rhythm: one clack pair per joint, driven by distance travelled, so the
+            // tempo follows the throttle instead of a wall-clock timer.
+            float speed = w.Train.Speed;
+            if (speed > 1.5f)
+            {
+                _railAccum += speed * Time.deltaTime;
+                if (_railAccum >= _railSpacing && Time.time - _lastRailAt > 0.10f)
+                {
+                    _railAccum -= _railSpacing;
+                    _lastRailAt = Time.time;
+                    float k = Mathf.Clamp01(speed / SimConfig.MoveSpeed);
+                    Play("fx_rail", (0.10f + 0.16f * k) * Mathf.Clamp01(speed / 4f),
+                         PitchJitter() * 0.98f);
+                }
+            }
+            else _railAccum = 0f;
+
+            // Sparse steel: the yard is never silent, but a creak is an event, not a loop.
+            _creakTimer -= Time.deltaTime;
+            if (_creakTimer <= 0f)
+            {
+                _creakTimer = Random.Range(9f, 21f);
+                Play("fx_creak", Random.Range(0.10f, 0.20f), 1f + Random.Range(-0.4f, 0.4f));
+            }
+
+            // Mix telemetry: cumulative peak is the clipping proof (>=0.99 means the master
+            // bus is hot). Only with dev.audiodiag, never in a normal run.
+            if (_tap != null)
+            {
+                _peakLogAt -= Time.deltaTime;
+                if (_peakLogAt <= 0f)
+                {
+                    _peakLogAt = 5f;
+                    int playing = 0;
+                    foreach (var src in _pool) if (src.isPlaying) playing++;
+                    Debug.Log(string.Format("[audio] live peak {0:0.000} rms {1:0.000} playing {2}/{3} shots {4}",
+                        _tap.Peak, _tap.Rms, playing, _pool.Count, _shotsAccepted));
+                }
             }
 
             _ambientTimer -= Time.deltaTime;

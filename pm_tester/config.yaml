@@ -1,0 +1,54 @@
+# PM/Tester configuration
+# All values can be overridden with environment variables of the same name.
+
+hermes:
+  # OpenAI-compatible endpoint exposed by `hermes gateway` (API server).
+  base_url: "http://127.0.0.1:8642/v1"
+  model: "hermes-agent"
+  # Bearer token; falls back to HERMES_API_KEY in the environment / .env
+  api_key_env: "HERMES_API_KEY"
+  timeout_s: 900
+  # Prefer /v1/responses with previous_response_id when the server supports it.
+  prefer_responses: true
+
+pm:
+  # How many fix -> retest cycles before the PM escalates to the CEO.
+  max_retries: 3
+  # The PM never edits project files. This is enforced in code (agent.py refuses
+  # any task that looks like a write request) and in the system prompt.
+  role: "reviewer-tester"
+
+unity_mcp:
+  # Singtaa UnityMCP: HTTP MCP server auto-started by the Unity Editor.
+  base_url: "http://127.0.0.1:5173/mcp"
+  auth_token_env: "UNITY_MCP_TOKEN"
+  request_timeout_s: 60
+  # Play Mode in the editor starts from whatever scene is open; the game builds
+  # itself at runtime, so load the bootstrap scene first.
+  scene: "Assets/_Project/Scenes/Run.unity"
+  # Tool names differ between Unity MCP distributions; these are the defaults
+  # for Singtaa/UnityMCP and are overridable if your build names them differently.
+  tools:
+    play_mode_enter: "unity_playmode_enter"
+    play_mode_exit: "unity_playmode_exit"
+    console_logs: "unity_console_logs"
+    screenshot: "unity_capture_game_view"
+    run_tests: "unity_test_run_sync"
+    scene_hierarchy: "unity_editor_get_hierarchy"
+    scene_load: "unity_scene_load"
+  # Used when the MCP server is unreachable (editor closed / package missing).
+  # Drives the already-built APK on the emulator through adb instead.
+  fallback:
+    enabled: true
+    adb: "C:/Users/saeed/Android/sdk/platform-tools/adb.exe"
+    apk: "../unity/Builds/Android/TrainSurvivor-emulator.apk"
+    package: "com.trainsurvivor.game"
+    activity: "com.unity3d.player.appui.AppUIActivity"
+    boot_timeout_s: 120
+    play_seconds: 20
+
+project:
+  unity_path: "../unity"
+  repo_root: ".."
+
+runs_dir: "runs"

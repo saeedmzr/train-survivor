@@ -71,18 +71,36 @@ namespace TrainSurvivor.Core
         ReinforcedBoiler = 4,
         RapidFireEngine = 5,
         IncendiaryShells = 6,
-        ExtraGun = 7,
-        ExtraWagon = 8
+        ExtraGun = 7,          // legacy (retired from offers): SPARE BARRELS fire rate
+        ExtraWagon = 8,        // legacy (retired from offers): FIELD REPAIR heal
+
+        // Approved Stage 1 card set (new offers draw only from these)
+        HeavyHitter = 9,
+        FastFire = 10,
+        LongReach = 11,
+        QuickAim = 12,
+        ToughTrain = 13,
+        StrongArmor = 14,
+        FixItUp = 15,
+        FullSteam = 16,
+        FastLearner = 17
     }
+
+    /// <summary>What an offer slot is for, so the three picks always cover combat, survival
+    /// and a flex pick instead of three copies of the same flavour.</summary>
+    public enum CardRole { Combat, Survival, Flex }
 
     public static class Cards
     {
-        public const int Count = 9;
+        public const int Count = 18;
 
         public static readonly string[] Names =
         {
             "MULTISHOT", "FIRE TRAIL", "SPIKE BUMPER", "PIERCING ROUNDS", "REINFORCED BOILER",
-            "RAPID FIRE ENGINE", "INCENDIARY SHELLS", "EXTRA GUN", "EXTRA WAGON"
+            "RAPID FIRE ENGINE", "INCENDIARY SHELLS", "SPARE BARRELS", "FIELD REPAIR",
+            // approved set: short, plain titles a non-gamer reads at a glance
+            "HEAVY HITTER", "FAST FIRE", "LONG REACH", "QUICK AIM", "TOUGH TRAIN",
+            "STRONG ARMOR", "FIX IT UP", "FULL STEAM", "FAST LEARNER"
         };
 
         public static readonly string[] Blurbs =
@@ -94,14 +112,67 @@ namespace TrainSurvivor.Core
             "+20% max HP and repair the extra plating.",
             "+15% fire rate on every gun.",
             "+20% chance to set zombies alight.",
-            "Bolt another gun onto the roof.",
-            "Hitch another wagon: +35 HP."
+            "Cooler barrels: +10% fire rate on every gun.",
+            "Patch the boiler: repair 40% of max HP.",
+            // approved set: one short line, no numbers, no jargon
+            "Your guns hit harder.",
+            "Your guns shoot faster.",
+            "Your guns shoot farther.",
+            "Your guns turn toward enemies faster.",
+            "Your train can take more damage.",
+            "Enemy attacks hurt your train less.",
+            "Restore some of your train's health.",
+            "Your train moves faster while you hold.",
+            "Your train levels up faster."
+        };
+
+        /// <summary>Max ranks per approved card; 0 means "no cap, gated by eligibility".</summary>
+        public static int Cap(CardId id)
+        {
+            switch (id)
+            {
+                case CardId.HeavyHitter: return 3;
+                case CardId.FastFire: return 3;
+                case CardId.LongReach: return 2;
+                case CardId.QuickAim: return 2;
+                case CardId.ToughTrain: return 3;
+                case CardId.StrongArmor: return 3;
+                case CardId.FixItUp: return 0;
+                case CardId.FullSteam: return 2;
+                case CardId.FastLearner: return 2;
+                default: return 0;
+            }
+        }
+
+        public static CardRole RoleOf(CardId id)
+        {
+            switch (id)
+            {
+                case CardId.HeavyHitter:
+                case CardId.FastFire:
+                case CardId.LongReach:
+                case CardId.QuickAim: return CardRole.Combat;
+                case CardId.ToughTrain:
+                case CardId.StrongArmor: return CardRole.Survival;
+                default: return CardRole.Flex;
+            }
+        }
+
+        /// <summary>The nine approved cards, in offer order. Legacy ids stay in the enum for
+        /// persisted stacks but are never drawn into a new offer.</summary>
+        public static readonly CardId[] Approved =
+        {
+            CardId.HeavyHitter, CardId.FastFire, CardId.LongReach, CardId.QuickAim,
+            CardId.ToughTrain, CardId.StrongArmor, CardId.FixItUp, CardId.FullSteam,
+            CardId.FastLearner
         };
 
         public static readonly string[] Sprites =
         {
             "up_multishot", "up_firetrail", "up_spikebumper", "up_piercing", "up_boiler",
-            "up_rapidfire", "up_incendiary", "up_extragun", "up_extrawagon"
+            "up_rapidfire", "up_incendiary", "up_extragun", "up_extrawagon",
+            "up_heavyhitter", "up_fastfire", "up_longreach", "up_quickaim", "up_toughtrain",
+            "up_strongarmor", "up_fixitup", "up_fullsteam", "up_fastlearner"
         };
     }
 
@@ -139,7 +210,31 @@ namespace TrainSurvivor.Core
 
         public float FireRateMultiplier =>
             (ChargeWindow > 0f ? 1f + SimConfig.ChargeBonus * ChargeSpent : 1f)
-            * (1f + 0.15f * CardStacks[(int)CardId.RapidFireEngine]);
+            * (1f + 0.15f * CardStacks[(int)CardId.RapidFireEngine])
+            * (1f + 0.10f * CardStacks[(int)CardId.ExtraGun])    // legacy "SPARE BARRELS"
+            * (1f + 0.08f * CardStacks[(int)CardId.FastFire]);   // FAST FIRE
+
+        /// <summary>Global shot damage: every current and future gun reads this.</summary>
+        public float GunDamageMultiplier => 1f + 0.12f * CardStacks[(int)CardId.HeavyHitter];
+
+        /// <summary>Global acquisition/firing range.</summary>
+        public float GunRangeMultiplier => 1f + 0.10f * CardStacks[(int)CardId.LongReach];
+
+        /// <summary>Turret turn rate: aim solves stay the same, only the slew is faster.</summary>
+        public float AimSpeedMultiplier => 1f + 0.20f * CardStacks[(int)CardId.QuickAim];
+
+        /// <summary>Convoy HP from the base hull + wagons, boosted by TOUGH TRAIN and the
+        /// legacy boiler. Everything that adds a wagon recomputes through this.</summary>
+        public float MaxHpFor(int wagons) =>
+            (SimConfig.BaseHp + SimConfig.WagonHp * wagons)
+            * (1f + 0.12f * CardStacks[(int)CardId.ToughTrain])
+            * (float)System.Math.Pow(1.2, CardStacks[(int)CardId.ReinforcedBoiler]);
+
+        public float DamageTakenMultiplier => 1f - 0.08f * CardStacks[(int)CardId.StrongArmor];
+
+        public float MoveSpeedMultiplier => 1f + 0.08f * CardStacks[(int)CardId.FullSteam];
+
+        public float XpGainMultiplier => 1f + 0.10f * CardStacks[(int)CardId.FastLearner];
 
         public float RamDamageNow =>
             (SimConfig.RamDamage + 25f * CardStacks[(int)CardId.SpikeBumper]) * StageDamageScale;

@@ -22,7 +22,7 @@ namespace TrainSurvivor.Game.View
 
         [Header("Placement")]
         [Tooltip("Distance between scenery slots along the track, in metres")]
-        public float slotStep = 7f;
+        public float slotStep = 4.5f;
         [Tooltip("Nothing is placed closer to the rails than this")]
         public float combatClear = 6.5f;
         [Tooltip("How far ahead of the train scenery is built")]
@@ -37,7 +37,7 @@ namespace TrainSurvivor.Game.View
 
         [Header("Lighting")]
         [Tooltip("How many lamp lights can be active at once")]
-        [Range(0, 6)] public int maxLampLights = 3;
+        [Range(0, 6)] public int maxLampLights = 6;
         public Color lampColour = new Color(1f, 0.72f, 0.36f);
 
         sealed class Prop
@@ -68,30 +68,30 @@ namespace TrainSurvivor.Game.View
             DressGround();
 
             if (RenderSettings.ambientMode == UnityEngine.Rendering.AmbientMode.Skybox ||
-                RenderSettings.ambientLight.maxColorComponent < 0.22f)
+                RenderSettings.ambientLight.maxColorComponent < 0.04f)
             {
                 RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-                RenderSettings.ambientLight = new Color(0.26f, 0.25f, 0.24f);
+                RenderSettings.ambientLight = new Color(0.11f, 0.13f, 0.11f);
             }
 
             // counts are the ceiling on live objects of each type, regardless of stage length
-            Add("warehouse", 6, 14f, true);
-            Add("brickbuilding", 6, 11f, true);
-            Add("rockwall", 12, 6f, false);
-            Add("rubble", 14, 3.2f, false);
-            Add("crate", 18, 1.2f, true);
-            Add("barrel", 18, 0.95f, true);
-            Add("lamp", 12, 5.5f, true);
+            Add("warehouse", 8, 14f, true);
+            Add("brickbuilding", 8, 11f, true);
+            Add("rockwall", 18, 6f, false);
+            Add("rubble", 22, 3.2f, false);
+            Add("crate", 26, 1.2f, true);
+            Add("barrel", 26, 0.95f, true);
+            // lamps moved onto the track (RailLights); the prop stays available as an asset
 
-            for (int i = 0; i < maxLampLights; i++)
+            for (int i = 0; i < 0; i++)   // rail fixtures own the road lighting now
             {
                 var go = new GameObject("LampLight" + i);
                 go.transform.SetParent(transform, false);
                 var l = go.AddComponent<Light>();
                 l.type = LightType.Point;
                 l.color = lampColour;
-                l.range = 14f;
-                l.intensity = 2.2f;
+                l.range = 26f;          // reaches across both rails from the verge
+                l.intensity = 6.5f;
                 l.shadows = LightShadows.None;   // mobile: no shadow maps for props
                 l.enabled = false;
                 _lampLights.Add(l);
@@ -288,7 +288,7 @@ namespace TrainSurvivor.Game.View
         }
 
         /// <summary>Pick the prop for a slot: type, side, lateral distance, yaw and scale.</summary>
-        void Pick(int slot, int side, out string type, out float lateral, out float yaw, out float scale)
+        void Pick(int slot, int side, float s, out string type, out float lateral, out float yaw, out float scale)
         {
             uint h = Hash((uint)(slot * 73856093) ^ (uint)(seed * 19349663));
             int roll = (int)(h % 100);
@@ -298,39 +298,51 @@ namespace TrainSurvivor.Game.View
             yaw = r1 * 360f;
             scale = 1f + (r2 * 2f - 1f) * scaleJitter;
 
-            if (roll < 26)
+            // Three compositions along Stage 1, so the district reads as a journey:
+            //   0-140 m  rail yard      - crates/barrels stacked beside the track, lamps, low walls
+            //   140-300  factory edge   - warehouses and brick halls, yard clutter, tall lamps
+            //   300+     ruined outskirts - broken walls and rubble, sparse lamps, open ground
+            float zone = Mathf.InverseLerp(0f, 1f, s < 140f ? 0f : (s < 300f ? 0.5f : 1f));
+
+            if (s < 140f)
             {
-                // Industrial clusters: roughly every third candidate slot on a side, so the
-                // skyline reads as a district instead of one lone warehouse per kilometer.
-                bool building = ((h >> 24) % 3) != 0;
-                type = building ? (((h >> 26) & 1) == 0 ? "warehouse" : "brickbuilding") : null;
-                lateral = side * (buildingLateral + r1 * 8f);
+                if (roll < 42)
+                {
+                    type = ((h >> 26) & 1) == 0 ? "crate" : "barrel";
+                    lateral = side * (combatClear + 0.35f + r1 * 1.9f);
+                }
+                else if (roll < 58) { type = "rockwall"; lateral = side * (combatClear + 1.1f + r1 * 2.0f); }
+                else if (roll < 70) { type = "rubble"; lateral = side * (combatClear + 0.25f + r1 * 1.6f); }
+                else if (roll < 82) { type = "lamp"; lateral = side * (combatClear + 0.25f + r1 * 0.9f); }
+                else if (roll < 90) { type = "warehouse"; lateral = side * (buildingLateral + r1 * 12f); }
+                else { type = null; lateral = 0f; }
             }
-            else if (roll < 34)
+            else if (s < 300f)
             {
-                type = "rockwall";
-                lateral = side * (combatClear + 1.2f + r1 * 2.6f);
-            }
-            else if (roll < 52)
-            {
-                type = "rubble";
-                lateral = side * (combatClear + 0.2f + r1 * 2.4f);
-            }
-            else if (roll < 72)
-            {
-                type = ((h >> 26) & 1) == 0 ? "crate" : "barrel";
-                lateral = side * (combatClear + 0.3f + r1 * 2.0f);
-            }
-            else if (roll < 84)
-            {
-                type = "lamp";
-                lateral = side * (combatClear + 0.2f + r1 * 1.2f);
+                if (roll < 34)
+                {
+                    bool building = ((h >> 24) % 3) != 0;
+                    type = building ? (((h >> 26) & 1) == 0 ? "warehouse" : "brickbuilding") : null;
+                    lateral = side * (buildingLateral + r1 * 8f);
+                }
+                else if (roll < 48) { type = "crate"; lateral = side * (combatClear + 0.3f + r1 * 1.7f); }
+                else if (roll < 60) { type = "barrel"; lateral = side * (combatClear + 0.3f + r1 * 1.7f); }
+                else if (roll < 72) { type = "rockwall"; lateral = side * (combatClear + 1.2f + r1 * 2.4f); }
+                else if (roll < 82) { type = "rubble"; lateral = side * (combatClear + 0.25f + r1 * 2.0f); }
+                else if (roll < 92) { type = "lamp"; lateral = side * (combatClear + 0.25f + r1 * 1.0f); }
+                else { type = null; lateral = 0f; }
             }
             else
             {
-                type = null;               // open ground: keep combat lanes readable
-                lateral = 0f;
+                if (roll < 30) { type = "rockwall"; lateral = side * (combatClear + 1.2f + r1 * 3.0f); }
+                else if (roll < 56) { type = "rubble"; lateral = side * (combatClear + 0.2f + r1 * 2.8f); }
+                else if (roll < 66) { type = "crate"; lateral = side * (combatClear + 0.4f + r1 * 2.2f); }
+                else if (roll < 76) { type = "barrel"; lateral = side * (combatClear + 0.4f + r1 * 2.2f); }
+                else if (roll < 84) { type = "lamp"; lateral = side * (combatClear + 0.3f + r1 * 1.4f); }
+                else if (roll < 88) { type = "brickbuilding"; lateral = side * (buildingLateral + 10f + r1 * 10f); }
+                else { type = null; lateral = 0f; }
             }
+            _ = zone;
         }
 
         float _lastSyncS = float.MaxValue;
@@ -369,12 +381,35 @@ namespace TrainSurvivor.Game.View
             int first = Mathf.FloorToInt((s0 - windowBehind) / slotStep);
             int last = Mathf.CeilToInt((s0 + windowAhead) / slotStep);
 
+            // ---- composed districts: fixed landmarks instead of an even sprinkle ----
+            ComposeLandmarks();
+
+            // Distant industrial skyline: big, fog-faded masses well outside the combat corridor so the
+            // horizon reads as a hazy roofline instead of an empty band. Staggered in depth and height.
+            for (int k = Mathf.FloorToInt((s0 - 120f) / 34f); k <= Mathf.CeilToInt((s0 + 260f) / 34f); k++)
+            {
+                for (int side = -1; side <= 1; side += 2)
+                {
+                    uint h = Hash((uint)(k * 2654435761u) ^ (uint)(side > 0 ? 40503u : 95287u) ^ (uint)(seed * 31));
+                    float lateral = side * (72f + (h % 100) * 0.42f);       // 72..114 m out, clear of the lane
+                    float scale = 2.3f + ((h >> 9) % 100) * 0.014f;         // 2.3..3.7x
+                    float yaw = ((h >> 17) % 2 == 0) ? 90f : 78f;
+                    string type = ((h >> 21) & 1) == 0 ? "warehouse" : "brickbuilding";
+                    Place(type, k * 34f + ((h >> 3) % 11), lateral, yaw, scale);
+                }
+            }
+
             for (int i = first; i <= last; i++)
             {
                 for (int side = -1; side <= 1; side += 2)
                 {
                     int slot = i * 2 + (side > 0 ? 1 : 0);
-                    Pick(slot, side, out string type, out float lateral, out float yaw, out float scale);
+                    float slotS = i * slotStep;
+                    bool composed = slotS < 70f || (slotS > 170f && slotS < 235f);
+                    Pick(slot, side, slotS, out string type, out float lateral, out float yaw, out float scale);
+                    if (composed && (type == "crate" || type == "barrel" || type == "wall" ||
+                                     type == "warehouse" || type == "brickbuilding" || type == "lamp"))
+                        continue;                      // keep the hand-placed group legible
                     if (type == null) continue;
 
                     float s = i * slotStep;
@@ -402,7 +437,12 @@ namespace TrainSurvivor.Game.View
                     active, s0, _activeLamps.Count));
             }
 
-            // light only the lamps nearest the train, capped for mobile
+            // light the lamps nearest the train — the list is in build order, so sort first,
+            // otherwise the far end of the window gets the lights and the road stays black
+            _activeLamps.Sort((a, b) =>
+                ((a.position - TrackSpace.Point(s0, 0f, 0f)).sqrMagnitude)
+                .CompareTo((b.position - TrackSpace.Point(s0, 0f, 0f)).sqrMagnitude));
+
             int lit = Mathf.Min(maxLampLights, _activeLamps.Count);
             for (int i = 0; i < _lampLights.Count; i++)
             {
@@ -412,8 +452,58 @@ namespace TrainSurvivor.Game.View
                     continue;
                 }
                 Transform lamp = _activeLamps[i];
-                _lampLights[i].transform.position = lamp.position + Vector3.up * 4.8f;
+                _lampLights[i].transform.position = lamp.position + Vector3.up * 4.2f;
+                _lampLights[i].transform.rotation = Quaternion.Euler(68f, lamp.eulerAngles.y, 0f);
                 _lampLights[i].enabled = true;
+            }
+        }
+
+                /// <summary>Hand-placed district landmarks. Both districts read as built-up places: a wall
+        /// line, roof edge, grouped yard clutter at the wall feet and a warm lamp, always behind the
+        /// combat clearance so the running lane and Walker approaches stay open.</summary>
+        void ComposeLandmarks()
+        {
+            float s = Mathf.Max(0f, _lastSyncS);
+            // OPENING (start .. 45 m): warehouse anchors the LEFT flank, low walls hug the curve,
+            // crates and barrels stack at the wall feet, one lamp lights the yard.
+            if (s < 70f)
+            {
+                Place("warehouse", 14f, -19f, 96f, 1.15f);
+                Place("warehouse", 34f, -26f, 88f, 1.0f);
+                Place("brickbuilding", 24f, -22f, 94f, 0.85f);
+                Place("wall", 9f, -12.5f, 92f, 1.15f);
+                Place("wall", 20f, -13.0f, 90f, 1.0f);
+                Place("wall", 31f, -12.2f, 93f, 0.9f);
+                Place("crate", 11f, -10.6f, 94f, 1.0f);
+                Place("crate", 12.4f, -11.4f, 92f, 0.9f);
+                Place("crate", 13.2f, -10.2f, 96f, 0.85f);
+                Place("barrel", 22.5f, -10.8f, 90f, 1.0f);
+                Place("barrel", 23.4f, -11.6f, 94f, 0.95f);
+                Place("rubble", 17f, -11.0f, 92f, 1.1f);
+                Place("lamp", 19f, -10.4f, 90f, 1.05f);
+                // a short opposite-side broken wall so the corridor reads framed, not walled
+                Place("wall", 26f, 12.6f, 88f, 1.0f);
+                Place("rubble", 30f, 11.4f, 92f, 1.0f);
+            }
+
+            // FACTORY EDGE (170 .. 235 m): articulated frontage receding along the OUTER curve
+            // (right), roof edge and window bays readable, secondary masses stepped back.
+            if (s > 130f && s < 300f)
+            {
+                Place("warehouse", 176f, 17.5f, 84f, 1.0f);
+                Place("warehouse", 196f, 21f, 80f, 1.1f);
+                Place("brickbuilding", 186f, 15.5f, 86f, 0.95f);
+                Place("brickbuilding", 210f, 25f, 78f, 0.9f);
+                Place("wall", 180f, 12.8f, 84f, 1.05f);
+                Place("wall", 191f, 12.4f, 82f, 0.95f);
+                Place("wall", 203f, 12.9f, 85f, 1.0f);
+                Place("crate", 182f, 10.9f, 84f, 1.0f);
+                Place("crate", 183.4f, 11.7f, 88f, 0.9f);
+                Place("barrel", 194f, 11.0f, 84f, 1.05f);
+                Place("barrel", 195.2f, 11.8f, 88f, 0.95f);
+                Place("rubble", 189f, 11.2f, 86f, 1.1f);
+                Place("lamp", 192f, 10.6f, 84f, 1.05f);
+                Place("warehouse", 224f, 30f, 76f, 1.2f);
             }
         }
 
@@ -440,6 +530,23 @@ namespace TrainSurvivor.Game.View
                 TrackSpace.Facing(s) * Quaternion.Euler(0f, yaw, 0f));
             p.Go.transform.localScale = Vector3.one * finalScale;
             p.Go.SetActive(true);
+
+            // pooled props repeat: a small deterministic tint shift (rust / soot / bleached)
+            // makes the same asset read as a different object without new materials
+            if (p.Rd != null)
+            {
+                uint th = Hash((uint)((int)(s * 91f) ^ (int)(lateral * 57f) ^ type.Length * 7717u));
+                float shade = 0.82f + ((th >> 8) & 0x3F) / 63f * 0.24f;   // 0.82..1.06
+                bool rust = ((th >> 14) & 3) == 0;
+                var tint = rust
+                    ? new Color(1.00f * shade, 0.86f * shade, 0.74f * shade, 1f)
+                    : new Color(shade, shade * 0.98f, shade * 0.94f, 1f);
+                var mpb = new MaterialPropertyBlock();
+                p.Rd.GetPropertyBlock(mpb);
+                mpb.SetColor("_BaseColor", tint);
+                mpb.SetColor("_Color", tint);
+                p.Rd.SetPropertyBlock(mpb);
+            }
 
             if (type == "lamp")
             {

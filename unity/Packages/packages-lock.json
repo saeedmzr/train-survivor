@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.singtaa.unity-mcp": {
+      "version": "file:com.singtaa.unity-mcp",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "10.2.4",
       "depth": 0,

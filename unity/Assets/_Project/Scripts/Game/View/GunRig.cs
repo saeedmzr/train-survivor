@@ -29,9 +29,9 @@ namespace TrainSurvivor.Game.View
 
         [Header("Recoil")]
         [Tooltip("How far the recoil sleeve travels back, in metres")]
-        [Range(0f, 0.2f)] public float recoilTravel = 0.10f;
+        [Range(0f, 0.2f)] public float recoilTravel = 0.16f;
         [Tooltip("Recoil return speed — higher snaps back faster")]
-        [Range(1f, 40f)] public float recoilReturn = 8f;
+        [Range(1f, 40f)] public float recoilReturn = 3.2f;
 
         [Header("Wiring (built by TrainRig)")]
         public Transform mount;
@@ -163,7 +163,7 @@ namespace TrainSurvivor.Game.View
             Quaternion want = Quaternion.LookRotation(wantDir, Vector3.up);
 
             // swing at a fixed angular rate, so a distant target does not snap the turret
-            float step = aimSpeedDeg * dt;
+            float step = aimSpeedDeg * world.Train.AimSpeedMultiplier * dt;
             yaw.rotation = Quaternion.RotateTowards(yaw.rotation, want, step);
 
             // bounded elevation toward the full 3D target (negative pitch aims down)
@@ -263,6 +263,10 @@ namespace TrainSurvivor.Game.View
         void Recoil(float dt)
         {
             if (recoil == null) return;
+            // 100 mm of travel returning at 8 m/s vanished in one frame: the sleeve now
+            // kicks 160 mm and takes ~50 ms to settle, slow enough to read in motion.
+            // Translation only — rotating the sleeve would tilt the muzzle and walk the
+            // rounds off the target the sim already resolved.
             _recoilOffset = Mathf.MoveTowards(_recoilOffset, 0f, recoilReturn * dt);
             Vector3 p = recoil.localPosition;
             p.z = -_recoilOffset;
